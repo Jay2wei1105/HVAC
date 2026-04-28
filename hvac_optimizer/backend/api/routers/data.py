@@ -10,12 +10,42 @@ from hvac_optimizer.backend.services.data_service import DataService
 from hvac_optimizer.backend.services.core_hvac_service import CoreHVACService
 from hvac_optimizer.backend.services.history_service import append_completed_import
 from hvac_optimizer.backend.services.site_migration import finalize_trained_site
+from engine.core import contracts
 
 router = APIRouter()
 
 STORAGE_DIR = os.path.join(Path(__file__).resolve().parents[4], "data", "history", "hvac_optimizer_storage")
 os.makedirs(STORAGE_DIR, exist_ok=True)
 METADATA_FILE = os.path.join(STORAGE_DIR, "projects_metadata.json")
+
+
+def _rehydrate_storage_path(path_value: str | None) -> str | None:
+    """
+    Rewrite historical absolute paths (e.g. Windows machine paths) to current STORAGE_DIR.
+    """
+    if not path_value or not isinstance(path_value, str):
+        return path_value
+    if os.path.exists(path_value):
+        return path_value
+
+    normalized = path_value.replace("\\", "/")
+    marker = "/hvac_optimizer_storage/"
+    if marker not in normalized:
+        return path_value
+
+    suffix = normalized.split(marker, 1)[1].lstrip("/")
+    candidate = os.path.join(STORAGE_DIR, *suffix.split("/"))
+    return candidate
+
+
+def _rehydrate_dataset_paths(dataset: dict) -> None:
+    for key in ("original_path", "cleaned_path", "cleaned_parquet_path", "quality_report_path"):
+        dataset[key] = _rehydrate_storage_path(dataset.get(key))
+
+    ml_results = dataset.get("ml_results")
+    if isinstance(ml_results, dict):
+        ml_results["model_bundle_path"] = _rehydrate_storage_path(ml_results.get("model_bundle_path"))
+
 
 def save_metadata():
     with open(METADATA_FILE, "w", encoding="utf-8") as f:
@@ -26,6 +56,9 @@ def load_metadata():
         try:
             with open(METADATA_FILE, "r", encoding="utf-8") as f:
                 data = json.load(f)
+                for site_ds in data.values():
+                    if isinstance(site_ds, dict):
+                        _rehydrate_dataset_paths(site_ds)
                 ACTIVE_DATASETS.update(data)
         except Exception:
             pass
@@ -51,6 +84,8 @@ async def upload_csv(site_id: str, file: UploadFile = File(...)):
             df = pd.read_csv(file_path)
         else:
             df = pd.read_excel(file_path)
+        preclean = contracts.preclean_raw_frame(df)
+        df = preclean.df
 
         prev = ACTIVE_DATASETS.get(site_id, {})
         prev_hist = list(prev.get("import_history") or [])
@@ -61,11 +96,13 @@ async def upload_csv(site_id: str, file: UploadFile = File(...)):
             "cleaned_parquet_path": None,
             "quality_report_path": None,
             "cleaning_stats": {
-                "initial_rows": int(len(df)),
-                "duplicates_removed": int(len(df) - len(df.drop_duplicates())),
+                "initial_rows": int(preclean.stats["original_rows"]),
+                "duplicates_removed": int(preclean.stats["duplicate_rows_removed"]),
                 "outliers_detected": 0,
                 "nulls_filled": int(df.isna().sum().sum()),
-                "final_rows": int(len(df.drop_duplicates())),
+                "empty_rows_removed": int(preclean.stats["empty_rows_removed"]),
+                "unnamed_columns_removed": int(preclean.stats["unnamed_columns_removed"]),
+                "final_rows": int(len(df)),
             },
             "columns": df.columns.tolist(),
             "mapping": None,
@@ -94,7 +131,10 @@ async def upload_csv(site_id: str, file: UploadFile = File(...)):
 async def get_diagnostics(site_id: str):
     if site_id not in ACTIVE_DATASETS:
         raise HTTPException(status_code=404, detail="No data for this site")
-    return ACTIVE_DATASETS[site_id]["cleaning_stats"]
+    ds = ACTIVE_DATASETS[site_id]
+    stats = dict(ds.get("cleaning_stats") or {})
+    stats["diagnostic_stage"] = "stage1_cleaned" if ds.get("cleaned_path") or ds.get("cleaned_parquet_path") else "upload_precheck"
+    return stats
 
 @router.get("/mapping/suggest", response_model=MappingSuggestResponse)
 async def suggest_mapping(site_id: str):
@@ -103,13 +143,11 @@ async def suggest_mapping(site_id: str):
         
     cols = ACTIVE_DATASETS[site_id]["columns"]
     mappings = DataService.suggest_mappings(cols)
+    equipment_suggestion = DataService.suggest_equipment(mappings)
 
     return MappingSuggestResponse(
         mappings=mappings,
-        equipment_suggestion={
-            "chiller": [{"id": 1, "rt": 500, "cop": 5.8}, {"id": 2, "rt": 300, "cop": 5.2}],
-            "cooling_tower": [{"id": 1, "kw": 18.5}, {"id": 2, "kw": 18.5}]
-        }
+        equipment_suggestion=equipment_suggestion,
     )
 
 @router.post("/mapping")

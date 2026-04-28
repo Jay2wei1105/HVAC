@@ -10,7 +10,7 @@ import joblib
 import pandas as pd
 
 from engine.addons.hvac import HVACAddon
-from engine.core import ingestion, interpolation, mapper, quality_engine, report, time_index
+from engine.core import contracts, ingestion, interpolation, mapper, quality_engine, report, time_index
 from engine.core.ml.mpc import run_mpc
 from engine.core.ml.optimizer import BusinessWeights, ControlVariable, run_control_optimization
 from engine.core.ml.q_demand_trainer import train_q_demand_model
@@ -126,6 +126,8 @@ class CoreHVACService:
             "interpolated_count": quality_report.interpolated_count,
             "range_violations": quality_report.range_violations,
             "cross_issues": quality_report.cross_issues,
+            "contract_issues": quality_report.contract_issues,
+            "cleaning_actions": quality_report.cleaning_actions,
             "should_halt": halt,
             "halt_reason": reason,
         }
@@ -141,10 +143,15 @@ class CoreHVACService:
         timestep_minutes: int = 15,
     ) -> dict[str, Any]:
         raw_df = cls.load_raw_df(original_path)
+        preclean = contracts.preclean_raw_frame(raw_df)
+        raw_df = preclean.df
         col_map = cls.to_engine_col_map(mappings)
         df = mapper.apply_mapping(raw_df, col_map)
         mapper.assert_required_columns(df, cls.addon.get_sensor_schema())
+        contract_result = contracts.coerce_and_validate_sensor_frame(df, cls.addon.get_sensor_schema())
+        df = contract_result.df
         df = time_index.build(df, timestep_minutes)
+        time_contract_issues = contracts.validate_time_index(df)
 
         cleaning_cfg = cls.addon.get_cleaning_config()
         df, shutdown_removed = quality_engine.remove_shutdown(df, cleaning_cfg)
@@ -168,6 +175,8 @@ class CoreHVACService:
             flatline_count=flatline_count,
             interpolated_count=interp_count,
             cross_issues=cross_issues,
+            contract_issues=contract_result.issues + time_contract_issues,
+            cleaning_actions=preclean.stats | contract_result.stats,
         )
 
         artifact_dir = cls.artifact_dir(site_id, dataset_id)

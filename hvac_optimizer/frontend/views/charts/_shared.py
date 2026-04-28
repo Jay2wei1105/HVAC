@@ -7,25 +7,25 @@ import plotly.graph_objects as go
 
 # ── Design tokens ───────────────────────────────────────────────────────────
 C = {
-    "total":   "#0F4C5C",
-    "chiller": "#006c49",
-    "chwp":    "#2196F3",
-    "cwp":     "#FF9800",
-    "ct":      "#9C27B0",
-    "oa_temp": "#E53935",
-    "oa_rh":   "#00ACC1",
-    "delta":   "#6D4C41",
-    "cop":     "#1565C0",
+    "total":   "#2F6DF6",
+    "chiller": "#4F46E5",
+    "chwp":    "#0EA5E9",
+    "cwp":     "#F59E0B",
+    "ct":      "#A855F7",
+    "oa_temp": "#EF4444",
+    "oa_rh":   "#14B8A6",
+    "delta":   "#64748B",
+    "cop":     "#2563EB",
 }
 
 _BASE_LAYOUT: dict[str, Any] = dict(
     template="plotly_white",
-    font=dict(family="Inter, sans-serif", size=12, color="#0b1c30"),
+    font=dict(family="Inter, sans-serif", size=12, color="#111827"),
     paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="#F8F9FF",
+    plot_bgcolor="#F8FAFD",
     margin=dict(t=52, b=48, l=62, r=24),
     legend=dict(orientation="h", y=-0.20, x=0.5, xanchor="center", font_size=11),
-    hoverlabel=dict(bgcolor="white", font_size=12, bordercolor="#e2e8f0"),
+    hoverlabel=dict(bgcolor="white", font_size=12, bordercolor="#d9dfeb"),
     colorway=list(C.values()),
 )
 
@@ -62,8 +62,8 @@ def ts_axis(title: str = "") -> dict[str, Any]:
         title=title,
         type="date",
         rangeselector=dict(buttons=RANGE_BUTTONS,
-                           bgcolor="#f8f9ff", activecolor="#0F4C5C",
-                           font=dict(color="#0b1c30", size=11)),
+                           bgcolor="#f6f8fd", activecolor="#2F6DF6",
+                           font=dict(color="#111827", size=11)),
         rangeslider=dict(visible=True, thickness=0.04),
         gridcolor="#e2e8f0",
     )

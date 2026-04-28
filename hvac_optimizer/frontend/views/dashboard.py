@@ -27,19 +27,19 @@ def _inject_styles() -> None:
             font-size: clamp(1.9rem, 3vw, 2.35rem);
             font-weight: 700;
             letter-spacing: -0.03em;
-            color: #0f4c5c;
+            color: #111827;
             margin: 0 0 0.35rem 0;
         }
         .ho-analysis-hero p {
             margin: 0;
-            color: #516072;
+            color: #5a6272;
             font-size: 0.98rem;
         }
         .ho-panel {
-            background: rgba(255,255,255,0.94);
-            border: 1px solid #cfd8e3;
-            border-radius: 0.75rem;
-            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+            background: #ffffff;
+            border: 1px solid #d9dfeb;
+            border-radius: 1rem;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 10px 24px rgba(15, 23, 42, 0.04);
             padding: 1.25rem;
             height: 100%;
         }
@@ -50,14 +50,14 @@ def _inject_styles() -> None:
             margin: 0 0 1rem 0;
             font-size: 1.03rem;
             font-weight: 600;
-            color: #0b1c30;
+            color: #1f2937;
         }
         .ho-kpi-card {
-            background: rgba(255,255,255,0.96);
-            border: 1px solid #cfd8e3;
-            border-radius: 0.75rem;
+            background: #ffffff;
+            border: 1px solid #d9dfeb;
+            border-radius: 1rem;
             padding: 1.1rem 1.15rem;
-            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 8px 20px rgba(15, 23, 42, 0.03);
             min-height: 168px;
         }
         .ho-kpi-label {
@@ -65,7 +65,7 @@ def _inject_styles() -> None:
             letter-spacing: 0.08em;
             font-size: 0.72rem;
             font-weight: 600;
-            color: #66758a;
+            color: #667085;
             margin-bottom: 0.55rem;
         }
         .ho-kpi-value {
@@ -73,13 +73,13 @@ def _inject_styles() -> None:
             line-height: 1.08;
             letter-spacing: -0.03em;
             font-weight: 700;
-            color: #0b1c30;
+            color: #111827;
             margin: 0;
         }
         .ho-kpi-unit {
             font-size: 0.92rem;
             font-weight: 500;
-            color: #66758a;
+            color: #667085;
         }
         .ho-kpi-trend {
             margin-top: 0.9rem;
@@ -87,10 +87,10 @@ def _inject_styles() -> None:
             gap: 0.45rem;
             align-items: center;
             font-size: 0.78rem;
-            color: #66758a;
+            color: #667085;
         }
-        .ho-kpi-good { color: #006c49; font-weight: 600; }
-        .ho-kpi-bad { color: #ba1a1a; font-weight: 600; }
+        .ho-kpi-good { color: #2f6df6; font-weight: 600; }
+        .ho-kpi-bad { color: #c24141; font-weight: 600; }
         .ho-meta-list {
             display: grid;
             gap: 0.5rem;
@@ -107,24 +107,24 @@ def _inject_styles() -> None:
             padding-bottom: 0;
         }
         .ho-meta-key {
-            color: #66758a;
+            color: #667085;
             font-size: 0.86rem;
         }
         .ho-meta-value {
-            color: #0b1c30;
+            color: #111827;
             font-size: 0.88rem;
             font-weight: 600;
             text-align: right;
         }
         .ho-spec-card {
-            background: #f8fbff;
-            border: 1px solid #dde7f2;
-            border-radius: 0.6rem;
+            background: #f8faff;
+            border: 1px solid #e1e7f3;
+            border-radius: 0.85rem;
             padding: 0.95rem;
         }
         .ho-spec-card h4 {
             margin: 0 0 0.75rem 0;
-            color: #0f4c5c;
+            color: #1f4fd6;
             font-size: 0.96rem;
             font-weight: 700;
         }
@@ -134,16 +134,16 @@ def _inject_styles() -> None:
             gap: 0.75rem;
             margin-bottom: 0.45rem;
             font-size: 0.84rem;
-            color: #4c5a6c;
+            color: #4b5565;
         }
         .ho-spec-item:last-child { margin-bottom: 0; }
         .ho-section-spacer { height: 0.5rem; }
         .ho-chart-card {
-            background: rgba(255,255,255,0.96);
-            border: 1px solid #cfd8e3;
-            border-radius: 0.75rem;
+            background: #ffffff;
+            border: 1px solid #d9dfeb;
+            border-radius: 1rem;
             padding: 1rem 1rem 0.35rem 1rem;
-            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 8px 20px rgba(15, 23, 42, 0.03);
         }
         </style>
         """,

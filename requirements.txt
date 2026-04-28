@@ -2,3 +2,5 @@ lightgbm>=4.0,<5
 optuna>=4.0,<5
 pyarrow>=15.0,<20
 import-linter>=1.12,<2
+httpx>=0.28,<1
+pandera[pandas]>=0.20,<1

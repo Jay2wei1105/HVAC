@@ -1,6 +1,6 @@
 from .addon_base import BaseDomainAddon
 from .types import CleanResult, CleaningConfig
-from . import ingestion, time_index, mapper, quality_engine, interpolation, report
+from . import ingestion, time_index, mapper, quality_engine, interpolation, report, contracts
 import pandas as pd
 from typing import Optional, List
 
@@ -19,6 +19,8 @@ def run_pipeline(
     # 1. Ingestion — 純讀檔
     df = ingestion.load_csv(csv_path)
     raw_rows = len(df)
+    preclean = contracts.preclean_raw_frame(df)
+    df = preclean.df
     
     # 2. Schema discovery — 問 add-on 要 sensor 定義
     schema = addon.get_sensor_schema()
@@ -28,9 +30,12 @@ def run_pipeline(
     col_map = mapping_result.mapping
     df = mapper.apply_mapping(df, col_map)
     mapper.assert_required_columns(df, schema)  # 必要欄位檢查
+    contract_result = contracts.coerce_and_validate_sensor_frame(df, schema)
+    df = contract_result.df
     
     # 4. Time index — 解析時間欄、重建等距索引
     df = time_index.build(df, timestep_minutes)
+    time_contract_issues = contracts.validate_time_index(df)
     
     # 5. Shutdown removal — 依 add-on 指定的欄位移除停機時段
     cleaning_cfg = override_cleaning_config if override_cleaning_config else addon.get_cleaning_config()
@@ -68,6 +73,8 @@ def run_pipeline(
         flatline_count=flatline_count,
         interpolated_count=interp_count,
         cross_issues=cross_issues,
+        contract_issues=contract_result.issues + time_contract_issues,
+        cleaning_actions=preclean.stats | contract_result.stats,
     )
     
     return CleanResult(df=df, quality_report=qr, column_mapping=col_map, addon_id=addon.domain_id)

@@ -1,38 +1,7 @@
 import pandas as pd
-import numpy as np
 import re
 
 class DataService:
-    @staticmethod
-    def clean_hvac_data(df: pd.DataFrame):
-        stats = {"initial_rows": len(df), "duplicates_removed": 0, "outliers_detected": 0, "nulls_filled": 0}
-        initial_len = len(df)
-        df = df.drop_duplicates()
-        stats["duplicates_removed"] = int(initial_len - len(df))
-        for col in df.columns:
-            if str(col).lower() not in ['timestamp', 'time', 'ts', 'date'] and '時間' not in str(col):
-                df[col] = pd.to_numeric(df[col], errors='coerce')
-        stats["nulls_filled"] = int(df.isnull().sum().sum())
-        numeric_cols = df.select_dtypes(include=[np.number]).columns
-        if not numeric_cols.empty:
-            df[numeric_cols] = df[numeric_cols].interpolate(method='linear', limit_direction='both')
-        df = df.ffill().bfill()
-        outlier_total = 0
-        numeric_cols = df.select_dtypes(include=[np.number]).columns
-        for col in numeric_cols:
-            if any(k in str(col).lower() for k in ['power', 'kw', '電力']):
-                mask = df[col] < 0
-                outlier_total += int(mask.sum())
-                df.loc[mask, col] = 0
-            if any(k in str(col).lower() for k in ['temp', 'rt', '溫度']):
-                mask = (df[col] > 100) | (df[col] < -20)
-                outlier_total += int(mask.sum())
-                if not df[col].empty:
-                    df.loc[mask, col] = df[col].median()
-        stats["outliers_detected"] = int(outlier_total)
-        stats["final_rows"] = len(df)
-        return df, stats
-
     @staticmethod
     def suggest_mappings(columns: list):
         suggestions = []
@@ -118,3 +87,72 @@ class DataService:
             })
             
         return suggestions
+
+    @staticmethod
+    def suggest_equipment(mappings: list[dict]) -> dict:
+        """
+        Infer equipment families/counts from mapped targets and source names.
+        Returns editable default specs for frontend onboarding.
+        """
+
+        def _infer_count(rows: list[dict]) -> int:
+            if not rows:
+                return 0
+            ids = set()
+            for row in rows:
+                src = str(row.get("source", ""))
+                # Only treat explicit device numbering as count evidence:
+                # CHWP_1_*, CWP-2-*, CT 3 *, #1 ...
+                found = re.findall(r"(?:^|[_\-\s#])(\d{1,2})(?:$|[_\-\s])", src)
+                if found:
+                    ids.add(int(found[-1]))
+            if ids:
+                return max(ids)
+            # No explicit numbering: conservative default is single equipment,
+            # because one device often contributes multiple columns (power/freq/flow).
+            return 1
+
+        by_target = {}
+        for row in mappings:
+            tgt = row.get("target")
+            if not tgt:
+                continue
+            by_target.setdefault(tgt, []).append(row)
+
+        chiller_rows = by_target.get("chiller_power", []) + by_target.get("ch_freq", [])
+        chwp_rows = by_target.get("chwp_power", []) + by_target.get("chwp_freq", []) + by_target.get("chw_flow", [])
+        cwp_rows = by_target.get("cwp_power", []) + by_target.get("cwp_freq", []) + by_target.get("cw_flow", [])
+        ct_rows = by_target.get("ct_fan_power", []) + by_target.get("ct_fan_freq", [])
+
+        chiller_count = _infer_count(chiller_rows)
+        chwp_count = _infer_count(chwp_rows)
+        cwp_count = _infer_count(cwp_rows)
+        ct_count = _infer_count(ct_rows)
+
+        if chiller_count == 0 and by_target.get("total_power"):
+            chiller_count = 1
+
+        return {
+            "chillers": [
+                {"id": idx + 1, "rt": 500.0, "cop": 5.5}
+                for idx in range(chiller_count)
+            ],
+            "chwp": [
+                {"id": idx + 1, "kw": 22.0, "freq_max_hz": 60.0}
+                for idx in range(chwp_count)
+            ],
+            "cwp": [
+                {"id": idx + 1, "kw": 22.0, "freq_max_hz": 60.0}
+                for idx in range(cwp_count)
+            ],
+            "cooling_tower": [
+                {"id": idx + 1, "kw": 18.5, "freq_max_hz": 60.0}
+                for idx in range(ct_count)
+            ],
+            "detected": {
+                "chillers": chiller_count,
+                "chwp": chwp_count,
+                "cwp": cwp_count,
+                "cooling_tower": ct_count,
+            },
+        }

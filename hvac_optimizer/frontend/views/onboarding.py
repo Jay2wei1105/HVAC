@@ -137,9 +137,11 @@ def render() -> None:
             if "error" in diag:
                 st.error(diag["error"])
                 return
+            diag_stage = diag.get("diagnostic_stage", "upload_precheck")
+            final_label = "Stage 1 清理後列數" if diag_stage == "stage1_cleaned" else "上傳預檢後列數"
             c1, c2, c3, c4 = st.columns(4)
             c1.metric("原始列數", f"{diag.get('initial_rows', diag.get('raw_rows', 0)):,}")
-            c2.metric("清洗後列數", f"{diag.get('final_rows', 0):,}")
+            c2.metric(final_label, f"{diag.get('final_rows', 0):,}")
             c3.metric(
                 "完整率",
                 f"{diag.get('completeness', 0):.1%}" if diag.get("completeness") is not None else "—",
@@ -148,6 +150,8 @@ def render() -> None:
                 "異常比例",
                 f"{diag.get('anomaly_ratio', 0):.1%}" if diag.get("anomaly_ratio") is not None else "—",
             )
+            if diag_stage != "stage1_cleaned":
+                st.caption("目前顯示的是上傳預檢結果，只會移除空白列、重複列等明顯問題；正式 Stage 1 清理會在設備設定後執行。")
             if st.button("繼續：欄位對應", type="primary"):
                 st.session_state.ob_step = "mapping"
                 st.rerun()
@@ -161,6 +165,7 @@ def render() -> None:
             if "error" in sugg:
                 st.error(sugg["error"])
                 return
+            st.session_state.equipment_suggestion = sugg.get("equipment_suggestion", {})
             target_options = [
                 None,
                 "timestamp",
@@ -204,13 +209,133 @@ def render() -> None:
         st.markdown("---")
         with st.container(border=True):
             st.markdown('<p class="ho-section-title">設備規格</p>', unsafe_allow_html=True)
-            st.caption("用於訓練與最佳化參考；請依實際機台填寫。")
-            chillers = st.number_input("冰水主機台數", min_value=1, max_value=8, value=1, step=1)
-            rated_rt = st.number_input("單台額定冷凍噸 RT", min_value=50.0, max_value=2000.0, value=500.0, step=50.0)
-            rated_cop = st.number_input("額定 COP", min_value=2.0, max_value=10.0, value=5.5, step=0.1)
-            equipment_payload = {
-                "chillers": [{"id": idx + 1, "rt": rated_rt, "cop": rated_cop} for idx in range(int(chillers))]
+            st.caption("依據 CSV 欄位自動偵測設備類型與台數；請確認後再訓練。")
+
+            suggestion = st.session_state.get("equipment_suggestion") or {}
+            detected = suggestion.get("detected") if isinstance(suggestion, dict) else {}
+            if isinstance(detected, dict):
+                st.info(
+                    "自動偵測："
+                    f" 主機 {detected.get('chillers', 0)} 台、"
+                    f" CHWP {detected.get('chwp', 0)} 台、"
+                    f" CWP {detected.get('cwp', 0)} 台、"
+                    f" CT {detected.get('cooling_tower', 0)} 台"
+                )
+
+            equipment_payload: dict[str, list[dict[str, float | int]]] = {
+                "chillers": [],
+                "chwp": [],
+                "cwp": [],
+                "cooling_tower": [],
             }
+
+            chillers = suggestion.get("chillers") if isinstance(suggestion, dict) else None
+            chwp_list = suggestion.get("chwp") if isinstance(suggestion, dict) else None
+            cwp_list = suggestion.get("cwp") if isinstance(suggestion, dict) else None
+            ct_list = suggestion.get("cooling_tower") if isinstance(suggestion, dict) else None
+
+            if isinstance(chillers, list) and chillers:
+                st.markdown("**冰水主機（Chiller）**")
+                for idx, item in enumerate(chillers):
+                    c1, c2 = st.columns(2)
+                    with c1:
+                        rt = st.number_input(
+                            f"CH-{idx+1} 額定 RT",
+                            min_value=50.0,
+                            max_value=2000.0,
+                            value=float(item.get("rt", 500.0)),
+                            step=10.0,
+                            key=f"eq_ch_rt_{idx}",
+                        )
+                    with c2:
+                        cop = st.number_input(
+                            f"CH-{idx+1} 額定 COP",
+                            min_value=2.0,
+                            max_value=12.0,
+                            value=float(item.get("cop", 5.5)),
+                            step=0.1,
+                            key=f"eq_ch_cop_{idx}",
+                        )
+                    equipment_payload["chillers"].append({"id": idx + 1, "rt": rt, "cop": cop})
+
+            if isinstance(chwp_list, list) and chwp_list:
+                st.markdown("**冰水泵（CHWP）**")
+                for idx, item in enumerate(chwp_list):
+                    c1, c2 = st.columns(2)
+                    with c1:
+                        kw = st.number_input(
+                            f"CHWP-{idx+1} 額定功率 kW",
+                            min_value=1.0,
+                            max_value=500.0,
+                            value=float(item.get("kw", 22.0)),
+                            step=0.5,
+                            key=f"eq_chwp_kw_{idx}",
+                        )
+                    with c2:
+                        hz = st.number_input(
+                            f"CHWP-{idx+1} 最高頻率 Hz",
+                            min_value=20.0,
+                            max_value=120.0,
+                            value=float(item.get("freq_max_hz", 60.0)),
+                            step=1.0,
+                            key=f"eq_chwp_hz_{idx}",
+                        )
+                    equipment_payload["chwp"].append({"id": idx + 1, "kw": kw, "freq_max_hz": hz})
+
+            if isinstance(cwp_list, list) and cwp_list:
+                st.markdown("**冷卻水泵（CWP）**")
+                for idx, item in enumerate(cwp_list):
+                    c1, c2 = st.columns(2)
+                    with c1:
+                        kw = st.number_input(
+                            f"CWP-{idx+1} 額定功率 kW",
+                            min_value=1.0,
+                            max_value=500.0,
+                            value=float(item.get("kw", 22.0)),
+                            step=0.5,
+                            key=f"eq_cwp_kw_{idx}",
+                        )
+                    with c2:
+                        hz = st.number_input(
+                            f"CWP-{idx+1} 最高頻率 Hz",
+                            min_value=20.0,
+                            max_value=120.0,
+                            value=float(item.get("freq_max_hz", 60.0)),
+                            step=1.0,
+                            key=f"eq_cwp_hz_{idx}",
+                        )
+                    equipment_payload["cwp"].append({"id": idx + 1, "kw": kw, "freq_max_hz": hz})
+
+            if isinstance(ct_list, list) and ct_list:
+                st.markdown("**冷卻塔（CT）**")
+                for idx, item in enumerate(ct_list):
+                    c1, c2 = st.columns(2)
+                    with c1:
+                        kw = st.number_input(
+                            f"CT-{idx+1} 風扇額定功率 kW",
+                            min_value=1.0,
+                            max_value=300.0,
+                            value=float(item.get("kw", 18.5)),
+                            step=0.5,
+                            key=f"eq_ct_kw_{idx}",
+                        )
+                    with c2:
+                        hz = st.number_input(
+                            f"CT-{idx+1} 最高頻率 Hz",
+                            min_value=20.0,
+                            max_value=120.0,
+                            value=float(item.get("freq_max_hz", 60.0)),
+                            step=1.0,
+                            key=f"eq_ct_hz_{idx}",
+                        )
+                    equipment_payload["cooling_tower"].append({"id": idx + 1, "kw": kw, "freq_max_hz": hz})
+
+            if not any(equipment_payload.values()):
+                st.warning("目前無法從欄位自動判斷設備，至少請填一台冰水主機。")
+                fallback_rt = st.number_input("CH-1 額定 RT", min_value=50.0, max_value=2000.0, value=500.0, step=10.0)
+                fallback_cop = st.number_input("CH-1 額定 COP", min_value=2.0, max_value=12.0, value=5.5, step=0.1)
+                equipment_payload["chillers"] = [{"id": 1, "rt": fallback_rt, "cop": fallback_cop}]
+
             if st.button("執行清洗與訓練", type="primary"):
                 with st.spinner("Stage 1–2 管線執行中…"):
                     res = api_client.save_equipment(st.session_state.site_id, equipment_payload)

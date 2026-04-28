@@ -67,3 +67,49 @@ def test_interchangeability_mock_addon():
     
     assert result.addon_id == "mock"
     assert "val_1" in result.df.columns
+
+
+def test_pipeline_preclean_and_schema_contract(tmp_path):
+    raw = pd.DataFrame(
+        [
+            {
+                " time ": "2024-01-01 00:00:00",
+                " CHWS ": "7.0",
+                "CHWR": "12.0",
+                "OA_Temp": "29.0",
+                "SYS_kW": "120.0",
+            },
+            {
+                " time ": "2024-01-01 00:15:00",
+                " CHWS ": "bad-value",
+                "CHWR": "12.2",
+                "OA_Temp": "29.3",
+                "SYS_kW": "121.0",
+            },
+            {
+                " time ": "2024-01-01 00:15:00",
+                " CHWS ": "bad-value",
+                "CHWR": "12.2",
+                "OA_Temp": "29.3",
+                "SYS_kW": "121.0",
+            },
+            {
+                " time ": None,
+                " CHWS ": None,
+                "CHWR": None,
+                "OA_Temp": None,
+                "SYS_kW": None,
+            },
+        ]
+    )
+    csv_path = tmp_path / "contract_dirty.csv"
+    raw.to_csv(csv_path, index=False)
+
+    result = run_pipeline(str(csv_path), HVACAddon(), timestep_minutes=15)
+
+    assert "chw_supply_temp" in result.df.columns
+    assert len(result.df) == 2
+    assert result.quality_report.cleaning_actions["duplicate_rows_removed"] == 1
+    assert result.quality_report.cleaning_actions["empty_rows_removed"] == 1
+    assert result.quality_report.cleaning_actions["numeric_coercion_failures"] == 1
+    assert result.quality_report.contract_issues == []

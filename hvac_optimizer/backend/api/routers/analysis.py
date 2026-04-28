@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 import pandas as pd
 from fastapi import APIRouter, HTTPException
 
@@ -9,6 +10,21 @@ from hvac_optimizer.backend.services.analytics_service import AnalyticsService
 from hvac_optimizer.backend.services.core_hvac_service import CoreHVACService
 
 router = APIRouter()
+
+
+def _json_safe(value):
+    """
+    Convert NaN/Inf recursively so FastAPI JSON serialization won't fail.
+    """
+    if isinstance(value, dict):
+        return {k: _json_safe(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_json_safe(v) for v in value]
+    if isinstance(value, tuple):
+        return tuple(_json_safe(v) for v in value)
+    if isinstance(value, float):
+        return value if math.isfinite(value) else None
+    return value
 
 
 @router.get("/realtime", response_model=RealtimeAnalysisResponse)
@@ -72,7 +88,17 @@ async def get_analytics(site_id: str):
     ds = ACTIVE_DATASETS[site_id]
     cleaned_parquet = ds.get("cleaned_parquet_path")
     if cleaned_parquet:
-        df = pd.read_parquet(cleaned_parquet).reset_index().rename(columns={"index": "timestamp"})
+        try:
+            df = pd.read_parquet(cleaned_parquet).reset_index().rename(columns={"index": "timestamp"})
+        except FileNotFoundError:
+            cleaned_csv = ds.get("cleaned_path")
+            if cleaned_csv:
+                df = pd.read_csv(cleaned_csv)
+            else:
+                raise HTTPException(
+                    status_code=404,
+                    detail="Cleaned dataset file not found. Please re-import or retrain this project.",
+                )
     elif ds.get("cleaned_path"):
         df = pd.read_csv(ds["cleaned_path"])
     else:
@@ -92,7 +118,7 @@ async def get_analytics(site_id: str):
         "dataset_id": ds.get("dataset_id"),
         "source_filename": ds.get("source_filename") or ds.get("original_path"),
     }
-    return analytics
+    return _json_safe(analytics)
 
 
 @router.post("/optimize")

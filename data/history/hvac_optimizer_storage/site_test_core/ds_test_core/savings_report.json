@@ -12,25 +12,25 @@
     "ct_hz": 42.0
   },
   "best_solution": {
-    "energy_cost": 501.65374755859375,
+    "energy_cost": 501.6393127441406,
     "setpoints": {
-      "chw_supply_temp": 6.177634405779204,
-      "chwp_freq": 51.74993031208815,
-      "ct_freq": 40.56141183643403,
-      "cw_supply_temp": 28.094874363586282
+      "chw_supply_temp": 6.2907469257406285,
+      "chwp_freq": 49.992967720283374,
+      "ct_freq": 45.00690654518441,
+      "cw_supply_temp": 27.79647361066188
     },
-    "comfort_penalty": 2.0815743904387567,
-    "total_score": 891.5541011535138,
-    "q_demand_pred": 350.16178418665925,
-    "q_required_min": 367.6698733959922,
-    "q_capability": 386.7752371574639,
+    "comfort_penalty": 2.7541080315278847,
+    "total_score": 914.5312556569834,
+    "q_demand_pred": 356.75919707154895,
+    "q_required_min": 374.5971569251264,
+    "q_capability": 379.01498425561374,
     "feasible": true
   },
   "recommendations": [
     "Optimization result satisfies the cooling-capability safety constraint.",
-    "Q-demand P90 = 350.2 kW, required minimum with margin = 367.7 kW.",
-    "Estimated Q capability at the recommended setpoints = 386.8 kW."
+    "Q-demand P90 = 356.8 kW, required minimum with margin = 374.6 kW.",
+    "Estimated Q capability at the recommended setpoints = 379.0 kW."
   ],
-  "feasible_trials": 16,
+  "feasible_trials": 15,
   "total_trials": 40
 }

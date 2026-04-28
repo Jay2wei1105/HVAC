@@ -33,16 +33,19 @@ def inject_custom_styles():
         header[data-testid="stHeader"] {background: transparent;}
 
         :root {
-            --ho-primary: #003441;
-            --ho-primary-container: #0f4c5c;
-            --ho-secondary: #006c49;
-            --ho-background: #f8f9ff;
+            --ho-primary: #2f6df6;
+            --ho-primary-container: #1f5ae0;
+            --ho-secondary: #4f46e5;
+            --ho-background: #f7f7f5;
             --ho-surface: #ffffff;
-            --ho-surface-low: #eff4ff;
-            --ho-on-surface: #0b1c30;
-            --ho-on-variant: #40484b;
-            --ho-outline: #c0c8cb;
-            --ho-error: #ba1a1a;
+            --ho-surface-low: #f2f4f8;
+            --ho-on-surface: #111827;
+            --ho-on-variant: #596275;
+            --ho-outline: #d8deea;
+            --ho-error: #c24141;
+            --ho-radius-sm: 10px;
+            --ho-radius-md: 14px;
+            --ho-radius-lg: 18px;
         }
 
         html, body, [class*="css"] {
@@ -50,7 +53,13 @@ def inject_custom_styles():
             color: var(--ho-on-surface);
         }
         .stApp {
-            background: linear-gradient(180deg, var(--ho-background) 0%, #eef2ff 55%, var(--ho-background) 100%) !important;
+            background: radial-gradient(circle at 0% 0%, #eef3ff 0%, transparent 32%),
+                        radial-gradient(circle at 100% 8%, #f4f6ff 0%, transparent 28%),
+                        var(--ho-background) !important;
+        }
+        section[data-testid="stMain"] {
+            color: rgba(255, 255, 255, 1) !important;
+            background-color: rgba(255, 255, 255, 1) !important;
         }
 
         /* Top nav */
@@ -63,13 +72,13 @@ def inject_custom_styles():
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e8ebf2;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 clamp(16px, 3vw, 32px);
             z-index: 1000020;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04);
         }
         .nav-inner {
             display: flex;
@@ -86,7 +95,7 @@ def inject_custom_styles():
         .nav-logo {
             font-size: 1.2rem;
             font-weight: 700;
-            color: var(--ho-primary-container);
+            color: rgba(5, 5, 5, 1);
             letter-spacing: -0.04em;
             white-space: nowrap;
         }
@@ -100,7 +109,7 @@ def inject_custom_styles():
         .nav-item {
             font-size: 0.875rem;
             font-weight: 500;
-            color: #64748b;
+            color: #5c667a;
             text-decoration: none;
             padding: 0.35rem 0;
             border-bottom: 2px solid transparent;
@@ -108,8 +117,8 @@ def inject_custom_styles():
         }
         .nav-item:hover { color: var(--ho-primary-container); }
         .nav-item.active {
-            color: var(--ho-primary-container);
-            border-bottom-color: var(--ho-primary-container);
+            color: rgba(12, 13, 13, 1);
+            border-bottom-color: #1d4ed8;
         }
         .nav-actions {
             display: flex;
@@ -130,40 +139,57 @@ def inject_custom_styles():
 
         /* Streamlit controls */
         .stButton > button {
-            border-radius: 0.375rem !important;
-            font-weight: 500 !important;
-            transition: transform 0.12s ease, box-shadow 0.12s ease !important;
+            border-radius: var(--ho-radius-md) !important;
+            font-weight: 600 !important;
+            transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease !important;
         }
         .stButton > button[kind="primary"] {
-            background: var(--ho-primary-container) !important;
+            background: linear-gradient(180deg, #2f6df6 0%, #235bdf 100%) !important;
             color: #fff !important;
             border: none !important;
-            box-shadow: 0 1px 2px rgba(15, 76, 92, 0.25) !important;
+            box-shadow: 0 8px 20px rgba(47, 109, 246, 0.24) !important;
         }
         .stButton > button[kind="primary"]:hover {
-            background: #0c3d4a !important;
-            box-shadow: 0 2px 8px rgba(15, 76, 92, 0.35) !important;
+            background: linear-gradient(180deg, #2b67eb 0%, #1f56d6 100%) !important;
+            box-shadow: 0 10px 22px rgba(47, 109, 246, 0.30) !important;
         }
         .stButton > button[kind="secondary"] {
             background: var(--ho-surface) !important;
-            border: 1px solid var(--ho-outline) !important;
+            border: 1px solid #d4d9e3 !important;
             color: var(--ho-on-surface) !important;
         }
         .stButton > button:active { transform: scale(0.98) !important; }
 
         div[data-testid="stVerticalBlockBorderWrapper"] {
-            border-radius: 0.75rem !important;
+            border-radius: var(--ho-radius-lg) !important;
             border-color: var(--ho-outline) !important;
             background: var(--ho-surface) !important;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06) !important;
-            padding: 0.25rem 0.5rem !important;
+            box-shadow: 0 1px 2px rgba(17, 24, 39, 0.05), 0 10px 24px rgba(17, 24, 39, 0.03) !important;
+            padding: 0.45rem 0.7rem !important;
+        }
+        div.stVerticalBlock.st-emotion-cache-1gz5zxc {
+            color: rgba(255, 255, 255, 1) !important;
+            background-color: unset !important;
+            background: unset !important;
+            background-clip: unset !important;
+            -webkit-background-clip: unset !important;
+            border-color: rgba(0, 0, 0, 1) !important;
+            border-image: none !important;
         }
 
         [data-testid="stFileUploader"] {
             border: 2px dashed var(--ho-outline) !important;
-            border-radius: 0.5rem !important;
+            border-radius: var(--ho-radius-md) !important;
             padding: 1rem !important;
             background: var(--ho-surface-low) !important;
+        }
+        [data-testid="stFileUploaderDropzone"] {
+            background-color: var(--ho-surface-low) !important;
+            background: unset !important;
+            color: rgba(255, 255, 255, 1) !important;
+        }
+        span.st-emotion-cache-1x4hur2 {
+            color: rgba(10, 10, 10, 0.6) !important;
         }
         [data-testid="stFileUploader"]:hover {
             background: #e5eeff !important;
@@ -172,7 +198,7 @@ def inject_custom_styles():
         div[data-testid="stMetric"] {
             background: var(--ho-surface);
             border: 1px solid var(--ho-outline);
-            border-radius: 0.5rem;
+            border-radius: var(--ho-radius-md);
             padding: 0.75rem 1rem !important;
             box-shadow: 0 1px 2px rgba(0,0,0,0.04);
         }
@@ -191,7 +217,7 @@ def inject_custom_styles():
             color: var(--ho-on-surface) !important;
         }
         div[data-baseweb="select"] > div {
-            border-radius: 0.5rem !important;
+            border-radius: var(--ho-radius-md) !important;
         }
 
         /* Onboarding stepper (injected HTML) */

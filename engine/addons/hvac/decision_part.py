@@ -27,14 +27,23 @@ class HVACDecisionPart:
         trial_values: dict[str, float],
     ) -> float | None:
         row = scenario_df.iloc[-1]
-        supply = float(trial_values.get("chw_supply_temp", row.get("chw_supply_temp", np.nan)))
-        return_temp = float(row.get("chw_return_temp", np.nan))
+
+        def _last_valid(series_name: str, default: float = np.nan) -> float:
+            if series_name not in scenario_df.columns:
+                return float(default)
+            series = scenario_df[series_name].dropna()
+            if series.empty:
+                return float(default)
+            return float(series.iloc[-1])
+
+        supply = float(trial_values.get("chw_supply_temp", _last_valid("chw_supply_temp")))
+        return_temp = _last_valid("chw_return_temp")
         if np.isnan(supply) or np.isnan(return_temp):
             return None
 
-        base_flow = row.get("chw_flow_lpm", np.nan)
-        trial_freq = float(trial_values.get("chwp_freq", row.get("chwp_freq", np.nan)))
-        base_freq = float(row.get("chwp_freq", np.nan))
+        base_flow = _last_valid("chw_flow_lpm")
+        trial_freq = float(trial_values.get("chwp_freq", _last_valid("chwp_freq")))
+        base_freq = _last_valid("chwp_freq")
 
         if pd.notna(base_flow):
             flow_lpm = float(base_flow)
@@ -49,7 +58,7 @@ class HVACDecisionPart:
         delta_t = max(return_temp - supply, 0.0)
         q_cap = flow_lpm / 60.0 * RHO_WATER * CP_WATER * delta_t
 
-        base_count = row.get("chiller_count", np.nan)
+        base_count = _last_valid("chiller_count")
         trial_count = float(trial_values.get("chiller_count", base_count if pd.notna(base_count) else 1.0))
         if pd.notna(base_count) and float(base_count) > 0:
             q_cap *= max(trial_count, 0.0) / float(base_count)

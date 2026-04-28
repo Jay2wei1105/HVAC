@@ -21,9 +21,6 @@ class HVACQDemandPart:
         feat_df.index = pd.to_datetime(feat_df.index, errors="coerce")
         feat_df = feat_df[feat_df.index.notnull()].sort_index()
 
-        if "is_steady" in feat_df.columns:
-            feat_df = feat_df[feat_df["is_steady"].fillna(False)].copy()
-
         hour = feat_df.index.hour
         dow = feat_df.index.dayofweek
         feat_df["hour_sin"] = np.sin(2 * np.pi * hour / 24)
@@ -55,7 +52,14 @@ class HVACQDemandPart:
         for lag in usable_lags:
             feat_df[f"q_lag_{lag}"] = feat_df[target].shift(lag)
 
-        return feat_df.dropna()
+        # Keep rows with a valid target. LightGBM can consume NaNs in optional
+        # features, so we should not throw away the whole frame for sparse columns.
+        feat_df = feat_df[feat_df[target].notna()].copy()
+
+        if "is_steady" in feat_df.columns:
+            feat_df["is_steady"] = feat_df["is_steady"].fillna(False).astype(bool)
+
+        return feat_df
 
     def get_feature_columns(
         self,
@@ -63,7 +67,11 @@ class HVACQDemandPart:
         target: str = "q_delivered_kw",
     ) -> list[str]:
         excluded = {target, "is_steady"}
-        return [c for c in df.columns if c not in excluded and not c.startswith("_")]
+        return [
+            c
+            for c in df.columns
+            if c not in excluded and not c.startswith("_") and df[c].notna().any()
+        ]
 
     def get_model_preset(self) -> dict[str, float | int | str]:
         return {

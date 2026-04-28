@@ -1,9 +1,9 @@
 {
   "site_manual_core": {
     "dataset_id": "ds_manual_core",
-    "original_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\manual_stage_flow.csv",
-    "cleaned_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_manual_core\\ds_manual_core\\stage1_cleaned.csv",
-    "cleaned_parquet_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_manual_core\\ds_manual_core\\stage1_cleaned.parquet",
+    "original_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/manual_stage_flow.csv",
+    "cleaned_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_manual_core/ds_manual_core/stage1_cleaned.csv",
+    "cleaned_parquet_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_manual_core/ds_manual_core/stage1_cleaned.parquet",
     "mapping": [
       {
         "source": "time",
@@ -86,7 +86,7 @@
     },
     "ml_results": {
       "status": "success",
-      "model_bundle_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_manual_core\\ds_manual_core\\stage2_model_bundle.joblib",
+      "model_bundle_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_manual_core/ds_manual_core/stage2_model_bundle.joblib",
       "power_metrics": {
         "cv_mape_best": 0.016673737540642573,
         "holdout_mape": 0.010160280630504651,
@@ -1304,14 +1304,15 @@
           "meta": {}
         }
       ]
-    }
+    },
+    "quality_report_path": null
   },
   "site_default": {
     "dataset_id": "ds_7ec2c7f7",
-    "original_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\ds_7ec2c7f7_hvac_monthly_real.csv",
-    "cleaned_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_default\\ds_7ec2c7f7\\stage1_cleaned.csv",
-    "cleaned_parquet_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_default\\ds_7ec2c7f7\\stage1_cleaned.parquet",
-    "quality_report_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_default\\ds_7ec2c7f7\\quality_report.html",
+    "original_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/ds_7ec2c7f7_hvac_monthly_real.csv",
+    "cleaned_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_default/ds_7ec2c7f7/stage1_cleaned.csv",
+    "cleaned_parquet_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_default/ds_7ec2c7f7/stage1_cleaned.parquet",
+    "quality_report_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_default/ds_7ec2c7f7/quality_report.html",
     "cleaning_stats": {
       "addon_id": "hvac",
       "raw_rows": 8633,
@@ -1677,7 +1678,7 @@
     "active_history_id": "ih_3ee18ce1b796",
     "ml_results": {
       "status": "success",
-      "model_bundle_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_default\\ds_7ec2c7f7\\stage2_model_bundle.joblib",
+      "model_bundle_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_default/ds_7ec2c7f7/stage2_model_bundle.joblib",
       "power_metrics": {
         "cv_mape_best": 0.12729551870195568,
         "holdout_mape": 0.021878667273658274,
@@ -1725,7 +1726,7 @@
   },
   "site_trace_cb5a1f": {
     "dataset_id": "ds_42d3f7eb",
-    "original_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\ds_42d3f7eb_flow.csv",
+    "original_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/ds_42d3f7eb_flow.csv",
     "cleaned_path": null,
     "cleaned_parquet_path": null,
     "quality_report_path": null,
@@ -1849,7 +1850,7 @@
   },
   "site_trace_185225": {
     "dataset_id": "ds_408dd9e9",
-    "original_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\ds_408dd9e9_flow.csv",
+    "original_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/ds_408dd9e9_flow.csv",
     "cleaned_path": null,
     "cleaned_parquet_path": null,
     "quality_report_path": null,
@@ -1945,10 +1946,10 @@
   },
   "site_proj_2552ee94": {
     "dataset_id": "ds_745adcf8",
-    "original_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\ds_745adcf8_flow.csv",
-    "cleaned_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_proj_2552ee94\\ds_745adcf8\\stage1_cleaned.csv",
-    "cleaned_parquet_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_proj_2552ee94\\ds_745adcf8\\stage1_cleaned.parquet",
-    "quality_report_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_proj_2552ee94\\ds_745adcf8\\quality_report.html",
+    "original_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/ds_745adcf8_flow.csv",
+    "cleaned_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_proj_2552ee94/ds_745adcf8/stage1_cleaned.csv",
+    "cleaned_parquet_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_proj_2552ee94/ds_745adcf8/stage1_cleaned.parquet",
+    "quality_report_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_proj_2552ee94/ds_745adcf8/quality_report.html",
     "cleaning_stats": {
       "addon_id": "hvac",
       "raw_rows": 240,
@@ -2226,7 +2227,7 @@
     "active_history_id": "ih_cbf38351c47f",
     "ml_results": {
       "status": "success",
-      "model_bundle_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_proj_2552ee94\\ds_745adcf8\\stage2_model_bundle.joblib",
+      "model_bundle_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_proj_2552ee94/ds_745adcf8/stage2_model_bundle.joblib",
       "power_metrics": {
         "cv_mape_best": 0.01836971547477609,
         "holdout_mape": 0.015043060090628602,
@@ -3489,7 +3490,7 @@
   },
   "site_4765b738": {
     "dataset_id": "ds_69c6a89a",
-    "original_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\ds_69c6a89a_hvac_monthly_real.csv",
+    "original_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/ds_69c6a89a_hvac_monthly_real.csv",
     "cleaned_path": null,
     "cleaned_parquet_path": null,
     "quality_report_path": null,
@@ -3527,5 +3528,1356 @@
     "mpc_summary": null,
     "report_summary": null,
     "dashboard_payload": null
+  },
+  "site_proj_66a5d800": {
+    "dataset_id": "ds_3005558c",
+    "original_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/ds_3005558c_hvac_monthly_real.csv",
+    "cleaned_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_proj_66a5d800/ds_3005558c/stage1_cleaned.csv",
+    "cleaned_parquet_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_proj_66a5d800/ds_3005558c/stage1_cleaned.parquet",
+    "quality_report_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_proj_66a5d800/ds_3005558c/quality_report.html",
+    "cleaning_stats": {
+      "addon_id": "hvac",
+      "raw_rows": 8633,
+      "final_rows": 2880,
+      "completeness": 0.8967470760233918,
+      "missing_ratio": 0.10325292397660824,
+      "anomaly_ratio": 0.0023166917641607786,
+      "shutdown_removed": 209,
+      "spike_count": 8,
+      "flatline_count": 12,
+      "interpolated_count": 881,
+      "range_violations": [
+        {
+          "column": "chw_supply_temp",
+          "violation_count": 2,
+          "range": [
+            3,
+            15
+          ]
+        },
+        {
+          "column": "cw_supply_temp",
+          "violation_count": 2633,
+          "range": [
+            20,
+            40
+          ]
+        },
+        {
+          "column": "cw_return_temp",
+          "violation_count": 179,
+          "range": [
+            25,
+            45
+          ]
+        },
+        {
+          "column": "ch_kw",
+          "violation_count": 49,
+          "range": [
+            0,
+            3000
+          ]
+        }
+      ],
+      "cross_issues": [
+        {
+          "rule": "energy_balance",
+          "bad_rows": 124,
+          "hint": "子設備功率加總與總功率偏差 > 5%"
+        },
+        {
+          "rule": "chw_delta_t",
+          "bad_rows": 1223,
+          "hint": "冰水 ΔT 超出 1~12°C 合理範圍"
+        }
+      ],
+      "should_halt": false,
+      "halt_reason": ""
+    },
+    "columns": [
+      "ts",
+      "OA_Temp",
+      "OA_RH",
+      "CHW_Flow",
+      "CHW_Supply_Temp",
+      "CHW_Return_Temp",
+      "CW_Supply_Temp",
+      "CW_Return_Temp",
+      "CHWP_Hz",
+      "CWP_Hz",
+      "CT_Hz",
+      "CH_kW",
+      "CHWP_kW",
+      "CWP_kW",
+      "CT_kW",
+      "Total_kW"
+    ],
+    "mapping": [
+      {
+        "source": "ts",
+        "target": "timestamp"
+      },
+      {
+        "source": "OA_Temp",
+        "target": "ambient_temp"
+      },
+      {
+        "source": "OA_RH",
+        "target": "oa_rh"
+      },
+      {
+        "source": "CHW_Flow",
+        "target": "chw_flow"
+      },
+      {
+        "source": "CHW_Supply_Temp",
+        "target": "chws_temp"
+      },
+      {
+        "source": "CHW_Return_Temp",
+        "target": "chwr_temp"
+      },
+      {
+        "source": "CW_Supply_Temp",
+        "target": "cws_temp"
+      },
+      {
+        "source": "CW_Return_Temp",
+        "target": "cwr_temp"
+      },
+      {
+        "source": "CHWP_Hz",
+        "target": "chwp_freq"
+      },
+      {
+        "source": "CWP_Hz",
+        "target": "cwp_freq"
+      },
+      {
+        "source": "CT_Hz",
+        "target": "cws_temp"
+      },
+      {
+        "source": "CH_kW",
+        "target": "chiller_power"
+      },
+      {
+        "source": "CHWP_kW",
+        "target": "chwp_power"
+      },
+      {
+        "source": "CWP_kW",
+        "target": "cwp_power"
+      },
+      {
+        "source": "CT_kW",
+        "target": "ct_fan_power"
+      },
+      {
+        "source": "Total_kW",
+        "target": "total_power"
+      }
+    ],
+    "equipment": {
+      "chillers": [
+        {
+          "id": 1,
+          "rt": 500.0,
+          "cop": 5.5
+        }
+      ]
+    },
+    "import_history": [
+      {
+        "history_id": "ih_631c91b5cc55",
+        "dataset_id": "ds_3005558c",
+        "cleaned_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_proj_66a5d800/ds_3005558c/stage1_cleaned.csv",
+        "original_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/ds_3005558c_hvac_monthly_real.csv",
+        "source_filename": "ds_3005558c_hvac_monthly_real.csv",
+        "range_start": null,
+        "range_end": null,
+        "row_count": 2880,
+        "completed_at": "2026-04-28T17:06:17.177614+00:00",
+        "mapping": [
+          {
+            "source": "ts",
+            "target": "timestamp"
+          },
+          {
+            "source": "OA_Temp",
+            "target": "ambient_temp"
+          },
+          {
+            "source": "OA_RH",
+            "target": "oa_rh"
+          },
+          {
+            "source": "CHW_Flow",
+            "target": "chw_flow"
+          },
+          {
+            "source": "CHW_Supply_Temp",
+            "target": "chws_temp"
+          },
+          {
+            "source": "CHW_Return_Temp",
+            "target": "chwr_temp"
+          },
+          {
+            "source": "CW_Supply_Temp",
+            "target": "cws_temp"
+          },
+          {
+            "source": "CW_Return_Temp",
+            "target": "cwr_temp"
+          },
+          {
+            "source": "CHWP_Hz",
+            "target": "chwp_freq"
+          },
+          {
+            "source": "CWP_Hz",
+            "target": "cwp_freq"
+          },
+          {
+            "source": "CT_Hz",
+            "target": "cws_temp"
+          },
+          {
+            "source": "CH_kW",
+            "target": "chiller_power"
+          },
+          {
+            "source": "CHWP_kW",
+            "target": "chwp_power"
+          },
+          {
+            "source": "CWP_kW",
+            "target": "cwp_power"
+          },
+          {
+            "source": "CT_kW",
+            "target": "ct_fan_power"
+          },
+          {
+            "source": "Total_kW",
+            "target": "total_power"
+          }
+        ],
+        "equipment": {
+          "chillers": [
+            {
+              "id": 1,
+              "rt": 500.0,
+              "cop": 5.5
+            }
+          ]
+        },
+        "ml_results": {
+          "status": "success",
+          "model_bundle_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_proj_66a5d800/ds_3005558c/stage2_model_bundle.joblib",
+          "power_metrics": {
+            "cv_mape_best": 0.13010644005834776,
+            "holdout_mape": 0.02309733678126326,
+            "holdout_cv_rmse": 0.03363591946589943,
+            "holdout_mae": 0.9942001804534625
+          },
+          "power_top_features": [
+            {
+              "feature": "chw_delta_t",
+              "importance": 0.5856438279151917
+            },
+            {
+              "feature": "q_delivered_kw",
+              "importance": 0.24365469813346863
+            },
+            {
+              "feature": "ch_kw",
+              "importance": 0.07022947818040848
+            },
+            {
+              "feature": "system_kw_per_rt",
+              "importance": 0.05429217591881752
+            },
+            {
+              "feature": "chw_return_temp",
+              "importance": 0.031805288046598434
+            }
+          ],
+          "q_demand_metrics": {
+            "status": "skipped",
+            "message": "Not enough q_demand samples after feature building (0 rows). Need at least 12.",
+            "coverage": null,
+            "pinball_holdout": null,
+            "baseline_pinball_holdout": null,
+            "pinball_improvement": null,
+            "validation": {}
+          },
+          "q_demand_top_features": [],
+          "r2_score": 0.9769026632187368
+        },
+        "cleaning_stats": {
+          "addon_id": "hvac",
+          "raw_rows": 8633,
+          "final_rows": 2880,
+          "completeness": 0.8967470760233918,
+          "missing_ratio": 0.10325292397660824,
+          "anomaly_ratio": 0.0023166917641607786,
+          "shutdown_removed": 209,
+          "spike_count": 8,
+          "flatline_count": 12,
+          "interpolated_count": 881,
+          "range_violations": [
+            {
+              "column": "chw_supply_temp",
+              "violation_count": 2,
+              "range": [
+                3,
+                15
+              ]
+            },
+            {
+              "column": "cw_supply_temp",
+              "violation_count": 2633,
+              "range": [
+                20,
+                40
+              ]
+            },
+            {
+              "column": "cw_return_temp",
+              "violation_count": 179,
+              "range": [
+                25,
+                45
+              ]
+            },
+            {
+              "column": "ch_kw",
+              "violation_count": 49,
+              "range": [
+                0,
+                3000
+              ]
+            }
+          ],
+          "cross_issues": [
+            {
+              "rule": "energy_balance",
+              "bad_rows": 124,
+              "hint": "子設備功率加總與總功率偏差 > 5%"
+            },
+            {
+              "rule": "chw_delta_t",
+              "bad_rows": 1223,
+              "hint": "冰水 ΔT 超出 1~12°C 合理範圍"
+            }
+          ],
+          "should_halt": false,
+          "halt_reason": ""
+        },
+        "columns": [
+          "ts",
+          "OA_Temp",
+          "OA_RH",
+          "CHW_Flow",
+          "CHW_Supply_Temp",
+          "CHW_Return_Temp",
+          "CW_Supply_Temp",
+          "CW_Return_Temp",
+          "CHWP_Hz",
+          "CWP_Hz",
+          "CT_Hz",
+          "CH_kW",
+          "CHWP_kW",
+          "CWP_kW",
+          "CT_kW",
+          "Total_kW"
+        ]
+      }
+    ],
+    "active_history_id": "ih_631c91b5cc55",
+    "ml_results": {
+      "status": "success",
+      "model_bundle_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_proj_66a5d800/ds_3005558c/stage2_model_bundle.joblib",
+      "power_metrics": {
+        "cv_mape_best": 0.13010644005834776,
+        "holdout_mape": 0.02309733678126326,
+        "holdout_cv_rmse": 0.03363591946589943,
+        "holdout_mae": 0.9942001804534625
+      },
+      "power_top_features": [
+        {
+          "feature": "chw_delta_t",
+          "importance": 0.5856438279151917
+        },
+        {
+          "feature": "q_delivered_kw",
+          "importance": 0.24365469813346863
+        },
+        {
+          "feature": "ch_kw",
+          "importance": 0.07022947818040848
+        },
+        {
+          "feature": "system_kw_per_rt",
+          "importance": 0.05429217591881752
+        },
+        {
+          "feature": "chw_return_temp",
+          "importance": 0.031805288046598434
+        }
+      ],
+      "q_demand_metrics": {
+        "status": "skipped",
+        "message": "Not enough q_demand samples after feature building (0 rows). Need at least 12.",
+        "coverage": null,
+        "pinball_holdout": null,
+        "baseline_pinball_holdout": null,
+        "pinball_improvement": null,
+        "validation": {}
+      },
+      "q_demand_top_features": [],
+      "r2_score": 0.9769026632187368
+    },
+    "optimization_results": null,
+    "mpc_summary": null,
+    "report_summary": null,
+    "dashboard_payload": null,
+    "project_display_name": "proj-66a5d800"
+  },
+  "site_7d13d2b2": {
+    "dataset_id": "ds_2b56dc8d",
+    "original_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/ds_2b56dc8d_hvac_monthly_real.csv",
+    "cleaned_path": null,
+    "cleaned_parquet_path": null,
+    "quality_report_path": null,
+    "cleaning_stats": {
+      "initial_rows": 8633,
+      "duplicates_removed": 0,
+      "outliers_detected": 0,
+      "nulls_filled": 0,
+      "final_rows": 8633
+    },
+    "columns": [
+      "ts",
+      "OA_Temp",
+      "OA_RH",
+      "CHW_Flow",
+      "CHW_Supply_Temp",
+      "CHW_Return_Temp",
+      "CW_Supply_Temp",
+      "CW_Return_Temp",
+      "CHWP_Hz",
+      "CWP_Hz",
+      "CT_Hz",
+      "CH_kW",
+      "CHWP_kW",
+      "CWP_kW",
+      "CT_kW",
+      "Total_kW"
+    ],
+    "mapping": null,
+    "equipment": null,
+    "import_history": [],
+    "active_history_id": null,
+    "ml_results": null,
+    "optimization_results": null,
+    "mpc_summary": null,
+    "report_summary": null,
+    "dashboard_payload": null
+  },
+  "site_a8fcac97": {
+    "dataset_id": "ds_dbe5e9b0",
+    "original_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/ds_dbe5e9b0_hvac_monthly_real.csv",
+    "cleaned_path": null,
+    "cleaned_parquet_path": null,
+    "quality_report_path": null,
+    "cleaning_stats": {
+      "initial_rows": 8633,
+      "duplicates_removed": 0,
+      "outliers_detected": 0,
+      "nulls_filled": 0,
+      "final_rows": 8633
+    },
+    "columns": [
+      "ts",
+      "OA_Temp",
+      "OA_RH",
+      "CHW_Flow",
+      "CHW_Supply_Temp",
+      "CHW_Return_Temp",
+      "CW_Supply_Temp",
+      "CW_Return_Temp",
+      "CHWP_Hz",
+      "CWP_Hz",
+      "CT_Hz",
+      "CH_kW",
+      "CHWP_kW",
+      "CWP_kW",
+      "CT_kW",
+      "Total_kW"
+    ],
+    "mapping": null,
+    "equipment": null,
+    "import_history": [],
+    "active_history_id": null,
+    "ml_results": null,
+    "optimization_results": null,
+    "mpc_summary": null,
+    "report_summary": null,
+    "dashboard_payload": null
+  },
+  "site_923f4393": {
+    "dataset_id": "ds_3aa34531",
+    "original_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/ds_3aa34531_hvac_monthly_real.csv",
+    "cleaned_path": null,
+    "cleaned_parquet_path": null,
+    "quality_report_path": null,
+    "cleaning_stats": {
+      "initial_rows": 8633,
+      "duplicates_removed": 0,
+      "outliers_detected": 0,
+      "nulls_filled": 0,
+      "final_rows": 8633
+    },
+    "columns": [
+      "ts",
+      "OA_Temp",
+      "OA_RH",
+      "CHW_Flow",
+      "CHW_Supply_Temp",
+      "CHW_Return_Temp",
+      "CW_Supply_Temp",
+      "CW_Return_Temp",
+      "CHWP_Hz",
+      "CWP_Hz",
+      "CT_Hz",
+      "CH_kW",
+      "CHWP_kW",
+      "CWP_kW",
+      "CT_kW",
+      "Total_kW"
+    ],
+    "mapping": null,
+    "equipment": null,
+    "import_history": [],
+    "active_history_id": null,
+    "ml_results": null,
+    "optimization_results": null,
+    "mpc_summary": null,
+    "report_summary": null,
+    "dashboard_payload": null
+  },
+  "site_4958fb2f": {
+    "dataset_id": "ds_f060e8c5",
+    "original_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/ds_f060e8c5_hvac_monthly_real.csv",
+    "cleaned_path": null,
+    "cleaned_parquet_path": null,
+    "quality_report_path": null,
+    "cleaning_stats": {
+      "initial_rows": 8633,
+      "duplicates_removed": 0,
+      "outliers_detected": 0,
+      "nulls_filled": 0,
+      "final_rows": 8633
+    },
+    "columns": [
+      "ts",
+      "OA_Temp",
+      "OA_RH",
+      "CHW_Flow",
+      "CHW_Supply_Temp",
+      "CHW_Return_Temp",
+      "CW_Supply_Temp",
+      "CW_Return_Temp",
+      "CHWP_Hz",
+      "CWP_Hz",
+      "CT_Hz",
+      "CH_kW",
+      "CHWP_kW",
+      "CWP_kW",
+      "CT_kW",
+      "Total_kW"
+    ],
+    "mapping": [
+      {
+        "source": "ts",
+        "target": "timestamp"
+      },
+      {
+        "source": "OA_Temp",
+        "target": "ambient_temp"
+      },
+      {
+        "source": "OA_RH",
+        "target": "oa_rh"
+      },
+      {
+        "source": "CHW_Flow",
+        "target": "chw_flow"
+      },
+      {
+        "source": "CHW_Supply_Temp",
+        "target": "chws_temp"
+      },
+      {
+        "source": "CHW_Return_Temp",
+        "target": "chwr_temp"
+      },
+      {
+        "source": "CW_Supply_Temp",
+        "target": "cws_temp"
+      },
+      {
+        "source": "CW_Return_Temp",
+        "target": "cwr_temp"
+      },
+      {
+        "source": "CHWP_Hz",
+        "target": "chwp_freq"
+      },
+      {
+        "source": "CWP_Hz",
+        "target": "cwp_freq"
+      },
+      {
+        "source": "CT_Hz",
+        "target": "cws_temp"
+      },
+      {
+        "source": "CH_kW",
+        "target": "chiller_power"
+      },
+      {
+        "source": "CHWP_kW",
+        "target": "chwp_power"
+      },
+      {
+        "source": "CWP_kW",
+        "target": "cwp_power"
+      },
+      {
+        "source": "CT_kW",
+        "target": "ct_fan_power"
+      },
+      {
+        "source": "Total_kW",
+        "target": "total_power"
+      }
+    ],
+    "equipment": null,
+    "import_history": [],
+    "active_history_id": null,
+    "ml_results": null,
+    "optimization_results": null,
+    "mpc_summary": null,
+    "report_summary": null,
+    "dashboard_payload": null
+  },
+  "site_0f514167": {
+    "dataset_id": "ds_6ac5c5b8",
+    "original_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/ds_6ac5c5b8_hvac_monthly_real.csv",
+    "cleaned_path": null,
+    "cleaned_parquet_path": null,
+    "quality_report_path": null,
+    "cleaning_stats": {
+      "initial_rows": 8633,
+      "duplicates_removed": 0,
+      "outliers_detected": 0,
+      "nulls_filled": 0,
+      "empty_rows_removed": 0,
+      "unnamed_columns_removed": 0,
+      "final_rows": 8633
+    },
+    "columns": [
+      "ts",
+      "OA_Temp",
+      "OA_RH",
+      "CHW_Flow",
+      "CHW_Supply_Temp",
+      "CHW_Return_Temp",
+      "CW_Supply_Temp",
+      "CW_Return_Temp",
+      "CHWP_Hz",
+      "CWP_Hz",
+      "CT_Hz",
+      "CH_kW",
+      "CHWP_kW",
+      "CWP_kW",
+      "CT_kW",
+      "Total_kW"
+    ],
+    "mapping": [
+      {
+        "source": "ts",
+        "target": "timestamp"
+      },
+      {
+        "source": "OA_Temp",
+        "target": "ambient_temp"
+      },
+      {
+        "source": "OA_RH",
+        "target": "oa_rh"
+      },
+      {
+        "source": "CHW_Flow",
+        "target": "chw_flow"
+      },
+      {
+        "source": "CHW_Supply_Temp",
+        "target": "chws_temp"
+      },
+      {
+        "source": "CHW_Return_Temp",
+        "target": "chwr_temp"
+      },
+      {
+        "source": "CW_Supply_Temp",
+        "target": "cws_temp"
+      },
+      {
+        "source": "CW_Return_Temp",
+        "target": "cwr_temp"
+      },
+      {
+        "source": "CHWP_Hz",
+        "target": "chwp_freq"
+      },
+      {
+        "source": "CWP_Hz",
+        "target": "cwp_freq"
+      },
+      {
+        "source": "CT_Hz",
+        "target": "cws_temp"
+      },
+      {
+        "source": "CH_kW",
+        "target": "chiller_power"
+      },
+      {
+        "source": "CHWP_kW",
+        "target": "chwp_power"
+      },
+      {
+        "source": "CWP_kW",
+        "target": "cwp_power"
+      },
+      {
+        "source": "CT_kW",
+        "target": "ct_fan_power"
+      },
+      {
+        "source": "Total_kW",
+        "target": "total_power"
+      }
+    ],
+    "equipment": null,
+    "import_history": [],
+    "active_history_id": null,
+    "ml_results": null,
+    "optimization_results": null,
+    "mpc_summary": null,
+    "report_summary": null,
+    "dashboard_payload": null
+  },
+  "site_725637d9": {
+    "dataset_id": "ds_f6d054ed",
+    "original_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/ds_f6d054ed_hvac_monthly_real.csv",
+    "cleaned_path": null,
+    "cleaned_parquet_path": null,
+    "quality_report_path": null,
+    "cleaning_stats": {
+      "initial_rows": 8633,
+      "duplicates_removed": 0,
+      "outliers_detected": 0,
+      "nulls_filled": 0,
+      "empty_rows_removed": 0,
+      "unnamed_columns_removed": 0,
+      "final_rows": 8633
+    },
+    "columns": [
+      "ts",
+      "OA_Temp",
+      "OA_RH",
+      "CHW_Flow",
+      "CHW_Supply_Temp",
+      "CHW_Return_Temp",
+      "CW_Supply_Temp",
+      "CW_Return_Temp",
+      "CHWP_Hz",
+      "CWP_Hz",
+      "CT_Hz",
+      "CH_kW",
+      "CHWP_kW",
+      "CWP_kW",
+      "CT_kW",
+      "Total_kW"
+    ],
+    "mapping": [
+      {
+        "source": "ts",
+        "target": "timestamp"
+      },
+      {
+        "source": "OA_Temp",
+        "target": "ambient_temp"
+      },
+      {
+        "source": "OA_RH",
+        "target": "oa_rh"
+      },
+      {
+        "source": "CHW_Flow",
+        "target": "chw_flow"
+      },
+      {
+        "source": "CHW_Supply_Temp",
+        "target": "chws_temp"
+      },
+      {
+        "source": "CHW_Return_Temp",
+        "target": "chwr_temp"
+      },
+      {
+        "source": "CW_Supply_Temp",
+        "target": "cws_temp"
+      },
+      {
+        "source": "CW_Return_Temp",
+        "target": "cwr_temp"
+      },
+      {
+        "source": "CHWP_Hz",
+        "target": "chwp_freq"
+      },
+      {
+        "source": "CWP_Hz",
+        "target": "cwp_freq"
+      },
+      {
+        "source": "CT_Hz",
+        "target": "cws_temp"
+      },
+      {
+        "source": "CH_kW",
+        "target": "chiller_power"
+      },
+      {
+        "source": "CHWP_kW",
+        "target": "chwp_power"
+      },
+      {
+        "source": "CWP_kW",
+        "target": "cwp_power"
+      },
+      {
+        "source": "CT_kW",
+        "target": "ct_fan_power"
+      },
+      {
+        "source": "Total_kW",
+        "target": "total_power"
+      }
+    ],
+    "equipment": null,
+    "import_history": [],
+    "active_history_id": null,
+    "ml_results": null,
+    "optimization_results": null,
+    "mpc_summary": null,
+    "report_summary": null,
+    "dashboard_payload": null
+  },
+  "site_proj_4a27a57e": {
+    "dataset_id": "ds_5edf3c35",
+    "original_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/ds_5edf3c35_hvac_monthly_real.csv",
+    "cleaned_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_proj_4a27a57e/ds_5edf3c35/stage1_cleaned.csv",
+    "cleaned_parquet_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_proj_4a27a57e/ds_5edf3c35/stage1_cleaned.parquet",
+    "quality_report_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_proj_4a27a57e/ds_5edf3c35/quality_report.html",
+    "cleaning_stats": {
+      "addon_id": "hvac",
+      "raw_rows": 8633,
+      "final_rows": 2880,
+      "completeness": 0.8967470760233918,
+      "missing_ratio": 0.10325292397660824,
+      "anomaly_ratio": 0.0023166917641607786,
+      "shutdown_removed": 209,
+      "spike_count": 8,
+      "flatline_count": 12,
+      "interpolated_count": 881,
+      "range_violations": [
+        {
+          "column": "chw_supply_temp",
+          "violation_count": 2,
+          "range": [
+            3,
+            15
+          ]
+        },
+        {
+          "column": "cw_supply_temp",
+          "violation_count": 2633,
+          "range": [
+            20,
+            40
+          ]
+        },
+        {
+          "column": "cw_return_temp",
+          "violation_count": 179,
+          "range": [
+            25,
+            45
+          ]
+        },
+        {
+          "column": "ch_kw",
+          "violation_count": 49,
+          "range": [
+            0,
+            3000
+          ]
+        }
+      ],
+      "cross_issues": [
+        {
+          "rule": "energy_balance",
+          "bad_rows": 124,
+          "hint": "子設備功率加總與總功率偏差 > 5%"
+        },
+        {
+          "rule": "chw_delta_t",
+          "bad_rows": 1223,
+          "hint": "冰水 ΔT 超出 1~12°C 合理範圍"
+        }
+      ],
+      "contract_issues": [
+        {
+          "stage": "contract",
+          "message": "pandera is not installed; schema validation skipped"
+        }
+      ],
+      "cleaning_actions": {
+        "original_rows": 8633,
+        "final_rows": 8633,
+        "unnamed_columns_removed": 0,
+        "empty_rows_removed": 0,
+        "duplicate_rows_removed": 0,
+        "numeric_coercion_failures": 0
+      },
+      "should_halt": false,
+      "halt_reason": ""
+    },
+    "columns": [
+      "ts",
+      "OA_Temp",
+      "OA_RH",
+      "CHW_Flow",
+      "CHW_Supply_Temp",
+      "CHW_Return_Temp",
+      "CW_Supply_Temp",
+      "CW_Return_Temp",
+      "CHWP_Hz",
+      "CWP_Hz",
+      "CT_Hz",
+      "CH_kW",
+      "CHWP_kW",
+      "CWP_kW",
+      "CT_kW",
+      "Total_kW"
+    ],
+    "mapping": [
+      {
+        "source": "ts",
+        "target": "timestamp"
+      },
+      {
+        "source": "OA_Temp",
+        "target": "ambient_temp"
+      },
+      {
+        "source": "OA_RH",
+        "target": "oa_rh"
+      },
+      {
+        "source": "CHW_Flow",
+        "target": "chw_flow"
+      },
+      {
+        "source": "CHW_Supply_Temp",
+        "target": "chws_temp"
+      },
+      {
+        "source": "CHW_Return_Temp",
+        "target": "chwr_temp"
+      },
+      {
+        "source": "CW_Supply_Temp",
+        "target": "cws_temp"
+      },
+      {
+        "source": "CW_Return_Temp",
+        "target": "cwr_temp"
+      },
+      {
+        "source": "CHWP_Hz",
+        "target": "chwp_freq"
+      },
+      {
+        "source": "CWP_Hz",
+        "target": "cwp_freq"
+      },
+      {
+        "source": "CT_Hz",
+        "target": "cws_temp"
+      },
+      {
+        "source": "CH_kW",
+        "target": "chiller_power"
+      },
+      {
+        "source": "CHWP_kW",
+        "target": "chwp_power"
+      },
+      {
+        "source": "CWP_kW",
+        "target": "cwp_power"
+      },
+      {
+        "source": "CT_kW",
+        "target": "ct_fan_power"
+      },
+      {
+        "source": "Total_kW",
+        "target": "total_power"
+      }
+    ],
+    "equipment": {
+      "chillers": [
+        {
+          "id": 1,
+          "rt": 500.0,
+          "cop": 5.5
+        }
+      ],
+      "chwp": [
+        {
+          "id": 1,
+          "kw": 22.0,
+          "freq_max_hz": 60.0
+        }
+      ],
+      "cwp": [
+        {
+          "id": 1,
+          "kw": 22.0,
+          "freq_max_hz": 60.0
+        }
+      ],
+      "cooling_tower": [
+        {
+          "id": 1,
+          "kw": 18.5,
+          "freq_max_hz": 60.0
+        }
+      ]
+    },
+    "import_history": [
+      {
+        "history_id": "ih_fb92d7acc124",
+        "dataset_id": "ds_5edf3c35",
+        "cleaned_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_proj_4a27a57e/ds_5edf3c35/stage1_cleaned.csv",
+        "original_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/ds_5edf3c35_hvac_monthly_real.csv",
+        "source_filename": "ds_5edf3c35_hvac_monthly_real.csv",
+        "range_start": null,
+        "range_end": null,
+        "row_count": 2880,
+        "completed_at": "2026-04-28T18:01:20.546050+00:00",
+        "mapping": [
+          {
+            "source": "ts",
+            "target": "timestamp"
+          },
+          {
+            "source": "OA_Temp",
+            "target": "ambient_temp"
+          },
+          {
+            "source": "OA_RH",
+            "target": "oa_rh"
+          },
+          {
+            "source": "CHW_Flow",
+            "target": "chw_flow"
+          },
+          {
+            "source": "CHW_Supply_Temp",
+            "target": "chws_temp"
+          },
+          {
+            "source": "CHW_Return_Temp",
+            "target": "chwr_temp"
+          },
+          {
+            "source": "CW_Supply_Temp",
+            "target": "cws_temp"
+          },
+          {
+            "source": "CW_Return_Temp",
+            "target": "cwr_temp"
+          },
+          {
+            "source": "CHWP_Hz",
+            "target": "chwp_freq"
+          },
+          {
+            "source": "CWP_Hz",
+            "target": "cwp_freq"
+          },
+          {
+            "source": "CT_Hz",
+            "target": "cws_temp"
+          },
+          {
+            "source": "CH_kW",
+            "target": "chiller_power"
+          },
+          {
+            "source": "CHWP_kW",
+            "target": "chwp_power"
+          },
+          {
+            "source": "CWP_kW",
+            "target": "cwp_power"
+          },
+          {
+            "source": "CT_kW",
+            "target": "ct_fan_power"
+          },
+          {
+            "source": "Total_kW",
+            "target": "total_power"
+          }
+        ],
+        "equipment": {
+          "chillers": [
+            {
+              "id": 1,
+              "rt": 500.0,
+              "cop": 5.5
+            }
+          ],
+          "chwp": [
+            {
+              "id": 1,
+              "kw": 22.0,
+              "freq_max_hz": 60.0
+            }
+          ],
+          "cwp": [
+            {
+              "id": 1,
+              "kw": 22.0,
+              "freq_max_hz": 60.0
+            }
+          ],
+          "cooling_tower": [
+            {
+              "id": 1,
+              "kw": 18.5,
+              "freq_max_hz": 60.0
+            }
+          ]
+        },
+        "ml_results": {
+          "status": "success",
+          "model_bundle_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_proj_4a27a57e/ds_5edf3c35/stage2_model_bundle.joblib",
+          "power_metrics": {
+            "cv_mape_best": 0.13010644005834776,
+            "holdout_mape": 0.02309733678126326,
+            "holdout_cv_rmse": 0.03363591946589943,
+            "holdout_mae": 0.9942001804534625
+          },
+          "power_top_features": [
+            {
+              "feature": "chw_delta_t",
+              "importance": 0.5856438279151917
+            },
+            {
+              "feature": "q_delivered_kw",
+              "importance": 0.24365469813346863
+            },
+            {
+              "feature": "ch_kw",
+              "importance": 0.07022947818040848
+            },
+            {
+              "feature": "system_kw_per_rt",
+              "importance": 0.05429217591881752
+            },
+            {
+              "feature": "chw_return_temp",
+              "importance": 0.031805288046598434
+            }
+          ],
+          "q_demand_metrics": {
+            "status": "skipped",
+            "message": "Not enough q_demand samples after feature building (0 rows). Need at least 12.",
+            "coverage": null,
+            "pinball_holdout": null,
+            "baseline_pinball_holdout": null,
+            "pinball_improvement": null,
+            "validation": {}
+          },
+          "q_demand_top_features": [],
+          "r2_score": 0.9769026632187368
+        },
+        "cleaning_stats": {
+          "addon_id": "hvac",
+          "raw_rows": 8633,
+          "final_rows": 2880,
+          "completeness": 0.8967470760233918,
+          "missing_ratio": 0.10325292397660824,
+          "anomaly_ratio": 0.0023166917641607786,
+          "shutdown_removed": 209,
+          "spike_count": 8,
+          "flatline_count": 12,
+          "interpolated_count": 881,
+          "range_violations": [
+            {
+              "column": "chw_supply_temp",
+              "violation_count": 2,
+              "range": [
+                3,
+                15
+              ]
+            },
+            {
+              "column": "cw_supply_temp",
+              "violation_count": 2633,
+              "range": [
+                20,
+                40
+              ]
+            },
+            {
+              "column": "cw_return_temp",
+              "violation_count": 179,
+              "range": [
+                25,
+                45
+              ]
+            },
+            {
+              "column": "ch_kw",
+              "violation_count": 49,
+              "range": [
+                0,
+                3000
+              ]
+            }
+          ],
+          "cross_issues": [
+            {
+              "rule": "energy_balance",
+              "bad_rows": 124,
+              "hint": "子設備功率加總與總功率偏差 > 5%"
+            },
+            {
+              "rule": "chw_delta_t",
+              "bad_rows": 1223,
+              "hint": "冰水 ΔT 超出 1~12°C 合理範圍"
+            }
+          ],
+          "contract_issues": [
+            {
+              "stage": "contract",
+              "message": "pandera is not installed; schema validation skipped"
+            }
+          ],
+          "cleaning_actions": {
+            "original_rows": 8633,
+            "final_rows": 8633,
+            "unnamed_columns_removed": 0,
+            "empty_rows_removed": 0,
+            "duplicate_rows_removed": 0,
+            "numeric_coercion_failures": 0
+          },
+          "should_halt": false,
+          "halt_reason": ""
+        },
+        "columns": [
+          "ts",
+          "OA_Temp",
+          "OA_RH",
+          "CHW_Flow",
+          "CHW_Supply_Temp",
+          "CHW_Return_Temp",
+          "CW_Supply_Temp",
+          "CW_Return_Temp",
+          "CHWP_Hz",
+          "CWP_Hz",
+          "CT_Hz",
+          "CH_kW",
+          "CHWP_kW",
+          "CWP_kW",
+          "CT_kW",
+          "Total_kW"
+        ]
+      }
+    ],
+    "active_history_id": "ih_fb92d7acc124",
+    "ml_results": {
+      "status": "success",
+      "model_bundle_path": "/Users/jay/Downloads/missionnnn/data/history/hvac_optimizer_storage/site_proj_4a27a57e/ds_5edf3c35/stage2_model_bundle.joblib",
+      "power_metrics": {
+        "cv_mape_best": 0.13010644005834776,
+        "holdout_mape": 0.02309733678126326,
+        "holdout_cv_rmse": 0.03363591946589943,
+        "holdout_mae": 0.9942001804534625
+      },
+      "power_top_features": [
+        {
+          "feature": "chw_delta_t",
+          "importance": 0.5856438279151917
+        },
+        {
+          "feature": "q_delivered_kw",
+          "importance": 0.24365469813346863
+        },
+        {
+          "feature": "ch_kw",
+          "importance": 0.07022947818040848
+        },
+        {
+          "feature": "system_kw_per_rt",
+          "importance": 0.05429217591881752
+        },
+        {
+          "feature": "chw_return_temp",
+          "importance": 0.031805288046598434
+        }
+      ],
+      "q_demand_metrics": {
+        "status": "skipped",
+        "message": "Not enough q_demand samples after feature building (0 rows). Need at least 12.",
+        "coverage": null,
+        "pinball_holdout": null,
+        "baseline_pinball_holdout": null,
+        "pinball_improvement": null,
+        "validation": {}
+      },
+      "q_demand_top_features": [],
+      "r2_score": 0.9769026632187368
+    },
+    "optimization_results": null,
+    "mpc_summary": null,
+    "report_summary": null,
+    "dashboard_payload": null,
+    "project_display_name": "proj-4a27a57e"
   }
 }

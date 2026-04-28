@@ -226,19 +226,24 @@ def train_and_evaluate(
     shap_vals: np.ndarray | None = None
     exp_val = 0.0
     if shap is not None:
-        explainer = shap.TreeExplainer(final)
-        shap_vals = explainer.shap_values(sample)
-        # #region agent log — H-C: shap expected_value type
-        _dbg("shap_expected_value", {
-            "hypothesisId": "H-C",
-            "expected_value_type": str(type(explainer.expected_value).__name__),
-            "expected_value_repr": str(explainer.expected_value)[:100],
-        })
-        # #endregion
-        if isinstance(explainer.expected_value, np.ndarray):
-            exp_val = float(explainer.expected_value[0])
-        else:
-            exp_val = float(explainer.expected_value)
+        try:
+            explainer = shap.TreeExplainer(final)
+            shap_vals = explainer.shap_values(sample)
+            # #region agent log — H-C: shap expected_value type
+            _dbg("shap_expected_value", {
+                "hypothesisId": "H-C",
+                "expected_value_type": str(type(explainer.expected_value).__name__),
+                "expected_value_repr": str(explainer.expected_value)[:100],
+            })
+            # #endregion
+            if isinstance(explainer.expected_value, np.ndarray):
+                exp_val = float(explainer.expected_value[0])
+            else:
+                exp_val = float(explainer.expected_value)
+        except Exception:
+            # SHAP is diagnostic-only; a version mismatch must not abort training.
+            shap_vals = None
+            exp_val = 0.0
 
     run_id = ""
     if mlflow is not None:

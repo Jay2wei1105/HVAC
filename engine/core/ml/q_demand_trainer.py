@@ -167,16 +167,20 @@ def train_q_demand_model(
     ]
 
     if shap is not None and len(X_ho) > 0:
-        sample = X_ho.sample(min(200, len(X_ho)), random_state=42)
-        explainer = shap.TreeExplainer(final)
-        shap_vals = explainer.shap_values(sample)
-        top_features = [
-            name
-            for name, _ in sorted(
-                zip(feat_cols, np.abs(shap_vals).mean(0).tolist()),
-                key=lambda item: -item[1],
-            )[:3]
-        ]
+        try:
+            sample = X_ho.sample(min(200, len(X_ho)), random_state=42)
+            explainer = shap.TreeExplainer(final)
+            shap_vals = explainer.shap_values(sample)
+            top_features = [
+                name
+                for name, _ in sorted(
+                    zip(feat_cols, np.abs(shap_vals).mean(0).tolist()),
+                    key=lambda item: -item[1],
+                )[:3]
+            ]
+        except Exception:
+            # SHAP is best-effort only; q-demand training should still finish.
+            pass
 
     validation = {
         "coverage_ok": 0.85 <= coverage <= 0.93,

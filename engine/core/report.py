@@ -16,6 +16,8 @@ class QualityReport:
     interpolated_count: int
     range_violations: List[Dict[str, Any]] = field(default_factory=list)
     cross_issues: List[Dict[str, Any]] = field(default_factory=list)
+    contract_issues: List[Dict[str, Any]] = field(default_factory=list)
+    cleaning_actions: Dict[str, int] = field(default_factory=dict)
 
     @property
     def missing_ratio(self) -> float:
@@ -77,6 +79,7 @@ class QualityReport:
                     <tr><td>Spike Count</td><td>{self.spike_count}</td></tr>
                     <tr><td>Flatline Count</td><td>{self.flatline_count}</td></tr>
                     <tr><td>Interpolated Gaps</td><td>{self.interpolated_count}</td></tr>
+                    <tr><td>Contract Issues</td><td><span class="{'error' if self.contract_issues else 'success'}">{len(self.contract_issues)}</span></td></tr>
                     <tr><td>Range Violations</td><td><span class="{'error' if self.range_violations else 'success'}">{len(self.range_violations)}</span></td></tr>
                     <tr><td>Cross Issues</td><td><span class="{'error' if self.cross_issues else 'success'}">{len(self.cross_issues)}</span></td></tr>
                 </table>
@@ -95,6 +98,7 @@ class QualityReport:
             f"Spikes Detected: {self.spike_count}\n"
             f"Flatlines Detected: {self.flatline_count}\n"
             f"Interpolated Gaps: {self.interpolated_count}\n"
+            f"Contract Issues: {len(self.contract_issues)}\n"
             f"Range Violations: {len(self.range_violations)}\n"
             f"Cross Validation Issues: {len(self.cross_issues)}\n"
         )
@@ -109,7 +113,9 @@ def build(
     spike_count: int,
     flatline_count: int,
     interpolated_count: int,
-    cross_issues: List[Any]
+    cross_issues: List[Any],
+    contract_issues: List[Dict[str, Any]] | None = None,
+    cleaning_actions: Dict[str, int] | None = None,
 ) -> QualityReport:
     """Factory to build a QualityReport from pipeline state."""
     completeness = (
@@ -127,5 +133,7 @@ def build(
         flatline_count=flatline_count,
         interpolated_count=interpolated_count,
         range_violations=range_violations,
-        cross_issues=cross_issues
+        cross_issues=cross_issues,
+        contract_issues=contract_issues or [],
+        cleaning_actions=cleaning_actions or {},
     )
