@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>site_test_core EMS Report</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 32px; color: #1f2937; }
+    h1, h2 { margin-bottom: 8px; }
+    section { margin-bottom: 24px; }
+    ul { margin: 8px 0 0 20px; }
+    .meta { color: #4b5563; }
+  </style>
+</head>
+<body>
+  <h1>site_test_core EMS Report</h1>
+  <p class="meta">Template version: v1</p>
+  <section>
+    <h2>Data Quality</h2>
+    <ul>
+      <li>Completeness: 1.0</li>
+      <li>Missing ratio: 0.0</li>
+      <li>Anomaly ratio: 0.0</li>
+      <li>Rows: 220</li>
+    </ul>
+  </section>
+  <section>
+    <h2>Modeling</h2>
+    <ul>
+      <li>Power holdout MAPE: 0.010160280630504651</li>
+      <li>Q-demand coverage: 0.9583333333333334</li>
+      <li>Q-demand pinball improvement: 0.37955650107368166</li>
+      <li>Top driver: chw_delta_t</li>
+    </ul>
+  </section>
+  <section>
+    <h2>Optimization</h2>
+    <ul>
+      <li>Predicted power: 501.65374755859375</li>
+      <li>Saving percent: 0.0007193910476969516</li>
+      <li>Feasible trials: 16 / 40</li>
+      <li>Q capability: 386.7752371574639</li>
+    </ul>
+  </section>
+  
+        <h2>MPC Replay</h2>
+        <ul>
+          <li>Baseline energy: 2296.896159393529</li>
+          <li>MPC energy: 2296.896159393529</li>
+          <li>Oracle energy: 2252.485984802246</li>
+          <li>Savings ratio vs oracle: 0.0</li>
+          <li>Passed ratio gate: False</li>
+        </ul>
+        
+</body>
+</html>

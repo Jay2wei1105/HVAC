@@ -1,0 +1,4 @@
+lightgbm>=4.0,<5
+optuna>=4.0,<5
+pyarrow>=15.0,<20
+import-linter>=1.12,<2

@@ -1,0 +1,10 @@
+contract_kw: 800
+electricity_rate_ntd_per_kwh: 3.85
+equipment:
+  chiller:
+    chws_max: 12.0
+    chws_min: 5.0
+    count: 4
+    rated_capacity_rt: 350
+site_id: default_site
+timezone: Asia/Taipei

@@ -1,0 +1,14 @@
+[importlinter]
+root_package = engine
+
+[importlinter:contract:1]
+name = Core cannot import Add-on
+type = forbidden
+source_modules = engine.core
+forbidden_modules = engine.addons
+
+[importlinter:contract:2]
+name = Add-ons must be independent
+type = independence
+modules = 
+    engine.addons.hvac

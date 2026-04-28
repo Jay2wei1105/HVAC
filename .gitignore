@@ -1,0 +1,39 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local tooling
+.import_linter_cache/
+
+# Cursor / ML artifacts (do not publish)
+.cursor/
+mlruns/
+agent-transcripts/
+
+# Optional: large local HVAC storage (uncomment if you do not want metadata in repo)
+# data/history/hvac_optimizer_storage/

@@ -1,0 +1,17 @@
+{
+  "mapping": {
+    "chw_supply_temp": "chw_supply_temp",
+    "chw_return_temp": "chw_return_temp",
+    "cw_supply_temp": "cw_supply_temp",
+    "cw_return_temp": "cw_return_temp",
+    "outdoor_temp": "outdoor_temp",
+    "outdoor_rh": "outdoor_rh",
+    "total_power": "total_power",
+    "ch_kw": "ch_kw",
+    "chwp_kw": "chwp_kw",
+    "cwp_kw": "cwp_kw",
+    "ct_kw": "ct_kw"
+  },
+  "fingerprint": "b1ca44aeb4b340f62c01bc40ce75d246aff38558c54a9c6a3e66190f34e7280a",
+  "version": 2
+}

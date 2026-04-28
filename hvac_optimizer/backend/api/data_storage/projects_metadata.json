@@ -1,0 +1,275 @@
+{
+  "site_default": {
+    "dataset_id": "ds_05046ff8",
+    "original_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\hvac_optimizer\\backend\\api\\data_storage\\ds_05046ff8_hvac_monthly_real.csv",
+    "cleaned_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\hvac_optimizer\\backend\\api\\data_storage\\cleaned_ds_05046ff8_hvac_monthly_real.csv",
+    "cleaning_stats": {
+      "initial_rows": 8633,
+      "duplicates_removed": 0,
+      "outliers_detected": 195,
+      "nulls_filled": 0,
+      "final_rows": 8633
+    },
+    "columns": [
+      "ts",
+      "OA_Temp",
+      "OA_RH",
+      "CHW_Flow",
+      "CHW_Supply_Temp",
+      "CHW_Return_Temp",
+      "CW_Supply_Temp",
+      "CW_Return_Temp",
+      "CHWP_Hz",
+      "CWP_Hz",
+      "CT_Hz",
+      "CH_kW",
+      "CHWP_kW",
+      "CWP_kW",
+      "CT_kW",
+      "Total_kW"
+    ],
+    "mapping": [
+      {
+        "source": "ts",
+        "target": "timestamp"
+      },
+      {
+        "source": "OA_Temp",
+        "target": "ambient_temp"
+      },
+      {
+        "source": "OA_RH",
+        "target": "oa_rh"
+      },
+      {
+        "source": "CHW_Flow",
+        "target": "chw_flow"
+      },
+      {
+        "source": "CHW_Supply_Temp",
+        "target": "chws_temp"
+      },
+      {
+        "source": "CHW_Return_Temp",
+        "target": "chwr_temp"
+      },
+      {
+        "source": "CW_Supply_Temp",
+        "target": "cws_temp"
+      },
+      {
+        "source": "CW_Return_Temp",
+        "target": "cwr_temp"
+      },
+      {
+        "source": "CHWP_Hz",
+        "target": "chwp_freq"
+      },
+      {
+        "source": "CWP_Hz",
+        "target": "cwp_freq"
+      },
+      {
+        "source": "CT_Hz",
+        "target": "cws_temp"
+      },
+      {
+        "source": "CH_kW",
+        "target": "chiller_power"
+      },
+      {
+        "source": "CHWP_kW",
+        "target": "chwp_power"
+      },
+      {
+        "source": "CWP_kW",
+        "target": "cwp_power"
+      },
+      {
+        "source": "CT_kW",
+        "target": "ct_fan_power"
+      },
+      {
+        "source": "Total_kW",
+        "target": "total_power"
+      }
+    ],
+    "equipment": {
+      "chillers": [
+        {
+          "id": 1,
+          "rt": 500.0,
+          "cop": 5.0
+        }
+      ]
+    },
+    "ml_results": {
+      "status": "success",
+      "r2_score": 0.9240735518098461,
+      "top_features": [
+        {
+          "feature": "oa_t",
+          "importance": 0.2949604094028473
+        },
+        {
+          "feature": "is_weekend",
+          "importance": 0.24290777742862701
+        },
+        {
+          "feature": "oa_rh",
+          "importance": 0.18888770043849945
+        },
+        {
+          "feature": "hour",
+          "importance": 0.11752873659133911
+        },
+        {
+          "feature": "oa_rh_roll_mean_6",
+          "importance": 0.04090699553489685
+        }
+      ],
+      "model_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\hvac_optimizer\\backend\\api\\data_storage\\baseline_model_site_default.joblib"
+    },
+    "import_history": [
+      {
+        "history_id": "ih_b5e4d7b4d5d9",
+        "dataset_id": "ds_05046ff8",
+        "cleaned_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\hvac_optimizer\\backend\\api\\data_storage\\cleaned_ds_05046ff8_hvac_monthly_real.csv",
+        "original_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\hvac_optimizer\\backend\\api\\data_storage\\ds_05046ff8_hvac_monthly_real.csv",
+        "source_filename": "ds_05046ff8_hvac_monthly_real.csv",
+        "range_start": "2024-07-01T00:00:00",
+        "range_end": "2024-07-30T23:55:00",
+        "row_count": 8633,
+        "completed_at": "2026-04-27T09:59:32.623900+00:00",
+        "mapping": [
+          {
+            "source": "ts",
+            "target": "timestamp"
+          },
+          {
+            "source": "OA_Temp",
+            "target": "ambient_temp"
+          },
+          {
+            "source": "OA_RH",
+            "target": "oa_rh"
+          },
+          {
+            "source": "CHW_Flow",
+            "target": "chw_flow"
+          },
+          {
+            "source": "CHW_Supply_Temp",
+            "target": "chws_temp"
+          },
+          {
+            "source": "CHW_Return_Temp",
+            "target": "chwr_temp"
+          },
+          {
+            "source": "CW_Supply_Temp",
+            "target": "cws_temp"
+          },
+          {
+            "source": "CW_Return_Temp",
+            "target": "cwr_temp"
+          },
+          {
+            "source": "CHWP_Hz",
+            "target": "chwp_freq"
+          },
+          {
+            "source": "CWP_Hz",
+            "target": "cwp_freq"
+          },
+          {
+            "source": "CT_Hz",
+            "target": "cws_temp"
+          },
+          {
+            "source": "CH_kW",
+            "target": "chiller_power"
+          },
+          {
+            "source": "CHWP_kW",
+            "target": "chwp_power"
+          },
+          {
+            "source": "CWP_kW",
+            "target": "cwp_power"
+          },
+          {
+            "source": "CT_kW",
+            "target": "ct_fan_power"
+          },
+          {
+            "source": "Total_kW",
+            "target": "total_power"
+          }
+        ],
+        "equipment": {
+          "chillers": [
+            {
+              "id": 1,
+              "rt": 500.0,
+              "cop": 5.0
+            }
+          ]
+        },
+        "ml_results": {
+          "status": "success",
+          "r2_score": 0.9240735518098461,
+          "top_features": [
+            {
+              "feature": "oa_t",
+              "importance": 0.2949604094028473
+            },
+            {
+              "feature": "is_weekend",
+              "importance": 0.24290777742862701
+            },
+            {
+              "feature": "oa_rh",
+              "importance": 0.18888770043849945
+            },
+            {
+              "feature": "hour",
+              "importance": 0.11752873659133911
+            },
+            {
+              "feature": "oa_rh_roll_mean_6",
+              "importance": 0.04090699553489685
+            }
+          ],
+          "model_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\hvac_optimizer\\backend\\api\\data_storage\\baseline_model_site_default.joblib"
+        },
+        "cleaning_stats": {
+          "initial_rows": 8633,
+          "duplicates_removed": 0,
+          "outliers_detected": 195,
+          "nulls_filled": 0,
+          "final_rows": 8633
+        },
+        "columns": [
+          "ts",
+          "OA_Temp",
+          "OA_RH",
+          "CHW_Flow",
+          "CHW_Supply_Temp",
+          "CHW_Return_Temp",
+          "CW_Supply_Temp",
+          "CW_Return_Temp",
+          "CHWP_Hz",
+          "CWP_Hz",
+          "CT_Hz",
+          "CH_kW",
+          "CHWP_kW",
+          "CWP_kW",
+          "CT_kW",
+          "Total_kW"
+        ]
+      }
+    ],
+    "active_history_id": "ih_b5e4d7b4d5d9"
+  }
+}

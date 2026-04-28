@@ -1,0 +1,3531 @@
+{
+  "site_manual_core": {
+    "dataset_id": "ds_manual_core",
+    "original_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\manual_stage_flow.csv",
+    "cleaned_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_manual_core\\ds_manual_core\\stage1_cleaned.csv",
+    "cleaned_parquet_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_manual_core\\ds_manual_core\\stage1_cleaned.parquet",
+    "mapping": [
+      {
+        "source": "time",
+        "target": "timestamp"
+      },
+      {
+        "source": "CHWS",
+        "target": "chws_temp"
+      },
+      {
+        "source": "CHWR",
+        "target": "chwr_temp"
+      },
+      {
+        "source": "CHW_Flow",
+        "target": "chw_flow"
+      },
+      {
+        "source": "CHWP_Hz",
+        "target": "chwp_freq"
+      },
+      {
+        "source": "CT_Hz",
+        "target": "ct_fan_freq"
+      },
+      {
+        "source": "CWS",
+        "target": "cws_temp"
+      },
+      {
+        "source": "OA_Temp",
+        "target": "ambient_temp"
+      },
+      {
+        "source": "RH",
+        "target": "oa_rh"
+      },
+      {
+        "source": "SYS_kW",
+        "target": "total_power"
+      },
+      {
+        "source": "CH_kW",
+        "target": "chiller_power"
+      },
+      {
+        "source": "CHWP_kW",
+        "target": "chwp_power"
+      },
+      {
+        "source": "CWP_kW",
+        "target": "cwp_power"
+      },
+      {
+        "source": "CT_kW",
+        "target": "ct_fan_power"
+      }
+    ],
+    "cleaning_stats": {
+      "addon_id": "hvac",
+      "raw_rows": 220,
+      "final_rows": 220,
+      "completeness": 1.0,
+      "missing_ratio": 0.0,
+      "anomaly_ratio": 0.0,
+      "shutdown_removed": 0,
+      "spike_count": 0,
+      "flatline_count": 0,
+      "interpolated_count": 0,
+      "range_violations": [],
+      "cross_issues": [
+        {
+          "rule": "energy_balance",
+          "bad_rows": 220,
+          "hint": "子設備功率加總與總功率偏差 > 5%"
+        }
+      ],
+      "should_halt": false,
+      "halt_reason": ""
+    },
+    "ml_results": {
+      "status": "success",
+      "model_bundle_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_manual_core\\ds_manual_core\\stage2_model_bundle.joblib",
+      "power_metrics": {
+        "cv_mape_best": 0.016673737540642573,
+        "holdout_mape": 0.010160280630504651,
+        "holdout_cv_rmse": 0.014675070965012494,
+        "holdout_mae": 5.170768606820613
+      },
+      "power_top_features": [
+        {
+          "feature": "chiller_plr",
+          "importance": 0.5285294055938721
+        },
+        {
+          "feature": "ct_kw",
+          "importance": 0.20654690265655518
+        },
+        {
+          "feature": "cwp_kw",
+          "importance": 0.132512629032135
+        },
+        {
+          "feature": "ch_kw",
+          "importance": 0.10555697977542877
+        },
+        {
+          "feature": "chwp_kw",
+          "importance": 0.02405763417482376
+        }
+      ],
+      "q_demand_metrics": {
+        "status": "success",
+        "message": "",
+        "coverage": 0.9583333333333334,
+        "pinball_holdout": 1.794771962747559,
+        "baseline_pinball_holdout": 2.892724262327551,
+        "pinball_improvement": 0.37955650107368166,
+        "validation": {
+          "coverage_ok": false,
+          "pinball_improvement_ok": true,
+          "weather_driver_ok": false
+        }
+      },
+      "q_demand_top_features": [
+        "chw_delta_t",
+        "chwp_freq",
+        "cw_supply_temp"
+      ],
+      "r2_score": 0.9898397193694953
+    },
+    "optimization_results": {
+      "baseline": {
+        "total_kw": 478.0,
+        "ch_kw": 334.6,
+        "chwp_kw": 38.2,
+        "cwp_kw": 33.5,
+        "ct_kw": 23.9,
+        "cost_daily": 22084.0,
+        "chws_temp": 7.01,
+        "cws_temp": 28.0,
+        "chwp_hz": 50.0,
+        "ct_hz": 42.0
+      },
+      "optimized": {
+        "total_kw": 501.6,
+        "ch_kw": 334.4,
+        "chwp_kw": 38.1,
+        "cwp_kw": 33.5,
+        "ct_kw": 23.8,
+        "cost_daily": 23176.0
+      },
+      "savings": {
+        "total_kw": 0.4,
+        "total_pct": 0.1,
+        "ch_kw": 0.2,
+        "chwp_kw": 0.1,
+        "ct_kw": 0.1,
+        "cwp_kw": 0.0,
+        "cost_daily": 17.0,
+        "cost_annual": 6325.0
+      },
+      "optimal_params": {
+        "chws": 6.24,
+        "chwp": 49.9,
+        "ct_fan": 40.1,
+        "cws": 27.96
+      },
+      "bounds_used": {
+        "chws": [
+          6.0,
+          9.0
+        ],
+        "chwp": [
+          40.0,
+          55.0
+        ],
+        "ct_fan": [
+          35.0,
+          50.0
+        ],
+        "cws": [
+          26.0,
+          30.0
+        ]
+      },
+      "positions": {
+        "chws": 0.08,
+        "chwp": 0.66,
+        "ct_fan": 0.34,
+        "cws": 0.49
+      },
+      "sensitivity": {
+        "CHWS": 0.2,
+        "CHWP": 0.1,
+        "CT": 0.1,
+        "CWS": 0.0
+      },
+      "converged": true,
+      "model_used": "engine-core",
+      "r2_score": null,
+      "q_constraint": {
+        "q_demand_pred": 350.16178418665925,
+        "q_required_min": 367.6698733959922,
+        "q_capability": 382.17488650987593,
+        "feasible": true
+      },
+      "mpc": {
+        "total_energy_mpc": 2296.896159393529,
+        "total_energy_oracle": 2252.4174728393555,
+        "total_energy_baseline": 2296.896159393529,
+        "saving_ratio_vs_oracle": 0.0,
+        "passed_ratio_gate": false
+      },
+      "artifacts": {
+        "optimization_results_parquet": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_manual_core\\ds_manual_core\\optimization_results.parquet",
+        "mpc_control_log_parquet": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_manual_core\\ds_manual_core\\mpc_control_log.parquet",
+        "savings_report_json": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_manual_core\\ds_manual_core\\savings_report.json",
+        "html_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_manual_core\\ds_manual_core\\reports\\monthly_report.html",
+        "pdf_path": null,
+        "template_version": "v1"
+      },
+      "dashboard_payload": {
+        "quality": [
+          {
+            "section": "quality",
+            "title": "Completeness",
+            "kind": "metric",
+            "value": 1.0,
+            "unit": "ratio",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "quality",
+            "title": "Missing Ratio",
+            "kind": "metric",
+            "value": 0.0,
+            "unit": "ratio",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "quality",
+            "title": "Anomaly Ratio",
+            "kind": "metric",
+            "value": 0.0,
+            "unit": "ratio",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "quality",
+            "title": "Rows",
+            "kind": "metric",
+            "value": 220,
+            "unit": "rows",
+            "status": "info",
+            "meta": {}
+          }
+        ],
+        "modeling": [
+          {
+            "section": "modeling",
+            "title": "Power MAPE",
+            "kind": "metric",
+            "value": 0.010160280630504651,
+            "unit": "",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "modeling",
+            "title": "Q Coverage",
+            "kind": "metric",
+            "value": 0.9583333333333334,
+            "unit": "",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "modeling",
+            "title": "Q Pinball Improvement",
+            "kind": "metric",
+            "value": 0.37955650107368166,
+            "unit": "",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "modeling",
+            "title": "Top Driver",
+            "kind": "text",
+            "value": "chw_delta_t",
+            "unit": "",
+            "status": "info",
+            "meta": {}
+          }
+        ],
+        "optimization": [
+          {
+            "section": "optimization",
+            "title": "Predicted Power",
+            "kind": "metric",
+            "value": 501.63983154296875,
+            "unit": "kW",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "optimization",
+            "title": "Saving Percent",
+            "kind": "metric",
+            "value": 0.0007471113719955667,
+            "unit": "ratio",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "optimization",
+            "title": "Feasible Trials",
+            "kind": "metric",
+            "value": 17,
+            "unit": "",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "optimization",
+            "title": "Q Capability",
+            "kind": "metric",
+            "value": 382.17488650987593,
+            "unit": "kW",
+            "status": "info",
+            "meta": {}
+          }
+        ],
+        "mpc": [
+          {
+            "section": "mpc",
+            "title": "Baseline Energy",
+            "kind": "metric",
+            "value": 2296.896159393529,
+            "unit": "kWh",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "mpc",
+            "title": "MPC Energy",
+            "kind": "metric",
+            "value": 2296.896159393529,
+            "unit": "kWh",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "mpc",
+            "title": "Oracle Energy",
+            "kind": "metric",
+            "value": 2252.4174728393555,
+            "unit": "kWh",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "mpc",
+            "title": "Savings Ratio vs Oracle",
+            "kind": "metric",
+            "value": 0.0,
+            "unit": "ratio",
+            "status": "info",
+            "meta": {}
+          }
+        ],
+        "report": [
+          {
+            "section": "report",
+            "title": "HTML Report",
+            "kind": "text",
+            "value": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_manual_core\\ds_manual_core\\reports\\monthly_report.html",
+            "unit": "",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "report",
+            "title": "PDF Report",
+            "kind": "text",
+            "value": null,
+            "unit": "",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "report",
+            "title": "Version",
+            "kind": "text",
+            "value": "v1",
+            "unit": "",
+            "status": "info",
+            "meta": {}
+          }
+        ]
+      },
+      "best_solution": {
+        "energy_cost": 501.63983154296875,
+        "setpoints": {
+          "chw_supply_temp": 6.244688567677818,
+          "chwp_freq": 49.8773515848804,
+          "ct_freq": 40.14992629568318,
+          "cw_supply_temp": 27.960640580536673
+        },
+        "comfort_penalty": 3.1283680493842096,
+        "total_score": 988.8105459871826,
+        "q_demand_pred": 350.16178418665925,
+        "q_required_min": 367.6698733959922,
+        "q_capability": 382.17488650987593,
+        "feasible": true
+      },
+      "trials": [
+        {
+          "trial": 0,
+          "predicted_power": 501.7279357910156,
+          "comfort_penalty": 10.218332457594613,
+          "longevity_penalty": 0.0,
+          "objective": 1910612.132999884,
+          "energy_cost": 501.7279357910156,
+          "total_score": 1910612.132999884,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 276.7610162141589,
+          "feasible": false,
+          "chw_supply_temp": 7.781188557928463,
+          "chwp_freq": 48.6908859333761,
+          "ct_freq": 36.97566205486663,
+          "cw_supply_temp": 27.115427315020856
+        },
+        {
+          "trial": 1,
+          "predicted_power": 501.7022399902344,
+          "comfort_penalty": 11.920140135207834,
+          "longevity_penalty": 0.0,
+          "objective": 2720133.1041603023,
+          "energy_cost": 501.7022399902344,
+          "total_score": 2720133.1041603023,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 195.8259346053131,
+          "feasible": false,
+          "chw_supply_temp": 8.9608886462951,
+          "chwp_freq": 53.3330678827826,
+          "ct_freq": 36.682743818186744,
+          "cw_supply_temp": 29.51112856494678
+        },
+        {
+          "trial": 2,
+          "predicted_power": 501.7225646972656,
+          "comfort_penalty": 3.8197187564960844,
+          "longevity_penalty": 0.0,
+          "objective": 1833641.2553809031,
+          "energy_cost": 501.7225646972656,
+          "total_score": 1833641.2553809031,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 284.3941173019366,
+          "feasible": false,
+          "chw_supply_temp": 7.669929387630935,
+          "chwp_freq": 49.46199237039187,
+          "ct_freq": 41.70932912329348,
+          "cw_supply_temp": 27.898008340379242
+        },
+        {
+          "trial": 3,
+          "predicted_power": 501.7279357910156,
+          "comfort_penalty": 16.674286486887173,
+          "longevity_penalty": 0.0,
+          "objective": 2367394.5858826954,
+          "energy_cost": 501.7279357910156,
+          "total_score": 2367394.5858826954,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 231.14733046617064,
+          "feasible": false,
+          "chw_supply_temp": 8.446048196517479,
+          "chwp_freq": 40.954964451373826,
+          "ct_freq": 39.36326674044173,
+          "cw_supply_temp": 26.672649720744488
+        },
+        {
+          "trial": 4,
+          "predicted_power": 501.6440124511719,
+          "comfort_penalty": 8.812755231804882,
+          "longevity_penalty": 0.0,
+          "objective": 1382.91953563166,
+          "energy_cost": 501.6440124511719,
+          "total_score": 1382.91953563166,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 377.73031003748736,
+          "feasible": true,
+          "chw_supply_temp": 6.309472183793379,
+          "chwp_freq": 45.056050713512896,
+          "ct_freq": 43.98239471689605,
+          "cw_supply_temp": 27.0063177284148
+        },
+        {
+          "trial": 5,
+          "predicted_power": 501.6615905761719,
+          "comfort_penalty": 7.876148936316025,
+          "longevity_penalty": 0.0,
+          "objective": 1345561.8371774745,
+          "energy_cost": 501.6615905761719,
+          "total_score": 1345561.8371774745,
+          "q_demand_pred": 363.96507030661405,
+          "q_required_min": 382.16332382194474,
+          "q_capability": 347.73606775261806,
+          "feasible": false,
+          "chw_supply_temp": 6.746664678945979,
+          "chwp_freq": 51.15641914000491,
+          "ct_freq": 37.26236437884943,
+          "cw_supply_temp": 26.254234975554034
+        },
+        {
+          "trial": 6,
+          "predicted_power": 501.57672119140625,
+          "comfort_penalty": 9.90414071860761,
+          "longevity_penalty": 0.0,
+          "objective": 1025669.9733253998,
+          "energy_cost": 501.57672119140625,
+          "total_score": 1025669.9733253998,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 365.25207514275746,
+          "feasible": false,
+          "chw_supply_temp": 6.491353446100819,
+          "chwp_freq": 46.027331642226486,
+          "ct_freq": 46.50397618155722,
+          "cw_supply_temp": 29.016648484747787
+        },
+        {
+          "trial": 7,
+          "predicted_power": 501.86480712890625,
+          "comfort_penalty": 6.582852698464511,
+          "longevity_penalty": 0.0,
+          "objective": 1391068.6585951091,
+          "energy_cost": 501.86480712890625,
+          "total_score": 1391068.6585951091,
+          "q_demand_pred": 363.96507030661405,
+          "q_required_min": 382.16332382194474,
+          "q_capability": 343.17247297013137,
+          "feasible": false,
+          "chw_supply_temp": 6.813183091742399,
+          "chwp_freq": 54.97405814394884,
+          "ct_freq": 40.77634720584371,
+          "cw_supply_temp": 27.78466897755878
+        },
+        {
+          "trial": 8,
+          "predicted_power": 501.67413330078125,
+          "comfort_penalty": 9.340708781063036,
+          "longevity_penalty": 0.0,
+          "objective": 1568408.3967094726,
+          "energy_cost": 501.67413330078125,
+          "total_score": 1568408.3967094726,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 310.9726082261857,
+          "feasible": false,
+          "chw_supply_temp": 7.282524476574892,
+          "chwp_freq": 53.64283911718854,
+          "ct_freq": 48.30847006974477,
+          "cw_supply_temp": 29.211189290775046
+        },
+        {
+          "trial": 9,
+          "predicted_power": 501.764892578125,
+          "comfort_penalty": 9.440702667548223,
+          "longevity_penalty": 0.0,
+          "objective": 2112660.3297333447,
+          "energy_cost": 501.764892578125,
+          "total_score": 2112660.3297333447,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 256.54842393859104,
+          "feasible": false,
+          "chw_supply_temp": 8.075804890174183,
+          "chwp_freq": 52.70938007854503,
+          "ct_freq": 36.759767189378586,
+          "cw_supply_temp": 27.6825139711625
+        },
+        {
+          "trial": 10,
+          "predicted_power": 501.594970703125,
+          "comfort_penalty": 10.101384149837795,
+          "longevity_penalty": 0.0,
+          "objective": 1511.7333856869045,
+          "energy_cost": 501.594970703125,
+          "total_score": 1511.7333856869045,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 397.58548731820866,
+          "feasible": true,
+          "chw_supply_temp": 6.0200654898481645,
+          "chwp_freq": 44.286252432628935,
+          "ct_freq": 44.7380490916566,
+          "cw_supply_temp": 28.76745184002839
+        },
+        {
+          "trial": 11,
+          "predicted_power": 501.594970703125,
+          "comfort_penalty": 9.634814037905405,
+          "longevity_penalty": 0.0,
+          "objective": 1465.0763744936655,
+          "energy_cost": 501.594970703125,
+          "total_score": 1465.0763744936655,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 396.5570262757907,
+          "feasible": true,
+          "chw_supply_temp": 6.035056215235776,
+          "chwp_freq": 44.491170873884386,
+          "ct_freq": 44.72125162804472,
+          "cw_supply_temp": 28.53758835835094
+        },
+        {
+          "trial": 12,
+          "predicted_power": 501.59283447265625,
+          "comfort_penalty": 9.777583867851176,
+          "longevity_penalty": 0.0,
+          "objective": 1479.351221257774,
+          "energy_cost": 501.59283447265625,
+          "total_score": 1479.351221257774,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 391.1722673604242,
+          "feasible": true,
+          "chw_supply_temp": 6.113543818411265,
+          "chwp_freq": 43.0358016022981,
+          "ct_freq": 43.49877157783148,
+          "cw_supply_temp": 28.525956570099158
+        },
+        {
+          "trial": 13,
+          "predicted_power": 501.7061462402344,
+          "comfort_penalty": 9.263999723063701,
+          "longevity_penalty": 0.0,
+          "objective": 1573267.3583584323,
+          "energy_cost": 501.7061462402344,
+          "total_score": 1573267.3583584323,
+          "q_demand_pred": 358.47338478831557,
+          "q_required_min": 376.3970540277314,
+          "q_capability": 319.2131288037428,
+          "feasible": false,
+          "chw_supply_temp": 7.162411632301578,
+          "chwp_freq": 45.77147073439993,
+          "ct_freq": 45.58133447795168,
+          "cw_supply_temp": 27.02528182312906
+        },
+        {
+          "trial": 14,
+          "predicted_power": 501.5882568359375,
+          "comfort_penalty": 18.566109279572792,
+          "longevity_penalty": 0.0,
+          "objective": 2358.199184793217,
+          "energy_cost": 501.5882568359375,
+          "total_score": 2358.199184793217,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 376.193110463495,
+          "feasible": true,
+          "chw_supply_temp": 6.3318782212894575,
+          "chwp_freq": 40.355427614288345,
+          "ct_freq": 48.42702628464384,
+          "cw_supply_temp": 29.924187689876852
+        },
+        {
+          "trial": 15,
+          "predicted_power": 501.57769775390625,
+          "comfort_penalty": 8.868821792432627,
+          "longevity_penalty": 0.0,
+          "objective": 1345339.241530474,
+          "energy_cost": 501.57769775390625,
+          "total_score": 1345339.241530474,
+          "q_demand_pred": 367.56346182456764,
+          "q_required_min": 385.94163491579604,
+          "q_capability": 351.54655675044836,
+          "feasible": false,
+          "chw_supply_temp": 6.691123446169003,
+          "chwp_freq": 42.9789871449888,
+          "ct_freq": 43.29969390027775,
+          "cw_supply_temp": 28.33703734268277
+        },
+        {
+          "trial": 16,
+          "predicted_power": 501.7948303222656,
+          "comfort_penalty": 11.6072526224159,
+          "longevity_penalty": 0.0,
+          "objective": 1467593.152593895,
+          "energy_cost": 501.7948303222656,
+          "total_score": 1467593.152593895,
+          "q_demand_pred": 358.47338478831557,
+          "q_required_min": 376.3970540277314,
+          "q_capability": 329.80399077759824,
+          "feasible": false,
+          "chw_supply_temp": 7.008040492394423,
+          "chwp_freq": 47.358897562956,
+          "ct_freq": 49.991663202035724,
+          "cw_supply_temp": 27.350559679397676
+        },
+        {
+          "trial": 17,
+          "predicted_power": 501.63037109375,
+          "comfort_penalty": 12.24666303388689,
+          "longevity_penalty": 0.0,
+          "objective": 1726.296674482439,
+          "energy_cost": 501.63037109375,
+          "total_score": 1726.296674482439,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 372.37677936539677,
+          "feasible": true,
+          "chw_supply_temp": 6.387504607822572,
+          "chwp_freq": 44.42522792421434,
+          "ct_freq": 40.01706515313126,
+          "cw_supply_temp": 26.027853454165147
+        },
+        {
+          "trial": 18,
+          "predicted_power": 501.594970703125,
+          "comfort_penalty": 13.782382425817506,
+          "longevity_penalty": 0.0,
+          "objective": 1879.8332132848757,
+          "energy_cost": 501.594970703125,
+          "total_score": 1879.8332132848757,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 395.3648854439924,
+          "feasible": true,
+          "chw_supply_temp": 6.052432717695053,
+          "chwp_freq": 42.10927783845936,
+          "ct_freq": 46.67599808732686,
+          "cw_supply_temp": 28.365893754015154
+        },
+        {
+          "trial": 19,
+          "predicted_power": 501.63006591796875,
+          "comfort_penalty": 7.636322580053316,
+          "longevity_penalty": 0.0,
+          "objective": 1265.2623239233003,
+          "energy_cost": 501.63006591796875,
+          "total_score": 1265.2623239233003,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 368.8212599375439,
+          "feasible": true,
+          "chw_supply_temp": 6.439329434583096,
+          "chwp_freq": 46.73388569700709,
+          "ct_freq": 44.11169570003176,
+          "cw_supply_temp": 26.504359129018162
+        },
+        {
+          "trial": 20,
+          "predicted_power": 501.725341796875,
+          "comfort_penalty": 6.6572425102906605,
+          "longevity_penalty": 0.0,
+          "objective": 1714269.6439385437,
+          "energy_cost": 501.725341796875,
+          "total_score": 1714269.6439385437,
+          "q_demand_pred": 358.47338478831557,
+          "q_required_min": 376.3970540277314,
+          "q_capability": 305.0868345931596,
+          "feasible": false,
+          "chw_supply_temp": 7.3683148104692116,
+          "chwp_freq": 47.2720118475128,
+          "ct_freq": 42.09252638888307,
+          "cw_supply_temp": 26.565653266712417
+        },
+        {
+          "trial": 21,
+          "predicted_power": 501.63165283203125,
+          "comfort_penalty": 9.007327637949258,
+          "longevity_penalty": 0.0,
+          "objective": 1402.3644166269569,
+          "energy_cost": 501.63165283203125,
+          "total_score": 1402.3644166269569,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 371.3322737780282,
+          "feasible": true,
+          "chw_supply_temp": 6.402729196582157,
+          "chwp_freq": 45.70478430948906,
+          "ct_freq": 44.563994440789436,
+          "cw_supply_temp": 26.65135443739887
+        },
+        {
+          "trial": 22,
+          "predicted_power": 501.6260681152344,
+          "comfort_penalty": 7.9118433337724765,
+          "longevity_penalty": 0.0,
+          "objective": 1043180.6688600013,
+          "energy_cost": 501.6260681152344,
+          "total_score": 1043180.6688600013,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 363.48108755014135,
+          "feasible": false,
+          "chw_supply_temp": 6.517167149849245,
+          "chwp_freq": 45.72316987694297,
+          "ct_freq": 43.62262943844677,
+          "cw_supply_temp": 26.672650218511986
+        },
+        {
+          "trial": 23,
+          "predicted_power": 501.8364562988281,
+          "comfort_penalty": 6.082042405944042,
+          "longevity_penalty": 0.0,
+          "objective": 1431971.112319844,
+          "energy_cost": 501.8364562988281,
+          "total_score": 1431971.112319844,
+          "q_demand_pred": 358.47338478831557,
+          "q_required_min": 376.3970540277314,
+          "q_capability": 333.3109468654363,
+          "feasible": false,
+          "chw_supply_temp": 6.956923519080983,
+          "chwp_freq": 48.98884260561684,
+          "ct_freq": 45.10850540968352,
+          "cw_supply_temp": 26.31155008754305
+        },
+        {
+          "trial": 24,
+          "predicted_power": 501.6440124511719,
+          "comfort_penalty": 10.235944044783597,
+          "longevity_penalty": 0.0,
+          "objective": 1525.2384169295315,
+          "energy_cost": 501.6440124511719,
+          "total_score": 1525.2384169295315,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 375.8133591144537,
+          "feasible": true,
+          "chw_supply_temp": 6.337413431622431,
+          "chwp_freq": 46.40228278613403,
+          "ct_freq": 46.830954265550226,
+          "cw_supply_temp": 27.05751514364007
+        },
+        {
+          "trial": 25,
+          "predicted_power": 501.66070556640625,
+          "comfort_penalty": 5.168146750889155,
+          "longevity_penalty": 0.0,
+          "objective": 1247890.6426257156,
+          "energy_cost": 501.66070556640625,
+          "total_score": 1247890.6426257156,
+          "q_demand_pred": 363.96507030661405,
+          "q_required_min": 382.16332382194474,
+          "q_capability": 357.4761070974387,
+          "feasible": false,
+          "chw_supply_temp": 6.604695028117535,
+          "chwp_freq": 51.09510323516959,
+          "ct_freq": 38.86695237500685,
+          "cw_supply_temp": 27.43830291081661
+        },
+        {
+          "trial": 26,
+          "predicted_power": 501.65496826171875,
+          "comfort_penalty": 4.908484774648206,
+          "longevity_penalty": 0.0,
+          "objective": 992.5034457265393,
+          "energy_cost": 501.65496826171875,
+          "total_score": 992.5034457265393,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 380.7204792394577,
+          "feasible": true,
+          "chw_supply_temp": 6.265887834439859,
+          "chwp_freq": 48.22616166610822,
+          "ct_freq": 43.04973449686669,
+          "cw_supply_temp": 26.85140136230031
+        },
+        {
+          "trial": 27,
+          "predicted_power": 501.6499938964844,
+          "comfort_penalty": 6.587146110981758,
+          "longevity_penalty": 0.0,
+          "objective": 1160.36460499466,
+          "energy_cost": 501.6499938964844,
+          "total_score": 1160.36460499466,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 382.66194287077,
+          "feasible": true,
+          "chw_supply_temp": 6.237589292301002,
+          "chwp_freq": 48.19273372476889,
+          "ct_freq": 41.19709163640363,
+          "cw_supply_temp": 26.889753408764932
+        },
+        {
+          "trial": 28,
+          "predicted_power": 501.8343505859375,
+          "comfort_penalty": 3.864620356998299,
+          "longevity_penalty": 0.0,
+          "objective": 1364157.8649943909,
+          "energy_cost": 501.8343505859375,
+          "total_score": 1364157.8649943909,
+          "q_demand_pred": 352.5183887285106,
+          "q_required_min": 370.14430816493615,
+          "q_capability": 333.8173513041256,
+          "feasible": false,
+          "chw_supply_temp": 6.94954222843179,
+          "chwp_freq": 49.92220235902823,
+          "ct_freq": 40.92883135793198,
+          "cw_supply_temp": 27.453007357403013
+        },
+        {
+          "trial": 29,
+          "predicted_power": 501.7279357910156,
+          "comfort_penalty": 10.574636762221612,
+          "longevity_penalty": 0.0,
+          "objective": 2044900.7658161656,
+          "energy_cost": 501.7279357910156,
+          "total_score": 2044900.7658161656,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 263.335715975577,
+          "feasible": false,
+          "chw_supply_temp": 7.976874131637364,
+          "chwp_freq": 48.08899068194306,
+          "ct_freq": 38.2488554114264,
+          "cw_supply_temp": 26.283510478976034
+        },
+        {
+          "trial": 30,
+          "predicted_power": 501.7334289550781,
+          "comfort_penalty": 3.1283680493842096,
+          "longevity_penalty": 0.0,
+          "objective": 1705330.0908835689,
+          "energy_cost": 501.7334289550781,
+          "total_score": 1705330.0908835689,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 297.2183213310247,
+          "feasible": false,
+          "chw_supply_temp": 7.483005320519183,
+          "chwp_freq": 50.12635960440365,
+          "ct_freq": 42.587082745638426,
+          "cw_supply_temp": 26.860314124022633
+        },
+        {
+          "trial": 31,
+          "predicted_power": 501.6490783691406,
+          "comfort_penalty": 11.991638627992309,
+          "longevity_penalty": 0.0,
+          "objective": 1700.8129411683715,
+          "energy_cost": 501.6490783691406,
+          "total_score": 1700.8129411683715,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 382.81823817991716,
+          "feasible": true,
+          "chw_supply_temp": 6.235311150531734,
+          "chwp_freq": 48.175959720942416,
+          "ct_freq": 35.47181827698138,
+          "cw_supply_temp": 27.229586396772373
+        },
+        {
+          "trial": 32,
+          "predicted_power": 501.642578125,
+          "comfort_penalty": 6.035440313960336,
+          "longevity_penalty": 0.0,
+          "objective": 1105.1866095210337,
+          "energy_cost": 501.642578125,
+          "total_score": 1105.1866095210337,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 385.22356734888274,
+          "feasible": true,
+          "chw_supply_temp": 6.200251359687347,
+          "chwp_freq": 47.03091937261226,
+          "ct_freq": 43.03081490982136,
+          "cw_supply_temp": 26.96640500419132
+        },
+        {
+          "trial": 33,
+          "predicted_power": 501.6388854980469,
+          "comfort_penalty": 7.160963825336077,
+          "longevity_penalty": 0.0,
+          "objective": 1217.7352680316544,
+          "energy_cost": 501.6388854980469,
+          "total_score": 1217.7352680316544,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 386.6450788507129,
+          "feasible": true,
+          "chw_supply_temp": 6.179531577721502,
+          "chwp_freq": 46.92813373900626,
+          "ct_freq": 42.41773050651503,
+          "cw_supply_temp": 26.417954524641342
+        },
+        {
+          "trial": 34,
+          "predicted_power": 501.7227478027344,
+          "comfort_penalty": 6.210744595181207,
+          "longevity_penalty": 0.0,
+          "objective": 2649568.827807612,
+          "energy_cost": 501.7227478027344,
+          "total_score": 2649568.827807612,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 202.82527033596313,
+          "feasible": false,
+          "chw_supply_temp": 8.85886716419094,
+          "chwp_freq": 48.27916869716584,
+          "ct_freq": 42.7047665088878,
+          "cw_supply_temp": 26.883306565885835
+        },
+        {
+          "trial": 35,
+          "predicted_power": 501.64007568359375,
+          "comfort_penalty": 6.266013121831447,
+          "longevity_penalty": 0.0,
+          "objective": 1128.2413878667385,
+          "energy_cost": 501.64007568359375,
+          "total_score": 1128.2413878667385,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 384.7783532065813,
+          "feasible": true,
+          "chw_supply_temp": 6.206740747880633,
+          "chwp_freq": 49.15128005275855,
+          "ct_freq": 41.306226997279026,
+          "cw_supply_temp": 26.174053253470554
+        },
+        {
+          "trial": 36,
+          "predicted_power": 501.6814880371094,
+          "comfort_penalty": 4.74864069387221,
+          "longevity_penalty": 0.0,
+          "objective": 1252913.2920993129,
+          "energy_cost": 501.6814880371094,
+          "total_score": 1252913.2920993129,
+          "q_demand_pred": 363.96507030661405,
+          "q_required_min": 382.16332382194474,
+          "q_capability": 356.9696491677559,
+          "feasible": false,
+          "chw_supply_temp": 6.612077098445065,
+          "chwp_freq": 50.84009246102396,
+          "ct_freq": 40.87477147473637,
+          "cw_supply_temp": 26.02873244514261
+        },
+        {
+          "trial": 37,
+          "predicted_power": 501.8320007324219,
+          "comfort_penalty": 4.994392120686753,
+          "longevity_penalty": 0.0,
+          "objective": 1350737.5925753226,
+          "energy_cost": 501.8320007324219,
+          "total_score": 1350737.5925753226,
+          "q_demand_pred": 358.47338478831557,
+          "q_required_min": 376.3970540277314,
+          "q_capability": 341.4234218914792,
+          "feasible": false,
+          "chw_supply_temp": 6.838677051481833,
+          "chwp_freq": 49.01877420599341,
+          "ct_freq": 41.435798945954296,
+          "cw_supply_temp": 26.81667184910392
+        },
+        {
+          "trial": 38,
+          "predicted_power": 501.63983154296875,
+          "comfort_penalty": 4.87170714444214,
+          "longevity_penalty": 0.0,
+          "objective": 988.8105459871826,
+          "energy_cost": 501.63983154296875,
+          "total_score": 988.8105459871826,
+          "q_demand_pred": 350.16178418665925,
+          "q_required_min": 367.6698733959922,
+          "q_capability": 382.17488650987593,
+          "feasible": true,
+          "chw_supply_temp": 6.244688567677818,
+          "chwp_freq": 49.8773515848804,
+          "ct_freq": 40.14992629568318,
+          "cw_supply_temp": 27.960640580536673
+        },
+        {
+          "trial": 39,
+          "predicted_power": 501.65484619140625,
+          "comfort_penalty": 5.10341090806348,
+          "longevity_penalty": 0.0,
+          "objective": 1216051.4881151884,
+          "energy_cost": 501.65484619140625,
+          "total_score": 1216051.4881151884,
+          "q_demand_pred": 361.6084657647627,
+          "q_required_min": 379.6888890530008,
+          "q_capability": 358.18493983518175,
+          "feasible": false,
+          "chw_supply_temp": 6.59436316674506,
+          "chwp_freq": 52.751104873095706,
+          "ct_freq": 39.902981940462574,
+          "cw_supply_temp": 28.133342687485158
+        }
+      ]
+    },
+    "mpc_summary": {
+      "total_energy_mpc": 2296.896159393529,
+      "total_energy_oracle": 2252.4174728393555,
+      "total_energy_baseline": 2296.896159393529,
+      "saving_ratio_vs_oracle": 0.0,
+      "passed_ratio_gate": false
+    },
+    "report_summary": {
+      "optimization_results_parquet": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_manual_core\\ds_manual_core\\optimization_results.parquet",
+      "mpc_control_log_parquet": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_manual_core\\ds_manual_core\\mpc_control_log.parquet",
+      "savings_report_json": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_manual_core\\ds_manual_core\\savings_report.json",
+      "html_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_manual_core\\ds_manual_core\\reports\\monthly_report.html",
+      "pdf_path": null,
+      "template_version": "v1"
+    },
+    "dashboard_payload": {
+      "quality": [
+        {
+          "section": "quality",
+          "title": "Completeness",
+          "kind": "metric",
+          "value": 1.0,
+          "unit": "ratio",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "quality",
+          "title": "Missing Ratio",
+          "kind": "metric",
+          "value": 0.0,
+          "unit": "ratio",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "quality",
+          "title": "Anomaly Ratio",
+          "kind": "metric",
+          "value": 0.0,
+          "unit": "ratio",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "quality",
+          "title": "Rows",
+          "kind": "metric",
+          "value": 220,
+          "unit": "rows",
+          "status": "info",
+          "meta": {}
+        }
+      ],
+      "modeling": [
+        {
+          "section": "modeling",
+          "title": "Power MAPE",
+          "kind": "metric",
+          "value": 0.010160280630504651,
+          "unit": "",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "modeling",
+          "title": "Q Coverage",
+          "kind": "metric",
+          "value": 0.9583333333333334,
+          "unit": "",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "modeling",
+          "title": "Q Pinball Improvement",
+          "kind": "metric",
+          "value": 0.37955650107368166,
+          "unit": "",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "modeling",
+          "title": "Top Driver",
+          "kind": "text",
+          "value": "chw_delta_t",
+          "unit": "",
+          "status": "info",
+          "meta": {}
+        }
+      ],
+      "optimization": [
+        {
+          "section": "optimization",
+          "title": "Predicted Power",
+          "kind": "metric",
+          "value": 501.63983154296875,
+          "unit": "kW",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "optimization",
+          "title": "Saving Percent",
+          "kind": "metric",
+          "value": 0.0007471113719955667,
+          "unit": "ratio",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "optimization",
+          "title": "Feasible Trials",
+          "kind": "metric",
+          "value": 17,
+          "unit": "",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "optimization",
+          "title": "Q Capability",
+          "kind": "metric",
+          "value": 382.17488650987593,
+          "unit": "kW",
+          "status": "info",
+          "meta": {}
+        }
+      ],
+      "mpc": [
+        {
+          "section": "mpc",
+          "title": "Baseline Energy",
+          "kind": "metric",
+          "value": 2296.896159393529,
+          "unit": "kWh",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "mpc",
+          "title": "MPC Energy",
+          "kind": "metric",
+          "value": 2296.896159393529,
+          "unit": "kWh",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "mpc",
+          "title": "Oracle Energy",
+          "kind": "metric",
+          "value": 2252.4174728393555,
+          "unit": "kWh",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "mpc",
+          "title": "Savings Ratio vs Oracle",
+          "kind": "metric",
+          "value": 0.0,
+          "unit": "ratio",
+          "status": "info",
+          "meta": {}
+        }
+      ],
+      "report": [
+        {
+          "section": "report",
+          "title": "HTML Report",
+          "kind": "text",
+          "value": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_manual_core\\ds_manual_core\\reports\\monthly_report.html",
+          "unit": "",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "report",
+          "title": "PDF Report",
+          "kind": "text",
+          "value": null,
+          "unit": "",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "report",
+          "title": "Version",
+          "kind": "text",
+          "value": "v1",
+          "unit": "",
+          "status": "info",
+          "meta": {}
+        }
+      ]
+    }
+  },
+  "site_default": {
+    "dataset_id": "ds_7ec2c7f7",
+    "original_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\ds_7ec2c7f7_hvac_monthly_real.csv",
+    "cleaned_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_default\\ds_7ec2c7f7\\stage1_cleaned.csv",
+    "cleaned_parquet_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_default\\ds_7ec2c7f7\\stage1_cleaned.parquet",
+    "quality_report_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_default\\ds_7ec2c7f7\\quality_report.html",
+    "cleaning_stats": {
+      "addon_id": "hvac",
+      "raw_rows": 8633,
+      "final_rows": 2880,
+      "completeness": 0.8967470760233918,
+      "missing_ratio": 0.10325292397660824,
+      "anomaly_ratio": 0.0023166917641607786,
+      "shutdown_removed": 209,
+      "spike_count": 8,
+      "flatline_count": 12,
+      "interpolated_count": 881,
+      "range_violations": [
+        {
+          "column": "chw_supply_temp",
+          "violation_count": 2,
+          "range": [
+            3,
+            15
+          ]
+        },
+        {
+          "column": "cw_supply_temp",
+          "violation_count": 2633,
+          "range": [
+            20,
+            40
+          ]
+        },
+        {
+          "column": "cw_return_temp",
+          "violation_count": 179,
+          "range": [
+            25,
+            45
+          ]
+        },
+        {
+          "column": "ch_kw",
+          "violation_count": 49,
+          "range": [
+            0,
+            3000
+          ]
+        }
+      ],
+      "cross_issues": [
+        {
+          "rule": "energy_balance",
+          "bad_rows": 124,
+          "hint": "子設備功率加總與總功率偏差 > 5%"
+        },
+        {
+          "rule": "chw_delta_t",
+          "bad_rows": 1223,
+          "hint": "冰水 ΔT 超出 1~12°C 合理範圍"
+        }
+      ],
+      "should_halt": false,
+      "halt_reason": ""
+    },
+    "columns": [
+      "ts",
+      "OA_Temp",
+      "OA_RH",
+      "CHW_Flow",
+      "CHW_Supply_Temp",
+      "CHW_Return_Temp",
+      "CW_Supply_Temp",
+      "CW_Return_Temp",
+      "CHWP_Hz",
+      "CWP_Hz",
+      "CT_Hz",
+      "CH_kW",
+      "CHWP_kW",
+      "CWP_kW",
+      "CT_kW",
+      "Total_kW"
+    ],
+    "mapping": [
+      {
+        "source": "ts",
+        "target": "timestamp"
+      },
+      {
+        "source": "OA_Temp",
+        "target": "ambient_temp"
+      },
+      {
+        "source": "OA_RH",
+        "target": "oa_rh"
+      },
+      {
+        "source": "CHW_Flow",
+        "target": "chw_flow"
+      },
+      {
+        "source": "CHW_Supply_Temp",
+        "target": "chws_temp"
+      },
+      {
+        "source": "CHW_Return_Temp",
+        "target": "chwr_temp"
+      },
+      {
+        "source": "CW_Supply_Temp",
+        "target": "cws_temp"
+      },
+      {
+        "source": "CW_Return_Temp",
+        "target": "cwr_temp"
+      },
+      {
+        "source": "CHWP_Hz",
+        "target": "chwp_freq"
+      },
+      {
+        "source": "CWP_Hz",
+        "target": "cwp_freq"
+      },
+      {
+        "source": "CT_Hz",
+        "target": "cws_temp"
+      },
+      {
+        "source": "CH_kW",
+        "target": "chiller_power"
+      },
+      {
+        "source": "CHWP_kW",
+        "target": "chwp_power"
+      },
+      {
+        "source": "CWP_kW",
+        "target": "cwp_power"
+      },
+      {
+        "source": "CT_kW",
+        "target": "ct_fan_power"
+      },
+      {
+        "source": "Total_kW",
+        "target": "total_power"
+      }
+    ],
+    "equipment": {
+      "chillers": [
+        {
+          "id": 1,
+          "rt": 500.0,
+          "cop": 5.5
+        }
+      ]
+    },
+    "import_history": [
+      {
+        "history_id": "ih_3ee18ce1b796",
+        "dataset_id": "ds_7ec2c7f7",
+        "cleaned_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_default\\ds_7ec2c7f7\\stage1_cleaned.csv",
+        "original_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\ds_7ec2c7f7_hvac_monthly_real.csv",
+        "source_filename": "ds_7ec2c7f7_hvac_monthly_real.csv",
+        "range_start": null,
+        "range_end": null,
+        "row_count": 2880,
+        "completed_at": "2026-04-28T08:43:18.401671+00:00",
+        "mapping": [
+          {
+            "source": "ts",
+            "target": "timestamp"
+          },
+          {
+            "source": "OA_Temp",
+            "target": "ambient_temp"
+          },
+          {
+            "source": "OA_RH",
+            "target": "oa_rh"
+          },
+          {
+            "source": "CHW_Flow",
+            "target": "chw_flow"
+          },
+          {
+            "source": "CHW_Supply_Temp",
+            "target": "chws_temp"
+          },
+          {
+            "source": "CHW_Return_Temp",
+            "target": "chwr_temp"
+          },
+          {
+            "source": "CW_Supply_Temp",
+            "target": "cws_temp"
+          },
+          {
+            "source": "CW_Return_Temp",
+            "target": "cwr_temp"
+          },
+          {
+            "source": "CHWP_Hz",
+            "target": "chwp_freq"
+          },
+          {
+            "source": "CWP_Hz",
+            "target": "cwp_freq"
+          },
+          {
+            "source": "CT_Hz",
+            "target": "cws_temp"
+          },
+          {
+            "source": "CH_kW",
+            "target": "chiller_power"
+          },
+          {
+            "source": "CHWP_kW",
+            "target": "chwp_power"
+          },
+          {
+            "source": "CWP_kW",
+            "target": "cwp_power"
+          },
+          {
+            "source": "CT_kW",
+            "target": "ct_fan_power"
+          },
+          {
+            "source": "Total_kW",
+            "target": "total_power"
+          }
+        ],
+        "equipment": {
+          "chillers": [
+            {
+              "id": 1,
+              "rt": 500.0,
+              "cop": 5.5
+            }
+          ]
+        },
+        "ml_results": {
+          "status": "success",
+          "model_bundle_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_default\\ds_7ec2c7f7\\stage2_model_bundle.joblib",
+          "power_metrics": {
+            "cv_mape_best": 0.12729551870195568,
+            "holdout_mape": 0.021878667273658274,
+            "holdout_cv_rmse": 0.03304411696257534,
+            "holdout_mae": 1.0100262986547723
+          },
+          "power_top_features": [
+            {
+              "feature": "chw_delta_t",
+              "importance": 0.49224579334259033
+            },
+            {
+              "feature": "q_delivered_kw",
+              "importance": 0.3749792277812958
+            },
+            {
+              "feature": "ch_kw",
+              "importance": 0.06071602180600166
+            },
+            {
+              "feature": "system_kw_per_rt",
+              "importance": 0.03497852385044098
+            },
+            {
+              "feature": "chw_return_temp",
+              "importance": 0.026897050440311432
+            }
+          ],
+          "q_demand_metrics": {
+            "status": "skipped",
+            "message": "Not enough q_demand samples after feature building (0 rows). Need at least 12.",
+            "coverage": null,
+            "pinball_holdout": null,
+            "baseline_pinball_holdout": null,
+            "pinball_improvement": null,
+            "validation": {}
+          },
+          "q_demand_top_features": [],
+          "r2_score": 0.9781213327263417
+        },
+        "cleaning_stats": {
+          "addon_id": "hvac",
+          "raw_rows": 8633,
+          "final_rows": 2880,
+          "completeness": 0.8967470760233918,
+          "missing_ratio": 0.10325292397660824,
+          "anomaly_ratio": 0.0023166917641607786,
+          "shutdown_removed": 209,
+          "spike_count": 8,
+          "flatline_count": 12,
+          "interpolated_count": 881,
+          "range_violations": [
+            {
+              "column": "chw_supply_temp",
+              "violation_count": 2,
+              "range": [
+                3,
+                15
+              ]
+            },
+            {
+              "column": "cw_supply_temp",
+              "violation_count": 2633,
+              "range": [
+                20,
+                40
+              ]
+            },
+            {
+              "column": "cw_return_temp",
+              "violation_count": 179,
+              "range": [
+                25,
+                45
+              ]
+            },
+            {
+              "column": "ch_kw",
+              "violation_count": 49,
+              "range": [
+                0,
+                3000
+              ]
+            }
+          ],
+          "cross_issues": [
+            {
+              "rule": "energy_balance",
+              "bad_rows": 124,
+              "hint": "子設備功率加總與總功率偏差 > 5%"
+            },
+            {
+              "rule": "chw_delta_t",
+              "bad_rows": 1223,
+              "hint": "冰水 ΔT 超出 1~12°C 合理範圍"
+            }
+          ],
+          "should_halt": false,
+          "halt_reason": ""
+        },
+        "columns": [
+          "ts",
+          "OA_Temp",
+          "OA_RH",
+          "CHW_Flow",
+          "CHW_Supply_Temp",
+          "CHW_Return_Temp",
+          "CW_Supply_Temp",
+          "CW_Return_Temp",
+          "CHWP_Hz",
+          "CWP_Hz",
+          "CT_Hz",
+          "CH_kW",
+          "CHWP_kW",
+          "CWP_kW",
+          "CT_kW",
+          "Total_kW"
+        ]
+      }
+    ],
+    "active_history_id": "ih_3ee18ce1b796",
+    "ml_results": {
+      "status": "success",
+      "model_bundle_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_default\\ds_7ec2c7f7\\stage2_model_bundle.joblib",
+      "power_metrics": {
+        "cv_mape_best": 0.12729551870195568,
+        "holdout_mape": 0.021878667273658274,
+        "holdout_cv_rmse": 0.03304411696257534,
+        "holdout_mae": 1.0100262986547723
+      },
+      "power_top_features": [
+        {
+          "feature": "chw_delta_t",
+          "importance": 0.49224579334259033
+        },
+        {
+          "feature": "q_delivered_kw",
+          "importance": 0.3749792277812958
+        },
+        {
+          "feature": "ch_kw",
+          "importance": 0.06071602180600166
+        },
+        {
+          "feature": "system_kw_per_rt",
+          "importance": 0.03497852385044098
+        },
+        {
+          "feature": "chw_return_temp",
+          "importance": 0.026897050440311432
+        }
+      ],
+      "q_demand_metrics": {
+        "status": "skipped",
+        "message": "Not enough q_demand samples after feature building (0 rows). Need at least 12.",
+        "coverage": null,
+        "pinball_holdout": null,
+        "baseline_pinball_holdout": null,
+        "pinball_improvement": null,
+        "validation": {}
+      },
+      "q_demand_top_features": [],
+      "r2_score": 0.9781213327263417
+    },
+    "optimization_results": null,
+    "mpc_summary": null,
+    "report_summary": null,
+    "dashboard_payload": null
+  },
+  "site_trace_cb5a1f": {
+    "dataset_id": "ds_42d3f7eb",
+    "original_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\ds_42d3f7eb_flow.csv",
+    "cleaned_path": null,
+    "cleaned_parquet_path": null,
+    "quality_report_path": null,
+    "cleaning_stats": {
+      "initial_rows": 160,
+      "duplicates_removed": 0,
+      "outliers_detected": 0,
+      "nulls_filled": 0,
+      "final_rows": 160
+    },
+    "columns": [
+      "time",
+      "CHWS",
+      "CHWR",
+      "CHW_Flow",
+      "CHWP_Hz",
+      "CT_Hz",
+      "CWS",
+      "OA_Temp",
+      "RH",
+      "SYS_kW",
+      "CH_kW",
+      "CHWP_kW",
+      "CWP_kW",
+      "CT_kW"
+    ],
+    "mapping": [
+      {
+        "source": "time",
+        "target": "timestamp",
+        "confidence": "high",
+        "reason": "智慧識別: TIME+TEMP"
+      },
+      {
+        "source": "CHWS",
+        "target": null,
+        "confidence": "low",
+        "reason": "建議手動選配"
+      },
+      {
+        "source": "CHWR",
+        "target": null,
+        "confidence": "low",
+        "reason": "建議手動選配"
+      },
+      {
+        "source": "CHW_Flow",
+        "target": "chw_flow",
+        "confidence": "high",
+        "reason": "智慧識別: CHWP+FLOW"
+      },
+      {
+        "source": "CHWP_Hz",
+        "target": "chwp_freq",
+        "confidence": "high",
+        "reason": "智慧識別: CHWP+FREQ"
+      },
+      {
+        "source": "CT_Hz",
+        "target": "cws_temp",
+        "confidence": "high",
+        "reason": "智慧識別: CT+TEMP"
+      },
+      {
+        "source": "CWS",
+        "target": null,
+        "confidence": "low",
+        "reason": "建議手動選配"
+      },
+      {
+        "source": "OA_Temp",
+        "target": "ambient_temp",
+        "confidence": "high",
+        "reason": "智慧識別: OA+TEMP"
+      },
+      {
+        "source": "RH",
+        "target": null,
+        "confidence": "low",
+        "reason": "建議手動選配"
+      },
+      {
+        "source": "SYS_kW",
+        "target": null,
+        "confidence": "low",
+        "reason": "建議手動選配"
+      },
+      {
+        "source": "CH_kW",
+        "target": "chiller_power",
+        "confidence": "high",
+        "reason": "智慧識別: CHILLER+POWER"
+      },
+      {
+        "source": "CHWP_kW",
+        "target": "chwp_power",
+        "confidence": "high",
+        "reason": "智慧識別: CHWP+POWER"
+      },
+      {
+        "source": "CWP_kW",
+        "target": "cwp_power",
+        "confidence": "high",
+        "reason": "智慧識別: CWP+POWER"
+      },
+      {
+        "source": "CT_kW",
+        "target": "ct_fan_power",
+        "confidence": "high",
+        "reason": "智慧識別: CT+POWER"
+      }
+    ],
+    "equipment": null,
+    "import_history": [],
+    "active_history_id": null,
+    "ml_results": null,
+    "optimization_results": null,
+    "mpc_summary": null,
+    "report_summary": null,
+    "dashboard_payload": null
+  },
+  "site_trace_185225": {
+    "dataset_id": "ds_408dd9e9",
+    "original_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\ds_408dd9e9_flow.csv",
+    "cleaned_path": null,
+    "cleaned_parquet_path": null,
+    "quality_report_path": null,
+    "cleaning_stats": {
+      "initial_rows": 160,
+      "duplicates_removed": 0,
+      "outliers_detected": 0,
+      "nulls_filled": 0,
+      "final_rows": 160
+    },
+    "columns": [
+      "time",
+      "CHWS",
+      "CHWR",
+      "CHW_Flow",
+      "CHWP_Hz",
+      "CT_Hz",
+      "CWS",
+      "OA_Temp",
+      "RH",
+      "SYS_kW",
+      "CH_kW",
+      "CHWP_kW",
+      "CWP_kW",
+      "CT_kW"
+    ],
+    "mapping": [
+      {
+        "source": "time",
+        "target": "timestamp"
+      },
+      {
+        "source": "CHWS",
+        "target": "chws_temp"
+      },
+      {
+        "source": "CHWR",
+        "target": "chwr_temp"
+      },
+      {
+        "source": "CHW_Flow",
+        "target": "chw_flow"
+      },
+      {
+        "source": "CHWP_Hz",
+        "target": "chwp_freq"
+      },
+      {
+        "source": "CT_Hz",
+        "target": "ct_fan_freq"
+      },
+      {
+        "source": "CWS",
+        "target": "cws_temp"
+      },
+      {
+        "source": "OA_Temp",
+        "target": "ambient_temp"
+      },
+      {
+        "source": "RH",
+        "target": "oa_rh"
+      },
+      {
+        "source": "SYS_kW",
+        "target": "total_power"
+      },
+      {
+        "source": "CH_kW",
+        "target": "chiller_power"
+      },
+      {
+        "source": "CHWP_kW",
+        "target": "chwp_power"
+      },
+      {
+        "source": "CWP_kW",
+        "target": "cwp_power"
+      },
+      {
+        "source": "CT_kW",
+        "target": "ct_fan_power"
+      }
+    ],
+    "equipment": null,
+    "import_history": [],
+    "active_history_id": null,
+    "ml_results": null,
+    "optimization_results": null,
+    "mpc_summary": null,
+    "report_summary": null,
+    "dashboard_payload": null
+  },
+  "site_proj_2552ee94": {
+    "dataset_id": "ds_745adcf8",
+    "original_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\ds_745adcf8_flow.csv",
+    "cleaned_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_proj_2552ee94\\ds_745adcf8\\stage1_cleaned.csv",
+    "cleaned_parquet_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_proj_2552ee94\\ds_745adcf8\\stage1_cleaned.parquet",
+    "quality_report_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_proj_2552ee94\\ds_745adcf8\\quality_report.html",
+    "cleaning_stats": {
+      "addon_id": "hvac",
+      "raw_rows": 240,
+      "final_rows": 240,
+      "completeness": 1.0,
+      "missing_ratio": 0.0,
+      "anomaly_ratio": 0.0,
+      "shutdown_removed": 0,
+      "spike_count": 0,
+      "flatline_count": 0,
+      "interpolated_count": 0,
+      "range_violations": [],
+      "cross_issues": [
+        {
+          "rule": "energy_balance",
+          "bad_rows": 240,
+          "hint": "子設備功率加總與總功率偏差 > 5%"
+        }
+      ],
+      "should_halt": false,
+      "halt_reason": ""
+    },
+    "columns": [
+      "time",
+      "CHWS",
+      "CHWR",
+      "CHW_Flow",
+      "CHWP_Hz",
+      "CT_Hz",
+      "CWS",
+      "OA_Temp",
+      "RH",
+      "SYS_kW",
+      "CH_kW",
+      "CHWP_kW",
+      "CWP_kW",
+      "CT_kW"
+    ],
+    "mapping": [
+      {
+        "source": "time",
+        "target": "timestamp"
+      },
+      {
+        "source": "CHWS",
+        "target": "chws_temp"
+      },
+      {
+        "source": "CHWR",
+        "target": "chwr_temp"
+      },
+      {
+        "source": "CHW_Flow",
+        "target": "chw_flow"
+      },
+      {
+        "source": "CHWP_Hz",
+        "target": "chwp_freq"
+      },
+      {
+        "source": "CT_Hz",
+        "target": "ct_fan_freq"
+      },
+      {
+        "source": "CWS",
+        "target": "cws_temp"
+      },
+      {
+        "source": "OA_Temp",
+        "target": "ambient_temp"
+      },
+      {
+        "source": "RH",
+        "target": "oa_rh"
+      },
+      {
+        "source": "SYS_kW",
+        "target": "total_power"
+      },
+      {
+        "source": "CH_kW",
+        "target": "chiller_power"
+      },
+      {
+        "source": "CHWP_kW",
+        "target": "chwp_power"
+      },
+      {
+        "source": "CWP_kW",
+        "target": "cwp_power"
+      },
+      {
+        "source": "CT_kW",
+        "target": "ct_fan_power"
+      }
+    ],
+    "equipment": {
+      "chillers": [
+        {
+          "id": 1,
+          "rt": 500.0,
+          "cop": 5.5
+        }
+      ]
+    },
+    "import_history": [
+      {
+        "history_id": "ih_cbf38351c47f",
+        "dataset_id": "ds_745adcf8",
+        "cleaned_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_proj_2552ee94\\ds_745adcf8\\stage1_cleaned.csv",
+        "original_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\ds_745adcf8_flow.csv",
+        "source_filename": "ds_745adcf8_flow.csv",
+        "range_start": null,
+        "range_end": null,
+        "row_count": 240,
+        "completed_at": "2026-04-28T10:08:28.501771+00:00",
+        "mapping": [
+          {
+            "source": "time",
+            "target": "timestamp"
+          },
+          {
+            "source": "CHWS",
+            "target": "chws_temp"
+          },
+          {
+            "source": "CHWR",
+            "target": "chwr_temp"
+          },
+          {
+            "source": "CHW_Flow",
+            "target": "chw_flow"
+          },
+          {
+            "source": "CHWP_Hz",
+            "target": "chwp_freq"
+          },
+          {
+            "source": "CT_Hz",
+            "target": "ct_fan_freq"
+          },
+          {
+            "source": "CWS",
+            "target": "cws_temp"
+          },
+          {
+            "source": "OA_Temp",
+            "target": "ambient_temp"
+          },
+          {
+            "source": "RH",
+            "target": "oa_rh"
+          },
+          {
+            "source": "SYS_kW",
+            "target": "total_power"
+          },
+          {
+            "source": "CH_kW",
+            "target": "chiller_power"
+          },
+          {
+            "source": "CHWP_kW",
+            "target": "chwp_power"
+          },
+          {
+            "source": "CWP_kW",
+            "target": "cwp_power"
+          },
+          {
+            "source": "CT_kW",
+            "target": "ct_fan_power"
+          }
+        ],
+        "equipment": {
+          "chillers": [
+            {
+              "id": 1,
+              "rt": 500.0,
+              "cop": 5.5
+            }
+          ]
+        },
+        "ml_results": {
+          "status": "success",
+          "model_bundle_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_proj_2552ee94\\ds_745adcf8\\stage2_model_bundle.joblib",
+          "power_metrics": {
+            "cv_mape_best": 0.01836971547477609,
+            "holdout_mape": 0.015043060090628602,
+            "holdout_cv_rmse": 0.0175047661073681,
+            "holdout_mae": 7.653027106721064
+          },
+          "power_top_features": [
+            {
+              "feature": "chiller_plr",
+              "importance": 0.533557653427124
+            },
+            {
+              "feature": "ct_kw",
+              "importance": 0.205672487616539
+            },
+            {
+              "feature": "cwp_kw",
+              "importance": 0.12995941936969757
+            },
+            {
+              "feature": "ch_kw",
+              "importance": 0.10354523360729218
+            },
+            {
+              "feature": "chwp_kw",
+              "importance": 0.024736659601330757
+            }
+          ],
+          "q_demand_metrics": {
+            "status": "success",
+            "message": "",
+            "coverage": 0.7142857142857143,
+            "pinball_holdout": 0.2504954674874816,
+            "baseline_pinball_holdout": 9.659178079203405,
+            "pinball_improvement": 0.9740665856418147,
+            "validation": {
+              "coverage_ok": false,
+              "pinball_improvement_ok": true,
+              "weather_driver_ok": false
+            }
+          },
+          "q_demand_top_features": [
+            "q_lag_96",
+            "chw_supply_temp",
+            "chw_return_temp"
+          ],
+          "r2_score": 0.9849569399093714
+        },
+        "cleaning_stats": {
+          "addon_id": "hvac",
+          "raw_rows": 240,
+          "final_rows": 240,
+          "completeness": 1.0,
+          "missing_ratio": 0.0,
+          "anomaly_ratio": 0.0,
+          "shutdown_removed": 0,
+          "spike_count": 0,
+          "flatline_count": 0,
+          "interpolated_count": 0,
+          "range_violations": [],
+          "cross_issues": [
+            {
+              "rule": "energy_balance",
+              "bad_rows": 240,
+              "hint": "子設備功率加總與總功率偏差 > 5%"
+            }
+          ],
+          "should_halt": false,
+          "halt_reason": ""
+        },
+        "columns": [
+          "time",
+          "CHWS",
+          "CHWR",
+          "CHW_Flow",
+          "CHWP_Hz",
+          "CT_Hz",
+          "CWS",
+          "OA_Temp",
+          "RH",
+          "SYS_kW",
+          "CH_kW",
+          "CHWP_kW",
+          "CWP_kW",
+          "CT_kW"
+        ]
+      }
+    ],
+    "active_history_id": "ih_cbf38351c47f",
+    "ml_results": {
+      "status": "success",
+      "model_bundle_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_proj_2552ee94\\ds_745adcf8\\stage2_model_bundle.joblib",
+      "power_metrics": {
+        "cv_mape_best": 0.01836971547477609,
+        "holdout_mape": 0.015043060090628602,
+        "holdout_cv_rmse": 0.0175047661073681,
+        "holdout_mae": 7.653027106721064
+      },
+      "power_top_features": [
+        {
+          "feature": "chiller_plr",
+          "importance": 0.533557653427124
+        },
+        {
+          "feature": "ct_kw",
+          "importance": 0.205672487616539
+        },
+        {
+          "feature": "cwp_kw",
+          "importance": 0.12995941936969757
+        },
+        {
+          "feature": "ch_kw",
+          "importance": 0.10354523360729218
+        },
+        {
+          "feature": "chwp_kw",
+          "importance": 0.024736659601330757
+        }
+      ],
+      "q_demand_metrics": {
+        "status": "success",
+        "message": "",
+        "coverage": 0.7142857142857143,
+        "pinball_holdout": 0.2504954674874816,
+        "baseline_pinball_holdout": 9.659178079203405,
+        "pinball_improvement": 0.9740665856418147,
+        "validation": {
+          "coverage_ok": false,
+          "pinball_improvement_ok": true,
+          "weather_driver_ok": false
+        }
+      },
+      "q_demand_top_features": [
+        "q_lag_96",
+        "chw_supply_temp",
+        "chw_return_temp"
+      ],
+      "r2_score": 0.9849569399093714
+    },
+    "optimization_results": {
+      "baseline": {
+        "total_kw": 478.9,
+        "ch_kw": 335.2,
+        "chwp_kw": 38.3,
+        "cwp_kw": 33.5,
+        "ct_kw": 23.9,
+        "cost_daily": 22124.0,
+        "chws_temp": 7.0,
+        "cws_temp": 28.01,
+        "chwp_hz": 50.0,
+        "ct_hz": 42.0
+      },
+      "optimized": {
+        "total_kw": 495.4,
+        "ch_kw": 335.1,
+        "chwp_kw": 38.3,
+        "cwp_kw": 33.5,
+        "ct_kw": 23.9,
+        "cost_daily": 22888.0
+      },
+      "savings": {
+        "total_kw": 0.2,
+        "total_pct": 0.0,
+        "ch_kw": 0.1,
+        "chwp_kw": 0.0,
+        "ct_kw": 0.0,
+        "cwp_kw": 0.0,
+        "cost_daily": 7.0,
+        "cost_annual": 2617.0
+      },
+      "optimal_params": {
+        "chws": 6.19,
+        "chwp": 50.0,
+        "ct_fan": 42.6,
+        "cws": 28.4
+      },
+      "bounds_used": {
+        "chws": [
+          6.0,
+          9.0
+        ],
+        "chwp": [
+          40.0,
+          55.0
+        ],
+        "ct_fan": [
+          35.0,
+          50.0
+        ],
+        "cws": [
+          26.0,
+          30.0
+        ]
+      },
+      "positions": {
+        "chws": 0.063,
+        "chwp": 0.667,
+        "ct_fan": 0.507,
+        "cws": 0.6
+      },
+      "sensitivity": {
+        "CHWS": 0.1,
+        "CHWP": 0.0,
+        "CT": 0.0,
+        "CWS": 0.0
+      },
+      "converged": true,
+      "model_used": "engine-core",
+      "r2_score": null,
+      "q_constraint": {
+        "q_demand_pred": 371.593249901603,
+        "q_required_min": 390.17291239668316,
+        "q_capability": 421.162250092005,
+        "feasible": true
+      },
+      "mpc": {
+        "total_energy_mpc": 2535.0371392661873,
+        "total_energy_oracle": 2488.82039642334,
+        "total_energy_baseline": 2535.0371392661873,
+        "saving_ratio_vs_oracle": 0.0,
+        "passed_ratio_gate": false
+      },
+      "artifacts": {
+        "optimization_results_parquet": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_proj_2552ee94\\ds_745adcf8\\optimization_results.parquet",
+        "mpc_control_log_parquet": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_proj_2552ee94\\ds_745adcf8\\mpc_control_log.parquet",
+        "savings_report_json": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_proj_2552ee94\\ds_745adcf8\\savings_report.json",
+        "html_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_proj_2552ee94\\ds_745adcf8\\reports\\monthly_report.html",
+        "pdf_path": null,
+        "template_version": "v1"
+      },
+      "dashboard_payload": {
+        "quality": [
+          {
+            "section": "quality",
+            "title": "Completeness",
+            "kind": "metric",
+            "value": 1.0,
+            "unit": "ratio",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "quality",
+            "title": "Missing Ratio",
+            "kind": "metric",
+            "value": 0.0,
+            "unit": "ratio",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "quality",
+            "title": "Anomaly Ratio",
+            "kind": "metric",
+            "value": 0.0,
+            "unit": "ratio",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "quality",
+            "title": "Rows",
+            "kind": "metric",
+            "value": 240,
+            "unit": "rows",
+            "status": "info",
+            "meta": {}
+          }
+        ],
+        "modeling": [
+          {
+            "section": "modeling",
+            "title": "Power MAPE",
+            "kind": "metric",
+            "value": 0.015043060090628602,
+            "unit": "",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "modeling",
+            "title": "Q Coverage",
+            "kind": "metric",
+            "value": 0.7142857142857143,
+            "unit": "",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "modeling",
+            "title": "Q Pinball Improvement",
+            "kind": "metric",
+            "value": 0.9740665856418147,
+            "unit": "",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "modeling",
+            "title": "Top Driver",
+            "kind": "text",
+            "value": "q_lag_96",
+            "unit": "",
+            "status": "info",
+            "meta": {}
+          }
+        ],
+        "optimization": [
+          {
+            "section": "optimization",
+            "title": "Predicted Power",
+            "kind": "metric",
+            "value": 495.4183349609375,
+            "unit": "kW",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "optimization",
+            "title": "Saving Percent",
+            "kind": "metric",
+            "value": 0.00031313595156042386,
+            "unit": "ratio",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "optimization",
+            "title": "Feasible Trials",
+            "kind": "metric",
+            "value": 22,
+            "unit": "",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "optimization",
+            "title": "Q Capability",
+            "kind": "metric",
+            "value": 421.162250092005,
+            "unit": "kW",
+            "status": "info",
+            "meta": {}
+          }
+        ],
+        "mpc": [
+          {
+            "section": "mpc",
+            "title": "Baseline Energy",
+            "kind": "metric",
+            "value": 2535.0371392661873,
+            "unit": "kWh",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "mpc",
+            "title": "MPC Energy",
+            "kind": "metric",
+            "value": 2535.0371392661873,
+            "unit": "kWh",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "mpc",
+            "title": "Oracle Energy",
+            "kind": "metric",
+            "value": 2488.82039642334,
+            "unit": "kWh",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "mpc",
+            "title": "Savings Ratio vs Oracle",
+            "kind": "metric",
+            "value": 0.0,
+            "unit": "ratio",
+            "status": "info",
+            "meta": {}
+          }
+        ],
+        "report": [
+          {
+            "section": "report",
+            "title": "HTML Report",
+            "kind": "text",
+            "value": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_proj_2552ee94\\ds_745adcf8\\reports\\monthly_report.html",
+            "unit": "",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "report",
+            "title": "PDF Report",
+            "kind": "text",
+            "value": null,
+            "unit": "",
+            "status": "info",
+            "meta": {}
+          },
+          {
+            "section": "report",
+            "title": "Version",
+            "kind": "text",
+            "value": "v1",
+            "unit": "",
+            "status": "info",
+            "meta": {}
+          }
+        ]
+      },
+      "best_solution": {
+        "energy_cost": 495.4183349609375,
+        "setpoints": {
+          "chw_supply_temp": 6.185025569428686,
+          "chwp_freq": 50.009655493269946,
+          "ct_freq": 42.58701758064362,
+          "cw_supply_temp": 28.404983022058403
+        },
+        "comfort_penalty": 2.1921148533076655,
+        "total_score": 714.629820291704,
+        "q_demand_pred": 371.593249901603,
+        "q_required_min": 390.17291239668316,
+        "q_capability": 421.162250092005,
+        "feasible": true
+      },
+      "trials": [
+        {
+          "trial": 0,
+          "predicted_power": 495.3713684082031,
+          "comfort_penalty": 13.426341543008888,
+          "longevity_penalty": 0.0,
+          "objective": 1838.005522709092,
+          "energy_cost": 495.3713684082031,
+          "total_score": 1838.005522709092,
+          "q_demand_pred": 363.6386159798767,
+          "q_required_min": 381.82054677887055,
+          "q_capability": 394.8745007053634,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.560356362478987,
+          "chwp_freq": 43.65182379342157,
+          "ct_freq": 48.13753232621463,
+          "cw_supply_temp": 29.630040052541066
+        },
+        {
+          "trial": 1,
+          "predicted_power": 495.5323181152344,
+          "comfort_penalty": 11.26026277330746,
+          "longevity_penalty": 0.0,
+          "objective": 2115654.666052532,
+          "energy_cost": 495.5323181152344,
+          "total_score": 2115654.666052532,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 278.76960165097455,
+          "feasible": false,
+          "error": "Q capability is below the required safety margin.",
+          "chw_supply_temp": 8.218076968308155,
+          "chwp_freq": 44.3173332507735,
+          "ct_freq": 39.00391155087554,
+          "cw_supply_temp": 26.989162937890338
+        },
+        {
+          "trial": 2,
+          "predicted_power": 495.49053955078125,
+          "comfort_penalty": 17.389842659027536,
+          "longevity_penalty": 0.0,
+          "objective": 1912718.4297144134,
+          "energy_cost": 495.49053955078125,
+          "total_score": 1912718.4297144134,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 299.1245169057872,
+          "feasible": false,
+          "error": "Q capability is below the required safety margin.",
+          "chw_supply_temp": 7.927453896218814,
+          "chwp_freq": 41.381429857996224,
+          "ct_freq": 49.842443785818055,
+          "cw_supply_temp": 29.09126765716713
+        },
+        {
+          "trial": 3,
+          "predicted_power": 495.41131591796875,
+          "comfort_penalty": 10.662189314172942,
+          "longevity_penalty": 0.0,
+          "objective": 1204121.662718807,
+          "energy_cost": 495.41131591796875,
+          "total_score": 1204121.662718807,
+          "q_demand_pred": 362.7209445890663,
+          "q_required_min": 380.8569918185196,
+          "q_capability": 360.6009885713724,
+          "feasible": false,
+          "error": "Q capability is below the required safety margin.",
+          "chw_supply_temp": 7.049706146694705,
+          "chwp_freq": 44.14031879765276,
+          "ct_freq": 46.771301612980125,
+          "cw_supply_temp": 26.468980159797507
+        },
+        {
+          "trial": 4,
+          "predicted_power": 495.53106689453125,
+          "comfort_penalty": 7.010772043357271,
+          "longevity_penalty": 0.0,
+          "objective": 2323240.710460774,
+          "energy_cost": 495.53106689453125,
+          "total_score": 2323240.710460774,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 257.9685021777288,
+          "feasible": false,
+          "error": "Q capability is below the required safety margin.",
+          "chw_supply_temp": 8.515070562045734,
+          "chwp_freq": 45.80629192068529,
+          "ct_freq": 42.01163454941407,
+          "cw_supply_temp": 27.03896559312779
+        },
+        {
+          "trial": 5,
+          "predicted_power": 495.4598083496094,
+          "comfort_penalty": 14.167501648770472,
+          "longevity_penalty": 0.0,
+          "objective": 1341012.6306892706,
+          "energy_cost": 495.4598083496094,
+          "total_score": 1341012.6306892706,
+          "q_demand_pred": 362.65702090166747,
+          "q_required_min": 380.78987194675085,
+          "q_capability": 346.87982987514647,
+          "feasible": false,
+          "error": "Q capability is below the required safety margin.",
+          "chw_supply_temp": 7.245613879200726,
+          "chwp_freq": 40.55709260483007,
+          "ct_freq": 39.748197325361176,
+          "cw_supply_temp": 29.41495748935092
+        },
+        {
+          "trial": 6,
+          "predicted_power": 495.3956298828125,
+          "comfort_penalty": 7.912472092668086,
+          "longevity_penalty": 0.0,
+          "objective": 1286.642839149621,
+          "energy_cost": 495.3956298828125,
+          "total_score": 1286.642839149621,
+          "q_demand_pred": 363.62166986381055,
+          "q_required_min": 381.8027533570011,
+          "q_capability": 390.78341418343683,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.618768009901812,
+          "chwp_freq": 43.770925901057225,
+          "ct_freq": 42.563620085987765,
+          "cw_supply_temp": 26.447649597257783
+        },
+        {
+          "trial": 7,
+          "predicted_power": 495.5289306640625,
+          "comfort_penalty": 9.182591640699403,
+          "longevity_penalty": 0.0,
+          "objective": 2196679.8279781025,
+          "energy_cost": 495.5289306640625,
+          "total_score": 2196679.8279781025,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 270.6463084083463,
+          "feasible": false,
+          "error": "Q capability is below the required safety margin.",
+          "chw_supply_temp": 8.334059590102518,
+          "chwp_freq": 42.966621556821295,
+          "ct_freq": 42.24580628775109,
+          "cw_supply_temp": 28.248739684759197
+        },
+        {
+          "trial": 8,
+          "predicted_power": 495.52435302734375,
+          "comfort_penalty": 8.725614210387906,
+          "longevity_penalty": 0.0,
+          "objective": 1582081.0486331151,
+          "energy_cost": 495.52435302734375,
+          "total_score": 1582081.0486331151,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 332.10161611077825,
+          "feasible": false,
+          "error": "Q capability is below the required safety margin.",
+          "chw_supply_temp": 7.45661401506119,
+          "chwp_freq": 51.65146193203582,
+          "ct_freq": 38.539518170930634,
+          "cw_supply_temp": 29.568379088503892
+        },
+        {
+          "trial": 9,
+          "predicted_power": 495.3943786621094,
+          "comfort_penalty": 7.361192728129413,
+          "longevity_penalty": 0.0,
+          "objective": 1017305.337465667,
+          "energy_cost": 495.3943786621094,
+          "total_score": 1017305.337465667,
+          "q_demand_pred": 363.62058370225697,
+          "q_required_min": 381.80161288736986,
+          "q_capability": 380.19423050595066,
+          "feasible": false,
+          "error": "Q capability is below the required safety margin.",
+          "chw_supply_temp": 6.769958081328993,
+          "chwp_freq": 44.22791633052173,
+          "ct_freq": 44.32813322413061,
+          "cw_supply_temp": 27.38038873843284
+        },
+        {
+          "trial": 10,
+          "predicted_power": 495.3917541503906,
+          "comfort_penalty": 8.864654523167399,
+          "longevity_penalty": 0.0,
+          "objective": 1381.8572064671305,
+          "energy_cost": 495.3917541503906,
+          "total_score": 1381.8572064671305,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 414.5545779833829,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.279368480884079,
+          "chwp_freq": 49.55984426349596,
+          "ct_freq": 36.43348984344401,
+          "cw_supply_temp": 26.176078575881224
+        },
+        {
+          "trial": 11,
+          "predicted_power": 495.3924865722656,
+          "comfort_penalty": 10.555652464774813,
+          "longevity_penalty": 0.0,
+          "objective": 1550.9577330497468,
+          "energy_cost": 495.3924865722656,
+          "total_score": 1550.9577330497468,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 430.9054699373254,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.045913986401124,
+          "chwp_freq": 49.64215362605629,
+          "ct_freq": 35.08958300568008,
+          "cw_supply_temp": 26.04089699138051
+        },
+        {
+          "trial": 12,
+          "predicted_power": 495.40472412109375,
+          "comfort_penalty": 14.510641113165049,
+          "longevity_penalty": 0.0,
+          "objective": 1946.4688354375985,
+          "energy_cost": 495.40472412109375,
+          "total_score": 1946.4688354375985,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 418.1869524023163,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.227506225532288,
+          "chwp_freq": 54.84249621982988,
+          "ct_freq": 36.15046978232015,
+          "cw_supply_temp": 26.043771920992633
+        },
+        {
+          "trial": 13,
+          "predicted_power": 495.3750915527344,
+          "comfort_penalty": 3.8175560438702103,
+          "longevity_penalty": 0.0,
+          "objective": 877.1306959397555,
+          "energy_cost": 495.3750915527344,
+          "total_score": 877.1306959397555,
+          "q_demand_pred": 363.61063626843065,
+          "q_required_min": 381.7911680818522,
+          "q_capability": 398.35152909386215,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.510712104109086,
+          "chwp_freq": 48.180978808700914,
+          "ct_freq": 44.62002971034216,
+          "cw_supply_temp": 28.018267926184304
+        },
+        {
+          "trial": 14,
+          "predicted_power": 495.37200927734375,
+          "comfort_penalty": 4.930768104780049,
+          "longevity_penalty": 0.0,
+          "objective": 1052781.6040889109,
+          "energy_cost": 495.37200927734375,
+          "total_score": 1052781.6040889109,
+          "q_demand_pred": 363.35073551386466,
+          "q_required_min": 381.5182722895579,
+          "q_capability": 376.33895676264234,
+          "feasible": false,
+          "error": "Q capability is below the required safety margin.",
+          "chw_supply_temp": 6.825002844964682,
+          "chwp_freq": 47.26160438582985,
+          "ct_freq": 44.98394462321867,
+          "cw_supply_temp": 28.162481392202164
+        },
+        {
+          "trial": 15,
+          "predicted_power": 495.49053955078125,
+          "comfort_penalty": 6.513873628773798,
+          "longevity_penalty": 0.0,
+          "objective": 2599478.2854206073,
+          "energy_cost": 495.49053955078125,
+          "total_score": 2599478.2854206073,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 230.33977164486527,
+          "feasible": false,
+          "error": "Q capability is below the required safety margin.",
+          "chw_supply_temp": 8.909547593508242,
+          "chwp_freq": 47.25539163976944,
+          "ct_freq": 44.2389118383555,
+          "cw_supply_temp": 28.710698658859737
+        },
+        {
+          "trial": 16,
+          "predicted_power": 495.3924865722656,
+          "comfort_penalty": 2.570923963118469,
+          "longevity_penalty": 0.0,
+          "objective": 752.4848828841125,
+          "energy_cost": 495.3924865722656,
+          "total_score": 752.4848828841125,
+          "q_demand_pred": 363.50670269770484,
+          "q_required_min": 381.6820378325901,
+          "q_capability": 399.24373765790756,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.497973343442126,
+          "chwp_freq": 49.63955402432977,
+          "ct_freq": 41.05322274577864,
+          "cw_supply_temp": 27.60732679417077
+        },
+        {
+          "trial": 17,
+          "predicted_power": 495.5351257324219,
+          "comfort_penalty": 4.668448031288763,
+          "longevity_penalty": 0.0,
+          "objective": 1805105.737546226,
+          "energy_cost": 495.5351257324219,
+          "total_score": 1805105.737546226,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 309.7585766349467,
+          "feasible": false,
+          "error": "Q capability is below the required safety margin.",
+          "chw_supply_temp": 7.775623094243887,
+          "chwp_freq": 51.32631984052464,
+          "ct_freq": 40.839832896375604,
+          "cw_supply_temp": 27.722712686950413
+        },
+        {
+          "trial": 18,
+          "predicted_power": 495.3653564453125,
+          "comfort_penalty": 4.066340473466959,
+          "longevity_penalty": 0.0,
+          "objective": 1199416.5619468584,
+          "energy_cost": 495.3653564453125,
+          "total_score": 1199416.5619468584,
+          "q_demand_pred": 362.71890076370875,
+          "q_required_min": 380.8548458018942,
+          "q_capability": 361.0033895475876,
+          "feasible": false,
+          "error": "Q capability is below the required safety margin.",
+          "chw_supply_temp": 7.043960752697461,
+          "chwp_freq": 49.29771570280379,
+          "ct_freq": 45.795349207772404,
+          "cw_supply_temp": 28.614639037981124
+        },
+        {
+          "trial": 19,
+          "predicted_power": 495.38677978515625,
+          "comfort_penalty": 5.2685280020707435,
+          "longevity_penalty": 0.0,
+          "objective": 1022.2395799922306,
+          "energy_cost": 495.38677978515625,
+          "total_score": 1022.2395799922306,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 410.6733184479576,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.3347842640323115,
+          "chwp_freq": 53.859170126388854,
+          "ct_freq": 43.23727825167122,
+          "cw_supply_temp": 27.68091590154695
+        },
+        {
+          "trial": 20,
+          "predicted_power": 495.3890686035156,
+          "comfort_penalty": 6.965998107472563,
+          "longevity_penalty": 0.0,
+          "objective": 1377437.805141487,
+          "energy_cost": 495.3890686035156,
+          "total_score": 1377437.805141487,
+          "q_demand_pred": 362.7444108097083,
+          "q_required_min": 380.88163135019374,
+          "q_capability": 343.2570497239801,
+          "feasible": false,
+          "error": "Q capability is below the required safety margin.",
+          "chw_supply_temp": 7.2973391496750075,
+          "chwp_freq": 51.8537142339949,
+          "ct_freq": 40.759917105268904,
+          "cw_supply_temp": 29.986184483353924
+        },
+        {
+          "trial": 21,
+          "predicted_power": 495.39276123046875,
+          "comfort_penalty": 5.528443083499859,
+          "longevity_penalty": 0.0,
+          "objective": 1048.2370695804548,
+          "energy_cost": 495.39276123046875,
+          "total_score": 1048.2370695804548,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 405.30186994293274,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.411476642583528,
+          "chwp_freq": 54.406229081505565,
+          "ct_freq": 43.104926176757026,
+          "cw_supply_temp": 27.759015321769134
+        },
+        {
+          "trial": 22,
+          "predicted_power": 495.38677978515625,
+          "comfort_penalty": 8.901222579734295,
+          "longevity_penalty": 0.0,
+          "objective": 1385.5090377585857,
+          "energy_cost": 495.38677978515625,
+          "total_score": 1385.5090377585857,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 430.35678775576423,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.053747951770657,
+          "chwp_freq": 53.28884587503335,
+          "ct_freq": 46.947044251293164,
+          "cw_supply_temp": 27.468699384411494
+        },
+        {
+          "trial": 23,
+          "predicted_power": 495.3713684082031,
+          "comfort_penalty": 3.317732419151082,
+          "longevity_penalty": 0.0,
+          "objective": 827.1446103233113,
+          "energy_cost": 495.3713684082031,
+          "total_score": 827.1446103233113,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 403.1268033080622,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.442531772978907,
+          "chwp_freq": 48.5023982734434,
+          "ct_freq": 43.92779204698711,
+          "cw_supply_temp": 28.463921098432532
+        },
+        {
+          "trial": 24,
+          "predicted_power": 495.38543701171875,
+          "comfort_penalty": 4.292138057865105,
+          "longevity_penalty": 0.0,
+          "objective": 924.5992427982293,
+          "energy_cost": 495.38543701171875,
+          "total_score": 924.5992427982293,
+          "q_demand_pred": 363.5196904418641,
+          "q_required_min": 381.69567496395734,
+          "q_capability": 381.6983548182061,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.74848252012131,
+          "chwp_freq": 48.161125632828835,
+          "ct_freq": 41.08464381695165,
+          "cw_supply_temp": 28.513327675022843
+        },
+        {
+          "trial": 25,
+          "predicted_power": 495.3774108886719,
+          "comfort_penalty": 7.529672499372805,
+          "longevity_penalty": 0.0,
+          "objective": 1143843.837257967,
+          "energy_cost": 495.3774108886719,
+          "total_score": 1143843.837257967,
+          "q_demand_pred": 363.23387188193385,
+          "q_required_min": 381.3955654760306,
+          "q_capability": 367.1360162163165,
+          "feasible": false,
+          "error": "Q capability is below the required safety margin.",
+          "chw_supply_temp": 6.956400437160327,
+          "chwp_freq": 45.8495340885441,
+          "ct_freq": 45.581840333369655,
+          "cw_supply_temp": 28.882817371553827
+        },
+        {
+          "trial": 26,
+          "predicted_power": 495.3861999511719,
+          "comfort_penalty": 6.731935904620192,
+          "longevity_penalty": 0.0,
+          "objective": 1168.579790413191,
+          "energy_cost": 495.3861999511719,
+          "total_score": 1168.579790413191,
+          "q_demand_pred": 363.5189860982849,
+          "q_required_min": 381.69493540319917,
+          "q_capability": 392.14671279372897,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.599303127570526,
+          "chwp_freq": 48.444309314994,
+          "ct_freq": 38.057491481092384,
+          "cw_supply_temp": 28.05997747553305
+        },
+        {
+          "trial": 27,
+          "predicted_power": 495.410400390625,
+          "comfort_penalty": 2.731360599147763,
+          "longevity_penalty": 0.0,
+          "objective": 768.5464603054013,
+          "energy_cost": 495.410400390625,
+          "total_score": 768.5464603054013,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 400.8748527884069,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.474684634831805,
+          "chwp_freq": 50.50816665399659,
+          "ct_freq": 43.691094829518164,
+          "cw_supply_temp": 28.3593772950035
+        },
+        {
+          "trial": 28,
+          "predicted_power": 495.52069091796875,
+          "comfort_penalty": 3.078379986966884,
+          "longevity_penalty": 0.0,
+          "objective": 1750419.801269926,
+          "energy_cost": 495.52069091796875,
+          "total_score": 1750419.801269926,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 315.21126813865203,
+          "feasible": false,
+          "error": "Q capability is below the required safety margin.",
+          "chw_supply_temp": 7.697770745750929,
+          "chwp_freq": 50.671505383584375,
+          "ct_freq": 43.52640680411544,
+          "cw_supply_temp": 28.496132740388813
+        },
+        {
+          "trial": 29,
+          "predicted_power": 495.3952941894531,
+          "comfort_penalty": 8.816401104557347,
+          "longevity_penalty": 0.0,
+          "objective": 1377.0354046451878,
+          "energy_cost": 495.3952941894531,
+          "total_score": 1377.0354046451878,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 432.922618674531,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.017113573551003,
+          "chwp_freq": 46.29843701376796,
+          "ct_freq": 46.739149418724146,
+          "cw_supply_temp": 27.0185203811302
+        },
+        {
+          "trial": 30,
+          "predicted_power": 495.3787841796875,
+          "comfort_penalty": 8.364392551303103,
+          "longevity_penalty": 0.0,
+          "objective": 1307045.6553234078,
+          "energy_cost": 495.3787841796875,
+          "total_score": 1307045.6553234078,
+          "q_demand_pred": 362.81803844835974,
+          "q_required_min": 380.9589403707777,
+          "q_capability": 350.38755664236794,
+          "feasible": false,
+          "error": "Q capability is below the required safety margin.",
+          "chw_supply_temp": 7.19553131602725,
+          "chwp_freq": 50.48368928376249,
+          "ct_freq": 48.759808973078464,
+          "cw_supply_temp": 29.238798665307574
+        },
+        {
+          "trial": 31,
+          "predicted_power": 495.36383056640625,
+          "comfort_penalty": 5.3729655675455135,
+          "longevity_penalty": 0.0,
+          "objective": 1032.6603873209576,
+          "energy_cost": 495.36383056640625,
+          "total_score": 1032.6603873209576,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 400.58857065465276,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.4787721091422785,
+          "chwp_freq": 52.65682017052631,
+          "ct_freq": 44.24842802870897,
+          "cw_supply_temp": 28.299083021991198
+        },
+        {
+          "trial": 32,
+          "predicted_power": 495.3830871582031,
+          "comfort_penalty": 2.800525890525165,
+          "longevity_penalty": 0.0,
+          "objective": 775.4356762107196,
+          "energy_cost": 495.3830871582031,
+          "total_score": 775.4356762107196,
+          "q_demand_pred": 363.5476686816596,
+          "q_required_min": 381.7250521157426,
+          "q_capability": 395.4117266218963,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.552685967180638,
+          "chwp_freq": 48.48865658685691,
+          "ct_freq": 41.852928071161436,
+          "cw_supply_temp": 27.921734162980098
+        },
+        {
+          "trial": 33,
+          "predicted_power": 495.3883361816406,
+          "comfort_penalty": 3.6561472332471094,
+          "longevity_penalty": 0.0,
+          "objective": 861.0030595063515,
+          "energy_cost": 495.3883361816406,
+          "total_score": 861.0030595063515,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 419.2622447938597,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.212153433623673,
+          "chwp_freq": 48.9934447147727,
+          "ct_freq": 41.213791832532635,
+          "cw_supply_temp": 27.237898472696553
+        },
+        {
+          "trial": 34,
+          "predicted_power": 495.4377746582031,
+          "comfort_penalty": 4.499538206920545,
+          "longevity_penalty": 0.0,
+          "objective": 945.3915953502576,
+          "energy_cost": 495.4377746582031,
+          "total_score": 945.3915953502576,
+          "q_demand_pred": 363.60246356272006,
+          "q_required_min": 381.78258674085606,
+          "q_capability": 386.7308527805748,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.676629604017365,
+          "chwp_freq": 50.43260379688579,
+          "ct_freq": 39.70288717267576,
+          "cw_supply_temp": 27.896931698676255
+        },
+        {
+          "trial": 35,
+          "predicted_power": 495.3821716308594,
+          "comfort_penalty": 7.829139170869054,
+          "longevity_penalty": 0.0,
+          "objective": 1074907.5802249492,
+          "energy_cost": 495.3821716308594,
+          "total_score": 1074907.5802249492,
+          "q_demand_pred": 363.22232439524413,
+          "q_required_min": 381.38344061500635,
+          "q_capability": 374.0205122013832,
+          "feasible": false,
+          "error": "Q capability is below the required safety margin.",
+          "chw_supply_temp": 6.858105094344111,
+          "chwp_freq": 46.52672100290277,
+          "ct_freq": 39.55854291650471,
+          "cw_supply_temp": 28.999445831876592
+        },
+        {
+          "trial": 36,
+          "predicted_power": 495.40716552734375,
+          "comfort_penalty": 5.564586182304808,
+          "longevity_penalty": 0.0,
+          "objective": 1051.8657837578246,
+          "energy_cost": 495.40716552734375,
+          "total_score": 1051.8657837578246,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 402.22398754206,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.455421980978384,
+          "chwp_freq": 52.347018434950265,
+          "ct_freq": 41.61300261664157,
+          "cw_supply_temp": 26.803900477205737
+        },
+        {
+          "trial": 37,
+          "predicted_power": 495.4217529296875,
+          "comfort_penalty": 7.4743960317639635,
+          "longevity_penalty": 0.0,
+          "objective": 1236054.636816922,
+          "energy_cost": 495.4217529296875,
+          "total_score": 1236054.636816922,
+          "q_demand_pred": 362.6564217771074,
+          "q_required_min": 380.7892428659628,
+          "q_capability": 357.3080653198812,
+          "feasible": false,
+          "error": "Q capability is below the required safety margin.",
+          "chw_supply_temp": 7.09672179178694,
+          "chwp_freq": 45.11412310411249,
+          "ct_freq": 40.32619734098489,
+          "cw_supply_temp": 27.534598859464285
+        },
+        {
+          "trial": 38,
+          "predicted_power": 495.4183349609375,
+          "comfort_penalty": 2.1921148533076655,
+          "longevity_penalty": 0.0,
+          "objective": 714.629820291704,
+          "energy_cost": 495.4183349609375,
+          "total_score": 714.629820291704,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 421.162250092005,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.185025569428686,
+          "chwp_freq": 50.009655493269946,
+          "ct_freq": 42.58701758064362,
+          "cw_supply_temp": 28.404983022058403
+        },
+        {
+          "trial": 39,
+          "predicted_power": 495.4183349609375,
+          "comfort_penalty": 2.4052342699565488,
+          "longevity_penalty": 0.0,
+          "objective": 735.9417619565924,
+          "energy_cost": 495.4183349609375,
+          "total_score": 735.9417619565924,
+          "q_demand_pred": 371.593249901603,
+          "q_required_min": 390.17291239668316,
+          "q_capability": 419.5783208075131,
+          "feasible": true,
+          "error": NaN,
+          "chw_supply_temp": 6.207640568747952,
+          "chwp_freq": 50.257622987751645,
+          "ct_freq": 42.48298577366219,
+          "cw_supply_temp": 28.28871813656343
+        }
+      ]
+    },
+    "mpc_summary": {
+      "total_energy_mpc": 2535.0371392661873,
+      "total_energy_oracle": 2488.82039642334,
+      "total_energy_baseline": 2535.0371392661873,
+      "saving_ratio_vs_oracle": 0.0,
+      "passed_ratio_gate": false
+    },
+    "report_summary": {
+      "optimization_results_parquet": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_proj_2552ee94\\ds_745adcf8\\optimization_results.parquet",
+      "mpc_control_log_parquet": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_proj_2552ee94\\ds_745adcf8\\mpc_control_log.parquet",
+      "savings_report_json": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_proj_2552ee94\\ds_745adcf8\\savings_report.json",
+      "html_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_proj_2552ee94\\ds_745adcf8\\reports\\monthly_report.html",
+      "pdf_path": null,
+      "template_version": "v1"
+    },
+    "dashboard_payload": {
+      "quality": [
+        {
+          "section": "quality",
+          "title": "Completeness",
+          "kind": "metric",
+          "value": 1.0,
+          "unit": "ratio",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "quality",
+          "title": "Missing Ratio",
+          "kind": "metric",
+          "value": 0.0,
+          "unit": "ratio",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "quality",
+          "title": "Anomaly Ratio",
+          "kind": "metric",
+          "value": 0.0,
+          "unit": "ratio",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "quality",
+          "title": "Rows",
+          "kind": "metric",
+          "value": 240,
+          "unit": "rows",
+          "status": "info",
+          "meta": {}
+        }
+      ],
+      "modeling": [
+        {
+          "section": "modeling",
+          "title": "Power MAPE",
+          "kind": "metric",
+          "value": 0.015043060090628602,
+          "unit": "",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "modeling",
+          "title": "Q Coverage",
+          "kind": "metric",
+          "value": 0.7142857142857143,
+          "unit": "",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "modeling",
+          "title": "Q Pinball Improvement",
+          "kind": "metric",
+          "value": 0.9740665856418147,
+          "unit": "",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "modeling",
+          "title": "Top Driver",
+          "kind": "text",
+          "value": "q_lag_96",
+          "unit": "",
+          "status": "info",
+          "meta": {}
+        }
+      ],
+      "optimization": [
+        {
+          "section": "optimization",
+          "title": "Predicted Power",
+          "kind": "metric",
+          "value": 495.4183349609375,
+          "unit": "kW",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "optimization",
+          "title": "Saving Percent",
+          "kind": "metric",
+          "value": 0.00031313595156042386,
+          "unit": "ratio",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "optimization",
+          "title": "Feasible Trials",
+          "kind": "metric",
+          "value": 22,
+          "unit": "",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "optimization",
+          "title": "Q Capability",
+          "kind": "metric",
+          "value": 421.162250092005,
+          "unit": "kW",
+          "status": "info",
+          "meta": {}
+        }
+      ],
+      "mpc": [
+        {
+          "section": "mpc",
+          "title": "Baseline Energy",
+          "kind": "metric",
+          "value": 2535.0371392661873,
+          "unit": "kWh",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "mpc",
+          "title": "MPC Energy",
+          "kind": "metric",
+          "value": 2535.0371392661873,
+          "unit": "kWh",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "mpc",
+          "title": "Oracle Energy",
+          "kind": "metric",
+          "value": 2488.82039642334,
+          "unit": "kWh",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "mpc",
+          "title": "Savings Ratio vs Oracle",
+          "kind": "metric",
+          "value": 0.0,
+          "unit": "ratio",
+          "status": "info",
+          "meta": {}
+        }
+      ],
+      "report": [
+        {
+          "section": "report",
+          "title": "HTML Report",
+          "kind": "text",
+          "value": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\site_proj_2552ee94\\ds_745adcf8\\reports\\monthly_report.html",
+          "unit": "",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "report",
+          "title": "PDF Report",
+          "kind": "text",
+          "value": null,
+          "unit": "",
+          "status": "info",
+          "meta": {}
+        },
+        {
+          "section": "report",
+          "title": "Version",
+          "kind": "text",
+          "value": "v1",
+          "unit": "",
+          "status": "info",
+          "meta": {}
+        }
+      ]
+    },
+    "project_display_name": "proj-2552ee94"
+  },
+  "site_4765b738": {
+    "dataset_id": "ds_69c6a89a",
+    "original_path": "C:\\Users\\jay.yu.wu\\Downloads\\missionnnn-20260427T011234Z-3-001\\missionnnn\\data\\history\\hvac_optimizer_storage\\ds_69c6a89a_hvac_monthly_real.csv",
+    "cleaned_path": null,
+    "cleaned_parquet_path": null,
+    "quality_report_path": null,
+    "cleaning_stats": {
+      "initial_rows": 8633,
+      "duplicates_removed": 0,
+      "outliers_detected": 0,
+      "nulls_filled": 0,
+      "final_rows": 8633
+    },
+    "columns": [
+      "ts",
+      "OA_Temp",
+      "OA_RH",
+      "CHW_Flow",
+      "CHW_Supply_Temp",
+      "CHW_Return_Temp",
+      "CW_Supply_Temp",
+      "CW_Return_Temp",
+      "CHWP_Hz",
+      "CWP_Hz",
+      "CT_Hz",
+      "CH_kW",
+      "CHWP_kW",
+      "CWP_kW",
+      "CT_kW",
+      "Total_kW"
+    ],
+    "mapping": null,
+    "equipment": null,
+    "import_history": [],
+    "active_history_id": null,
+    "ml_results": null,
+    "optimization_results": null,
+    "mpc_summary": null,
+    "report_summary": null,
+    "dashboard_payload": null
+  }
+}
