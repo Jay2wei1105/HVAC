@@ -73,7 +73,7 @@ def fig_oa_scatter(data: dict[str, Any]) -> go.Figure:
             x_r    = [min(oa_c), max(oa_c)]
             y_r    = [coeffs[0]*x + coeffs[1] for x in x_r]
             fig.add_trace(go.Scatter(x=x_r, y=y_r, mode="lines", name="線性趨勢",
-                                      line=dict(color="#E53935", width=2, dash="dash"),
+                                      line=dict(color="#b84756", width=2, dash="dash"),
                                       hoverinfo="skip"))
         except Exception:
             pass

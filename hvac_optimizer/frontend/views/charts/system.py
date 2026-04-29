@@ -99,7 +99,7 @@ def fig_power_donut(data: dict[str, Any]) -> go.Figure:
                             hovertemplate="%{label}: %{value:.1f} kW 平均<extra></extra>"))
     total_avg = sum(v for v in values if v)
     fig.add_annotation(text=f"<b>{total_avg:.0f}</b><br>kW 均值",
-                        x=0.5, y=0.5, showarrow=False, font_size=14, font_color="#0b1c30")
+                        x=0.5, y=0.5, showarrow=False, font_size=14, font_color="#172133")
     fig.update_layout(**layout(title="設備用電佔比（期間均值）",
                                 showlegend=True, height=310, margin=dict(t=52,b=20,l=20,r=20)))
     return fig
@@ -136,7 +136,7 @@ def fig_load_duration(data: dict[str, Any]) -> go.Figure:
                               fillcolor="rgba(15,76,92,0.12)", line=dict(color=C["total"], width=2),
                               hovertemplate="累計時間 %{x:.1f}%<br>負載: %{y:.1f} kW<extra></extra>"))
     fig.add_hline(y=peak * 0.8, line_dash="dot", line_color="#E53935",
-                  annotation_text=f"80% Peak ({peak*0.8:.0f} kW)", annotation_font_size=11)
+                  annotation_text=f"80% Peak ({peak*0.8:.0f} kW)", annotation_font_size=11, annotation_font_color="#7b1f2c")
     fig.update_layout(**layout(
         title="負載持續時間曲線（LDC）",
         xaxis=dict(title="累計時間百分比 (%)", gridcolor="#e2e8f0"),

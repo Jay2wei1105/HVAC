@@ -133,8 +133,38 @@ def run_optimization(site_id, params):
     """
     try:
         url = f"{BASE_URL}/sites/{site_id}/analysis/optimize"
-        with httpx.Client(timeout=120.0) as client:
+        with httpx.Client(timeout=1800.0) as client:
             response = client.post(url, json=params)
+            return handle_response(response)
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def get_optimization_status(site_id):
+    try:
+        url = f"{BASE_URL}/sites/{site_id}/analysis/optimize/status"
+        with httpx.Client(timeout=5.0) as client:
+            response = client.get(url)
+            return handle_response(response)
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def get_optimization_history(site_id):
+    try:
+        url = f"{BASE_URL}/sites/{site_id}/analysis/optimize/history"
+        with httpx.Client(timeout=15.0) as client:
+            response = client.get(url)
+            return handle_response(response)
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def activate_optimization_history(site_id, optimization_id):
+    try:
+        url = f"{BASE_URL}/sites/{site_id}/analysis/optimize/history/activate"
+        with httpx.Client(timeout=30.0) as client:
+            response = client.post(url, json={"optimization_id": optimization_id})
             return handle_response(response)
     except Exception as e:
         return {"error": str(e)}

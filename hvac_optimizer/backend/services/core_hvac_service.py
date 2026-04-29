@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import json
 import os
+from itertools import product
 from dataclasses import asdict
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import joblib
 import pandas as pd
@@ -12,7 +13,17 @@ import pandas as pd
 from engine.addons.hvac import HVACAddon
 from engine.core import contracts, ingestion, interpolation, mapper, quality_engine, report, time_index
 from engine.core.ml.mpc import run_mpc
-from engine.core.ml.optimizer import BusinessWeights, ControlVariable, run_control_optimization
+from engine.core.ml.optimizer import (
+    BusinessWeights,
+    ControlVariable,
+    _append_trial_row,
+    _ensure_datetime_index,
+    _infer_step,
+    _predict_from_last_row,
+    _prepare_prediction_frame,
+    _prepare_q_demand_frame,
+    run_control_optimization,
+)
 from engine.core.ml.q_demand_trainer import train_q_demand_model
 from engine.core.ml.trainer import train_and_evaluate
 from engine.core.report_export import export_monthly_report
@@ -43,16 +54,27 @@ FRONTEND_TO_ENGINE = {
 CONTROL_NAME_MAP = {
     "chws": "chw_supply_temp",
     "chwp": "chwp_freq",
+    "cwp": "cwp_freq",
     "ct_fan": "ct_freq",
-    "cws": "cw_supply_temp",
 }
 
 DISPLAY_NAME_MAP = {
     "chw_supply_temp": ("CHWS", "C"),
     "chwp_freq": ("CHWP", "Hz"),
+    "cwp_freq": ("CWP", "Hz"),
     "ct_freq": ("CT Fan", "Hz"),
-    "cw_supply_temp": ("CWS", "C"),
 }
+
+OPT_INTERVAL_HISTORY_ROWS = 104
+LEGACY_OPT_TRIALS = 16
+FAST_MODE_LEGACY_OPT_TRIALS = 8
+MPC_ADVISORY_TRIALS = 6
+MPC_HORIZON_MAX = 12
+PROJECTION_ACTION_LIMIT = 48
+FAST_MODE_TOP_ACTIONS = 36
+FAST_MODE_REPRESENTATIVE_POINTS = 4
+EXTREME_MODE_TOP_ACTIONS = 16
+EXTREME_MODE_REPRESENTATIVE_POINTS = 3
 
 
 class CoreHVACService:
@@ -257,6 +279,13 @@ class CoreHVACService:
                 "pinball_improvement": float(q_result.pinball_improvement) if q_result is not None else None,
                 "validation": q_result.validation if q_result is not None else {},
             },
+            "q_demand_feature_importance": [
+                {"feature": name, "importance": float(value)}
+                for name, value in sorted(
+                    (q_result.feature_importance if q_result is not None else {}).items(),
+                    key=lambda item: -item[1],
+                )[:8]
+            ],
             "q_demand_top_features": q_result.top_features if q_result is not None else [],
             "r2_score": float(max(0.0, 1.0 - power_result.holdout_mape)),
         }
@@ -299,9 +328,22 @@ class CoreHVACService:
         mappings: list[dict[str, Any]],
         model_bundle_path: str,
         bounds: dict[str, list[float]],
+        optimization_mode: str = "standard",
         quality_report: dict[str, Any] | None = None,
         ml_results: dict[str, Any] | None = None,
+        progress_callback: Callable[[dict[str, Any]], None] | None = None,
     ) -> dict[str, Any]:
+        def report_progress(payload: dict[str, Any] | None = None, **kwargs: Any) -> None:
+            if progress_callback is not None:
+                merged = dict(payload or {})
+                merged.update(kwargs)
+                progress_callback(merged)
+
+        report_progress(
+            percent=2,
+            stage="loading",
+            message="正在載入清洗後資料與訓練模型...",
+        )
         df = pd.read_parquet(cleaned_parquet_path)
         if "chiller_count" not in df.columns:
             df["chiller_count"] = 1.0
@@ -319,18 +361,108 @@ class CoreHVACService:
             target=bundle["target"],
             control_vars=control_vars,
             weights=weights,
-            n_trials=40,
+            n_trials=FAST_MODE_LEGACY_OPT_TRIALS if optimization_mode == "fast" else LEGACY_OPT_TRIALS,
             addon=cls.addon,
             q_demand_model=bundle["q_demand_model"],
             q_demand_feat_cols=bundle["q_demand_feat_cols"],
         )
+        report_progress(
+            percent=12,
+            stage="grid_build",
+            message="正在建立粗網格控制組合...",
+        )
+        candidate_actions = cls._build_grid_actions(control_vars=control_vars)
+        if not candidate_actions:
+            raise ValueError("No grid control combinations could be built from the provided bounds.")
+        interval_actions = candidate_actions
+        if optimization_mode == "fast":
+            report_progress(
+                percent=14,
+                stage="fast_prescreen",
+                message="正在做加速版全域快篩，縮小候選控制組合...",
+                control_combinations=int(len(candidate_actions)),
+            )
+            interval_actions = cls._prefilter_actions_for_interval(
+                raw_df=df,
+                addon=cls.addon,
+                power_model=bundle["power_model"],
+                power_feat_cols=bundle["power_feat_cols"],
+                target=bundle["target"],
+                control_vars=control_vars,
+                candidate_actions=candidate_actions,
+                q_demand_model=bundle["q_demand_model"],
+                q_demand_feat_cols=bundle["q_demand_feat_cols"],
+                top_actions=FAST_MODE_TOP_ACTIONS,
+                representative_points=FAST_MODE_REPRESENTATIVE_POINTS,
+            )
+        elif optimization_mode == "extreme":
+            report_progress(
+                percent=14,
+                stage="extreme_prescreen",
+                message="正在做極速版全域快篩，縮到最少候選控制組合...",
+                control_combinations=int(len(candidate_actions)),
+            )
+            interval_actions = cls._prefilter_actions_for_interval(
+                raw_df=df,
+                addon=cls.addon,
+                power_model=bundle["power_model"],
+                power_feat_cols=bundle["power_feat_cols"],
+                target=bundle["target"],
+                control_vars=control_vars,
+                candidate_actions=candidate_actions,
+                q_demand_model=bundle["q_demand_model"],
+                q_demand_feat_cols=bundle["q_demand_feat_cols"],
+                top_actions=EXTREME_MODE_TOP_ACTIONS,
+                representative_points=EXTREME_MODE_REPRESENTATIVE_POINTS,
+            )
+        report_progress(
+            percent=16,
+            stage="interval_prepare",
+            message="正在準備每小時取樣點與整段區間分析...",
+            control_combinations=int(len(interval_actions)),
+            full_control_combinations=int(len(candidate_actions)),
+            optimization_mode=optimization_mode,
+        )
+        interval_analysis = cls._evaluate_interval_actions(
+            raw_df=df,
+            addon=cls.addon,
+            power_model=bundle["power_model"],
+            power_feat_cols=bundle["power_feat_cols"],
+            target=bundle["target"],
+            control_vars=control_vars,
+            candidate_actions=interval_actions,
+            q_demand_model=bundle["q_demand_model"],
+            q_demand_feat_cols=bundle["q_demand_feat_cols"],
+            electricity_rate=4.0,
+            progress_callback=report_progress,
+        )
+        if optimization_mode == "extreme":
+            future_projection = {"summary": {}, "curve": []}
+        else:
+            report_progress(
+                percent=84,
+                stage="future_projection",
+                message="正在整理未來一倍時長的預測趨勢...",
+            )
+            future_projection = cls._project_future_mpc_like(
+                raw_df=df,
+                addon=cls.addon,
+                power_model=bundle["power_model"],
+                power_feat_cols=bundle["power_feat_cols"],
+                target=bundle["target"],
+                control_vars=control_vars,
+                candidate_actions=interval_analysis.get("projection_actions") or candidate_actions[:PROJECTION_ACTION_LIMIT],
+                q_demand_model=bundle["q_demand_model"],
+                q_demand_feat_cols=bundle["q_demand_feat_cols"],
+                progress_callback=report_progress,
+            )
 
         compat_baseline = cls._build_compat_baseline(df)
         compat_optimal_params = {
             "chws": round(float(result.best_setpoints.get("chw_supply_temp", compat_baseline["chws_temp"])), 2),
             "chwp": round(float(result.best_setpoints.get("chwp_freq", compat_baseline["chwp_hz"])), 1),
+            "cwp": round(float(result.best_setpoints.get("cwp_freq", compat_baseline["cwp_hz"])), 1),
             "ct_fan": round(float(result.best_setpoints.get("ct_freq", compat_baseline["ct_hz"])), 1),
-            "cws": round(float(result.best_setpoints.get("cw_supply_temp", compat_baseline["cws_temp"])), 2),
         }
         compat_core = cls._build_compat_optimized(compat_baseline, compat_optimal_params, result)
         positions = {
@@ -340,29 +472,40 @@ class CoreHVACService:
         sensitivity = {
             "CHWS": round(float(result.saving_kwh * 0.45), 1),
             "CHWP": round(float(result.saving_kwh * 0.25), 1),
+            "CWP": round(float(result.saving_kwh * 0.10), 1),
             "CT": round(float(result.saving_kwh * 0.20), 1),
-            "CWS": round(float(result.saving_kwh * 0.10), 1),
         }
 
-        mpc_result = run_mpc(
-            raw_df=df,
-            addon=cls.addon,
-            power_model=bundle["power_model"],
-            power_feat_cols=bundle["power_feat_cols"],
-            target=bundle["target"],
-            control_vars=control_vars,
-            weights=weights,
-            q_demand_model=bundle["q_demand_model"],
-            q_demand_feat_cols=bundle["q_demand_feat_cols"],
-            horizon_steps=min(24, max(8, len(df) // 12)),
-            advisory_trials=10,
-        )
+        if optimization_mode == "extreme":
+            mpc_log_df = pd.DataFrame()
+            mpc_summary = {}
+        else:
+            mpc_result = run_mpc(
+                raw_df=df,
+                addon=cls.addon,
+                power_model=bundle["power_model"],
+                power_feat_cols=bundle["power_feat_cols"],
+                target=bundle["target"],
+                control_vars=control_vars,
+                weights=weights,
+                q_demand_model=bundle["q_demand_model"],
+                q_demand_feat_cols=bundle["q_demand_feat_cols"],
+                horizon_steps=min(MPC_HORIZON_MAX, max(6, len(df) // 24)),
+                advisory_trials=MPC_ADVISORY_TRIALS,
+            )
+            mpc_log_df = mpc_result.control_log
+            mpc_summary = mpc_result.summary
 
         artifact_dir = cls.artifact_dir(site_id, dataset_id)
+        report_progress(
+            percent=92,
+            stage="artifacts",
+            message="正在寫入最佳化結果與報表產物...",
+        )
         trials_path = artifact_dir / "optimization_results.parquet"
         result.trials_df.to_parquet(trials_path, index=False)
         mpc_path = artifact_dir / "mpc_control_log.parquet"
-        mpc_result.control_log.to_parquet(mpc_path, index=False)
+        mpc_log_df.to_parquet(mpc_path, index=False)
 
         quality_summary = {
             "completeness": (quality_report or {}).get("completeness"),
@@ -389,7 +532,7 @@ class CoreHVACService:
             quality_summary=quality_summary,
             training_summary=training_summary,
             optimization_summary=optimization_summary,
-            mpc_summary=mpc_result.summary,
+            mpc_summary=mpc_summary,
         )
         dashboard_quality = type(
             "QR",
@@ -412,7 +555,7 @@ class CoreHVACService:
             quality_report=dashboard_quality,
             training_summary=training_summary,
             optimization_summary=optimization_summary,
-            mpc_summary=mpc_result.summary,
+            mpc_summary=mpc_summary,
             report_summary=report_summary,
         )
 
@@ -427,11 +570,19 @@ class CoreHVACService:
         with savings_report_path.open("w", encoding="utf-8") as fh:
             json.dump(savings_report, fh, ensure_ascii=False, indent=2)
 
+        report_progress(
+            percent=100,
+            stage="completed",
+            message="區間優化完成。",
+            rows_evaluated=interval_analysis["summary"].get("rows_evaluated"),
+            interval_hours=interval_analysis["summary"].get("interval_hours"),
+        )
         return {
             "baseline": compat_baseline,
             **compat_core,
             "optimal_params": compat_optimal_params,
             "bounds_used": {k: [float(min(v)), float(max(v))] for k, v in bounds.items()},
+            "optimization_mode": optimization_mode,
             "positions": positions,
             "sensitivity": sensitivity,
             "converged": True,
@@ -443,7 +594,7 @@ class CoreHVACService:
                 "q_capability": result.q_capability,
                 "feasible": result.feasible,
             },
-            "mpc": mpc_result.summary,
+            "mpc": mpc_summary,
             "artifacts": {
                 "optimization_results_parquet": str(trials_path),
                 "mpc_control_log_parquet": str(mpc_path),
@@ -453,6 +604,10 @@ class CoreHVACService:
             "dashboard_payload": dashboard_payload,
             "best_solution": result.to_payload()["best_solution"],
             "trials": result.trials_df.to_dict("records"),
+            "interval_summary": interval_analysis["summary"],
+            "interval_curve": interval_analysis["curve"],
+            "equipment_savings_kwh": interval_analysis["equipment_savings_kwh"],
+            "future_projection": future_projection,
         }
 
     @classmethod
@@ -470,8 +625,8 @@ class CoreHVACService:
             "ct_kw": round(ct_kw, 1),
             "cost_daily": round(total_kw * 12.0 * 3.85, 0),
             "chws_temp": round(float(df["chw_supply_temp"].mean()), 2) if "chw_supply_temp" in df.columns else 7.0,
-            "cws_temp": round(float(df["cw_supply_temp"].mean()), 2) if "cw_supply_temp" in df.columns else 27.0,
             "chwp_hz": round(float(df["chwp_freq"].mean()), 1) if "chwp_freq" in df.columns else 45.0,
+            "cwp_hz": round(float(df["cwp_freq"].mean()), 1) if "cwp_freq" in df.columns else 45.0,
             "ct_hz": round(float(df["ct_freq"].mean()), 1) if "ct_freq" in df.columns else 42.0,
         }
 
@@ -508,6 +663,561 @@ class CoreHVACService:
                 "cost_daily": round(total_sv * 12.0 * 3.85, 0),
                 "cost_annual": round(total_sv * 12.0 * 3.85 * 365, 0),
             },
+        }
+
+    @classmethod
+    def _sample_hourly_points(cls, df: pd.DataFrame) -> pd.DataFrame:
+        working = _ensure_datetime_index(df)
+        if working.empty:
+            return working
+        # Use the last available row in each hour as the representative operating point.
+        sampled = working.groupby(working.index.floor("1h"), sort=True).tail(1)
+        return sampled.sort_index()
+
+    @classmethod
+    def _build_grid_actions(
+        cls,
+        *,
+        control_vars: list[ControlVariable],
+    ) -> list[dict[str, float]]:
+        step_map = {
+            "chw_supply_temp": 1.0,
+            "chwp_freq": 2.5,
+            "cwp_freq": 2.5,
+            "ct_freq": 2.5,
+        }
+        value_lists: list[list[float]] = []
+        ordered_vars: list[ControlVariable] = []
+
+        for cv in control_vars:
+            lo, hi = cv.effective_bounds
+            step = step_map.get(cv.name)
+            if step is None or hi < lo:
+                continue
+            values: list[float] = []
+            current = float(lo)
+            while current <= hi + 1e-9:
+                values.append(round(current, 4))
+                current += step
+            if not values or values[-1] < hi - 1e-9:
+                values.append(round(float(hi), 4))
+            value_lists.append(values)
+            ordered_vars.append(cv)
+
+        if not ordered_vars:
+            return []
+
+        actions: list[dict[str, float]] = []
+        for combo in product(*value_lists):
+            actions.append({cv.name: float(value) for cv, value in zip(ordered_vars, combo, strict=True)})
+        return actions
+
+    @classmethod
+    def _prefilter_actions_for_interval(
+        cls,
+        *,
+        raw_df: pd.DataFrame,
+        addon: Any,
+        power_model: Any,
+        power_feat_cols: list[str],
+        target: str,
+        control_vars: list[ControlVariable],
+        candidate_actions: list[dict[str, float]],
+        q_demand_model: Any | None,
+        q_demand_feat_cols: list[str] | None,
+        top_actions: int,
+        representative_points: int,
+    ) -> list[dict[str, float]]:
+        working_df = _ensure_datetime_index(raw_df)
+        sampled_df = cls._sample_hourly_points(working_df)
+        if sampled_df.empty or len(candidate_actions) <= top_actions:
+            return candidate_actions
+
+        total_points = len(sampled_df)
+        selected_indexes = sorted({int(round(i * (total_points - 1) / max(representative_points - 1, 1))) for i in range(min(representative_points, total_points))})
+        selected_rows = sampled_df.iloc[selected_indexes]
+        action_stats: dict[tuple[tuple[str, float], ...], dict[str, Any]] = {}
+
+        for ts, _current in selected_rows.iterrows():
+            history_df = working_df.loc[:ts]
+            if history_df.empty:
+                continue
+            for action in candidate_actions:
+                try:
+                    score = cls._score_action(
+                        history_df=history_df,
+                        action=action,
+                        addon=addon,
+                        power_model=power_model,
+                        power_feat_cols=power_feat_cols,
+                        target=target,
+                        control_vars=control_vars,
+                        q_demand_model=q_demand_model,
+                        q_demand_feat_cols=q_demand_feat_cols,
+                    )
+                except Exception:
+                    continue
+                action_key = tuple(sorted((str(k), round(float(v), 4)) for k, v in action.items()))
+                stat = action_stats.setdefault(
+                    action_key,
+                    {"action": {k: float(v) for k, v in action.items()}, "count": 0, "feasible_count": 0, "power_sum": 0.0},
+                )
+                stat["count"] += 1
+                stat["feasible_count"] += int(bool(score["feasible"]))
+                stat["power_sum"] += float(score["predicted_power"])
+
+        ranked_actions = sorted(
+            action_stats.values(),
+            key=lambda item: (-item["feasible_count"], item["power_sum"] / max(item["count"], 1)),
+        )
+        filtered = [item["action"] for item in ranked_actions[:top_actions]]
+        return filtered or candidate_actions[:top_actions]
+
+    @classmethod
+    def _candidate_actions_from_trials(
+        cls,
+        *,
+        control_vars: list[ControlVariable],
+        trials_df: pd.DataFrame,
+        max_actions: int = 20,
+    ) -> list[dict[str, float]]:
+        actions: list[dict[str, float]] = []
+        seen: set[tuple[float, ...]] = set()
+
+        def _add(action: dict[str, float]) -> None:
+            key = tuple(round(float(action[cv.name]), 4) for cv in control_vars)
+            if key in seen:
+                return
+            seen.add(key)
+            actions.append({cv.name: float(action[cv.name]) for cv in control_vars})
+
+        baseline_action = {cv.name: float(cv.current_value) for cv in control_vars}
+        _add(baseline_action)
+
+        if not trials_df.empty:
+            ordered = trials_df.sort_values(by=["feasible", "objective"], ascending=[False, True], kind="stable")
+            for _, row in ordered.iterrows():
+                action = {}
+                valid = True
+                for cv in control_vars:
+                    value = row.get(cv.name)
+                    if pd.isna(value):
+                        valid = False
+                        break
+                    action[cv.name] = float(value)
+                if valid:
+                    _add(action)
+                if len(actions) >= max_actions:
+                    break
+
+        for ratio in (0.2, 0.5, 0.8):
+            action = {}
+            for cv in control_vars:
+                lo, hi = cv.effective_bounds
+                action[cv.name] = float(lo + (hi - lo) * ratio)
+            _add(action)
+            if len(actions) >= max_actions:
+                break
+
+        return actions[:max_actions]
+
+    @classmethod
+    def _score_action(
+        cls,
+        *,
+        history_df: pd.DataFrame,
+        action: dict[str, float],
+        addon: Any,
+        power_model: Any,
+        power_feat_cols: list[str],
+        target: str,
+        control_vars: list[ControlVariable],
+        q_demand_model: Any | None,
+        q_demand_feat_cols: list[str] | None,
+        history_rows: int = OPT_INTERVAL_HISTORY_ROWS,
+    ) -> dict[str, Any]:
+        scenario_raw_df = _append_trial_row(history_df, control_vars, action, history_rows=history_rows)
+        predicted_power = _predict_from_last_row(
+            power_model,
+            _prepare_prediction_frame(scenario_raw_df, addon, target),
+            power_feat_cols,
+        )
+
+        q_required_min = None
+        q_capability = None
+        q_gap_pct = None
+        feasible = True
+        q_demand_pred = None
+
+        if q_demand_model is not None and q_demand_feat_cols:
+            q_frame = _prepare_q_demand_frame(scenario_raw_df, addon)
+            if q_frame.empty:
+                feasible = False
+            else:
+                missing_q_cols = [col for col in q_demand_feat_cols if col not in q_frame.columns]
+                if missing_q_cols:
+                    feasible = False
+                else:
+                    q_row = q_frame.iloc[[-1]][q_demand_feat_cols]
+                    q_demand_pred = float(q_demand_model.predict(q_row)[0])
+                    q_required_min = q_demand_pred * 1.05
+                    q_capability = addon.decision.estimate_q_capability(scenario_raw_df, action)
+                    if q_capability is None or q_required_min is None or q_required_min <= 0:
+                        feasible = False
+                    else:
+                        q_gap_pct = (float(q_capability) - float(q_required_min)) / float(q_required_min) * 100.0
+                        feasible = bool(q_capability >= q_required_min)
+
+        return {
+            "predicted_power": float(predicted_power),
+            "q_demand_pred": q_demand_pred,
+            "q_required_min": q_required_min,
+            "q_capability": q_capability,
+            "q_gap_pct": q_gap_pct,
+            "feasible": feasible,
+            "action": action,
+        }
+
+    @classmethod
+    def _evaluate_interval_actions(
+        cls,
+        *,
+        raw_df: pd.DataFrame,
+        addon: Any,
+        power_model: Any,
+        power_feat_cols: list[str],
+        target: str,
+        control_vars: list[ControlVariable],
+        candidate_actions: list[dict[str, float]],
+        q_demand_model: Any | None,
+        q_demand_feat_cols: list[str] | None,
+        electricity_rate: float,
+        progress_callback: Callable[[dict[str, Any]], None] | None = None,
+    ) -> dict[str, Any]:
+        def report_progress(**payload: Any) -> None:
+            if progress_callback is not None:
+                progress_callback(payload)
+
+        working_df = _ensure_datetime_index(raw_df)
+        sampled_df = cls._sample_hourly_points(working_df)
+        interval_h = max(_infer_step(working_df.index).total_seconds() / 3600.0, 0.0) if len(working_df.index) > 1 else 0.25
+        equipment_cols = ["ch_kw", "chwp_kw", "cwp_kw", "ct_kw"]
+        equipment_savings = {col: 0.0 for col in equipment_cols}
+        rows: list[dict[str, Any]] = []
+        total_points = int(len(sampled_df))
+        action_stats: dict[tuple[tuple[str, float], ...], dict[str, Any]] = {}
+        no_feasible_points = 0
+
+        report_progress(
+            percent=18,
+            stage="interval_running",
+            message="正在逐點評估控制組合...",
+            completed_points=0,
+            total_points=total_points,
+        )
+
+        for point_idx, (ts, current) in enumerate(sampled_df.iterrows(), start=1):
+            history_df = working_df.loc[:ts]
+            if history_df.empty:
+                continue
+            baseline_power = float(current.get(target, 0.0) or 0.0)
+
+            best_score: dict[str, Any] | None = None
+            fallback_score: dict[str, Any] | None = None
+            baseline_action = {cv.name: float(current.get(cv.name, cv.current_value) or cv.current_value) for cv in control_vars}
+            baseline_score: dict[str, Any] | None = None
+            for action in candidate_actions:
+                try:
+                    score = cls._score_action(
+                        history_df=history_df,
+                        action=action,
+                        addon=addon,
+                        power_model=power_model,
+                        power_feat_cols=power_feat_cols,
+                        target=target,
+                        control_vars=control_vars,
+                        q_demand_model=q_demand_model,
+                        q_demand_feat_cols=q_demand_feat_cols,
+                    )
+                except Exception:
+                    continue
+
+                if fallback_score is None or score["predicted_power"] < fallback_score["predicted_power"]:
+                    fallback_score = score
+                if score["feasible"] and (best_score is None or score["predicted_power"] < best_score["predicted_power"]):
+                    best_score = score
+                if action == baseline_action:
+                    baseline_score = score
+
+            if baseline_score is None:
+                try:
+                    baseline_score = cls._score_action(
+                        history_df=history_df,
+                        action=baseline_action,
+                        addon=addon,
+                        power_model=power_model,
+                        power_feat_cols=power_feat_cols,
+                        target=target,
+                        control_vars=control_vars,
+                        q_demand_model=q_demand_model,
+                        q_demand_feat_cols=q_demand_feat_cols,
+                    )
+                except Exception:
+                    baseline_score = {
+                        "predicted_power": baseline_power,
+                        "q_demand_pred": None,
+                        "q_required_min": None,
+                        "q_capability": None,
+                        "q_gap_pct": None,
+                        "feasible": False,
+                        "action": baseline_action,
+                    }
+
+            if best_score is not None:
+                chosen = best_score
+                solution_type = "optimized"
+            elif q_demand_model is not None and q_demand_feat_cols:
+                chosen = baseline_score
+                solution_type = "baseline_locked"
+                no_feasible_points += 1
+            else:
+                chosen = fallback_score or baseline_score
+                solution_type = "fallback"
+
+            optimized_power = max(float(chosen["predicted_power"]), 0.0)
+            if solution_type == "baseline_locked":
+                optimized_power = baseline_power
+            saving_power = max(baseline_power - optimized_power, 0.0)
+
+            component_total = 0.0
+            component_values: dict[str, float] = {}
+            for col in equipment_cols:
+                value = max(float(current.get(col, 0.0) or 0.0), 0.0)
+                component_values[col] = value
+                component_total += value
+            if component_total > 0 and saving_power > 0:
+                for col in equipment_cols:
+                    equipment_savings[col] += saving_power * (component_values[col] / component_total) * interval_h
+
+            rows.append(
+                {
+                    "timestamp": ts,
+                    "baseline_power_kw": baseline_power,
+                    "optimized_power_kw": optimized_power,
+                    "saving_power_kw": saving_power,
+                    "q_required_min": chosen["q_required_min"],
+                    "q_capability": chosen["q_capability"],
+                    "q_gap_pct": chosen["q_gap_pct"],
+                    "feasible": bool(chosen["feasible"]),
+                    "solution_type": solution_type,
+                }
+            )
+            action_key = tuple(sorted((str(k), round(float(v), 4)) for k, v in chosen["action"].items()))
+            stat = action_stats.setdefault(
+                action_key,
+                {
+                    "action": {k: float(v) for k, v in chosen["action"].items()},
+                    "count": 0,
+                    "power_sum": 0.0,
+                    "feasible_count": 0,
+                },
+            )
+            stat["count"] += 1
+            stat["power_sum"] += optimized_power
+            stat["feasible_count"] += int(bool(chosen["feasible"]))
+            if total_points > 0:
+                percent = 18 + int((point_idx / total_points) * 62)
+                report_progress(
+                    percent=min(percent, 80),
+                    stage="interval_running",
+                    message="正在逐點評估控制組合...",
+                    completed_points=point_idx,
+                    total_points=total_points,
+                    current_timestamp=pd.Timestamp(ts).isoformat() if pd.notna(ts) else None,
+                )
+
+        curve_df = pd.DataFrame(rows)
+        sampled_interval_h = 1.0 if len(sampled_df) > 1 else interval_h
+        baseline_kwh = float(curve_df["baseline_power_kw"].sum() * sampled_interval_h) if not curve_df.empty else 0.0
+        optimized_kwh = float(curve_df["optimized_power_kw"].sum() * sampled_interval_h) if not curve_df.empty else 0.0
+        saving_kwh = max(baseline_kwh - optimized_kwh, 0.0)
+        saving_pct = saving_kwh / baseline_kwh * 100.0 if baseline_kwh > 0 else 0.0
+        avg_q_gap_pct = float(curve_df["q_gap_pct"].dropna().mean()) if "q_gap_pct" in curve_df and curve_df["q_gap_pct"].notna().any() else 0.0
+        feasible_ratio = float(curve_df["feasible"].mean()) if not curve_df.empty else 0.0
+        ranked_actions = sorted(
+            action_stats.values(),
+            key=lambda item: (-item["count"], -(item["feasible_count"]), item["power_sum"] / max(item["count"], 1)),
+        )
+        projection_actions = [item["action"] for item in ranked_actions[:PROJECTION_ACTION_LIMIT]]
+        if not projection_actions:
+            projection_actions = candidate_actions[:PROJECTION_ACTION_LIMIT]
+
+        return {
+            "summary": {
+                "baseline_kwh": round(baseline_kwh, 2),
+                "optimized_kwh": round(optimized_kwh, 2),
+                "saving_kwh": round(saving_kwh, 2),
+                "saving_pct": round(saving_pct, 2),
+                "saving_cost_ntd": round(saving_kwh * electricity_rate, 0),
+                "avg_q_gap_pct": round(avg_q_gap_pct, 2),
+                "feasible_ratio": round(feasible_ratio, 4),
+                "no_feasible_points": int(no_feasible_points),
+                "rows_evaluated": int(len(curve_df)),
+                "interval_hours": round(sampled_interval_h * len(curve_df), 2),
+                "control_combinations": int(len(candidate_actions)),
+            },
+            "curve": [
+                {
+                    **row,
+                    "timestamp": pd.Timestamp(row["timestamp"]).isoformat() if pd.notna(row["timestamp"]) else None,
+                }
+                for row in curve_df.to_dict("records")
+            ],
+            "equipment_savings_kwh": {col: round(val, 2) for col, val in equipment_savings.items()},
+            "projection_actions": projection_actions,
+        }
+
+    @classmethod
+    def _project_future_mpc_like(
+        cls,
+        *,
+        raw_df: pd.DataFrame,
+        addon: Any,
+        power_model: Any,
+        power_feat_cols: list[str],
+        target: str,
+        control_vars: list[ControlVariable],
+        candidate_actions: list[dict[str, float]],
+        q_demand_model: Any | None,
+        q_demand_feat_cols: list[str] | None,
+        progress_callback: Callable[[dict[str, Any]], None] | None = None,
+    ) -> dict[str, Any]:
+        def report_progress(**payload: Any) -> None:
+            if progress_callback is not None:
+                progress_callback(payload)
+
+        working_df = _ensure_datetime_index(raw_df)
+        if working_df.empty:
+            return {"summary": {}, "curve": []}
+
+        sampled_df = cls._sample_hourly_points(working_df)
+        if sampled_df.empty:
+            return {"summary": {}, "curve": []}
+
+        future_template = sampled_df.copy()
+        step = pd.Timedelta(hours=1)
+        projected_history = working_df.copy()
+        rows: list[dict[str, Any]] = []
+        interval_h = 1.0
+        total_steps = int(len(future_template))
+
+        for idx in range(len(future_template)):
+            template_row = future_template.iloc[idx].copy()
+            next_ts = projected_history.index[-1] + step
+
+            best_score: dict[str, Any] | None = None
+            fallback_score: dict[str, Any] | None = None
+            for action in candidate_actions:
+                scenario_raw_df = projected_history.iloc[-192:].copy()
+                next_row = template_row.copy()
+                for cv in control_vars:
+                    next_row[cv.name] = float(action.get(cv.name, next_row.get(cv.name, cv.current_value)))
+                scenario_raw_df = pd.concat([scenario_raw_df, pd.DataFrame([next_row], index=[next_ts])])
+                try:
+                    predicted_power = _predict_from_last_row(
+                        power_model,
+                        _prepare_prediction_frame(scenario_raw_df, addon, target),
+                        power_feat_cols,
+                    )
+                    q_demand_pred = None
+                    q_required_min = None
+                    q_capability = None
+                    q_gap_pct = None
+                    feasible = True
+                    if q_demand_model is not None and q_demand_feat_cols:
+                        q_frame = _prepare_q_demand_frame(scenario_raw_df, addon)
+                        if q_frame.empty:
+                            feasible = False
+                        else:
+                            missing_q_cols = [col for col in q_demand_feat_cols if col not in q_frame.columns]
+                            if missing_q_cols:
+                                feasible = False
+                            else:
+                                q_row = q_frame.iloc[[-1]][q_demand_feat_cols]
+                                q_demand_pred = float(q_demand_model.predict(q_row)[0])
+                                q_required_min = q_demand_pred * 1.05
+                                q_capability = addon.decision.estimate_q_capability(scenario_raw_df, action)
+                                if q_capability is None or q_required_min is None or q_required_min <= 0:
+                                    feasible = False
+                                else:
+                                    q_gap_pct = (float(q_capability) - float(q_required_min)) / float(q_required_min) * 100.0
+                                    feasible = bool(q_capability >= q_required_min)
+                    score = {
+                        "predicted_power": float(predicted_power),
+                        "q_demand_pred": q_demand_pred,
+                        "q_required_min": q_required_min,
+                        "q_capability": q_capability,
+                        "q_gap_pct": q_gap_pct,
+                        "feasible": feasible,
+                        "action": action,
+                    }
+                except Exception:
+                    continue
+
+                if fallback_score is None or score["predicted_power"] < fallback_score["predicted_power"]:
+                    fallback_score = score
+                if score["feasible"] and (best_score is None or score["predicted_power"] < best_score["predicted_power"]):
+                    best_score = score
+
+            chosen = best_score or fallback_score
+            if chosen is None:
+                continue
+
+            projected_row = template_row.copy()
+            simulated = addon.decision.simulate_dynamics(projected_history.iloc[-1], chosen["action"], chosen["q_demand_pred"])
+            for key, value in simulated.items():
+                projected_row[key] = value
+            projected_row[target] = chosen["predicted_power"]
+            projected_history = pd.concat([projected_history, pd.DataFrame([projected_row], index=[next_ts])])
+
+            baseline_power = float(template_row.get(target, 0.0) or 0.0)
+            optimized_power = max(float(chosen["predicted_power"]), 0.0)
+            rows.append(
+                {
+                    "timestamp": next_ts.isoformat(),
+                    "baseline_power_kw": baseline_power,
+                    "optimized_power_kw": optimized_power,
+                    "saving_power_kw": max(baseline_power - optimized_power, 0.0),
+                    "q_required_min": chosen["q_required_min"],
+                    "q_capability": chosen["q_capability"],
+                    "q_gap_pct": chosen["q_gap_pct"],
+                    "feasible": bool(chosen["feasible"]),
+                }
+            )
+            if total_steps > 0:
+                percent = 84 + int(((idx + 1) / total_steps) * 8)
+                report_progress(
+                    percent=min(percent, 91),
+                    stage="future_projection",
+                    message="正在整理未來一倍時長的預測趨勢...",
+                    completed_projection_points=idx + 1,
+                    total_projection_points=total_steps,
+                )
+
+        curve_df = pd.DataFrame(rows)
+        baseline_kwh = float(curve_df["baseline_power_kw"].sum() * interval_h) if not curve_df.empty else 0.0
+        optimized_kwh = float(curve_df["optimized_power_kw"].sum() * interval_h) if not curve_df.empty else 0.0
+        saving_kwh = max(baseline_kwh - optimized_kwh, 0.0)
+        return {
+            "summary": {
+                "baseline_kwh": round(baseline_kwh, 2),
+                "optimized_kwh": round(optimized_kwh, 2),
+                "saving_kwh": round(saving_kwh, 2),
+                "saving_pct": round(saving_kwh / baseline_kwh * 100.0, 2) if baseline_kwh > 0 else 0.0,
+                "rows_projected": int(len(curve_df)),
+                "interval_hours": round(interval_h * len(curve_df), 2),
+            },
+            "curve": rows,
         }
 
     @classmethod

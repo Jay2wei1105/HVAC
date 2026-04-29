@@ -46,6 +46,25 @@ def _rehydrate_dataset_paths(dataset: dict) -> None:
     if isinstance(ml_results, dict):
         ml_results["model_bundle_path"] = _rehydrate_storage_path(ml_results.get("model_bundle_path"))
 
+    optimization_results = dataset.get("optimization_results")
+    if isinstance(optimization_results, dict):
+        artifacts = optimization_results.get("artifacts")
+        if isinstance(artifacts, dict):
+            for key, value in list(artifacts.items()):
+                artifacts[key] = _rehydrate_storage_path(value)
+
+    opt_history = dataset.get("optimization_history")
+    if isinstance(opt_history, list):
+        for item in opt_history:
+            if not isinstance(item, dict):
+                continue
+            result = item.get("result")
+            if isinstance(result, dict):
+                artifacts = result.get("artifacts")
+                if isinstance(artifacts, dict):
+                    for key, value in list(artifacts.items()):
+                        artifacts[key] = _rehydrate_storage_path(value)
+
 
 def save_metadata():
     with open(METADATA_FILE, "w", encoding="utf-8") as f:
@@ -111,6 +130,8 @@ async def upload_csv(site_id: str, file: UploadFile = File(...)):
             "active_history_id": None,
             "ml_results": None,
             "optimization_results": None,
+            "optimization_history": list(prev.get("optimization_history") or []),
+            "active_optimization_id": prev.get("active_optimization_id"),
             "mpc_summary": None,
             "report_summary": None,
             "dashboard_payload": None,

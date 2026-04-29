@@ -4,7 +4,9 @@ Onboarding UI — Stage 1–2 flow. Layout/styling only; core API paths unchange
 from __future__ import annotations
 
 import uuid
+from collections import defaultdict
 
+import plotly.graph_objects as go
 import streamlit as st
 
 from hvac_optimizer.frontend import api_client
@@ -63,6 +65,286 @@ def _hero(title: str, subtitle: str) -> None:
     )
 
 
+def _safe_float(value: object, default: float = 0.0) -> float:
+    try:
+        if value is None:
+            return default
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _build_feature_overview(ml_res: dict) -> list[dict[str, object]]:
+    power_rows = ml_res.get("power_top_features") or []
+    q_rows = ml_res.get("q_demand_feature_importance") or []
+
+    if not q_rows and ml_res.get("q_demand_top_features"):
+        q_rows = [
+            {"feature": name, "importance": float(len(ml_res["q_demand_top_features"]) - idx)}
+            for idx, name in enumerate(ml_res["q_demand_top_features"])
+        ]
+
+    source_map: dict[str, dict[str, float]] = defaultdict(dict)
+    for row in power_rows:
+        feature = str(row.get("feature") or "").strip()
+        if feature:
+            source_map[feature]["power"] = max(_safe_float(row.get("importance")), 0.0)
+    for row in q_rows:
+        feature = str(row.get("feature") or "").strip()
+        if feature:
+            source_map[feature]["q"] = max(_safe_float(row.get("importance")), 0.0)
+
+    if not source_map:
+        return []
+
+    def _normalize(rows: list[dict[str, object]], key: str) -> dict[str, float]:
+        total = sum(max(_safe_float(r.get("importance")), 0.0) for r in rows)
+        if total <= 0:
+            return {}
+        return {
+            str(r.get("feature") or "").strip(): max(_safe_float(r.get("importance")), 0.0) / total
+            for r in rows
+            if str(r.get("feature") or "").strip()
+        }
+
+    power_norm = _normalize(power_rows, "power")
+    q_norm = _normalize(q_rows, "q")
+
+    rows: list[dict[str, object]] = []
+    for feature, src in source_map.items():
+        power_share = power_norm.get(feature, 0.0)
+        q_share = q_norm.get(feature, 0.0)
+        combined = power_share + q_share
+        rows.append(
+            {
+                "feature": feature,
+                "combined": combined,
+                "power_share": power_share,
+                "q_share": q_share,
+                "sources": [label for label, share in (("功率", power_share), ("Q", q_share)) if share > 0],
+            }
+        )
+
+    rows.sort(key=lambda item: float(item["combined"]), reverse=True)
+    top = rows[:6]
+    total = sum(float(item["combined"]) for item in top)
+    if total <= 0:
+        total = 1.0
+    for item in top:
+        item["display_pct"] = float(item["combined"]) / total * 100.0
+    return top
+
+
+def _build_feature_figure(rows: list[dict[str, object]]) -> go.Figure:
+    ordered = list(reversed(rows))
+    labels = [str(item["feature"]) for item in ordered]
+    combined = [float(item["display_pct"]) for item in ordered]
+    power_share = [float(item["power_share"]) * 100.0 for item in ordered]
+    q_share = [float(item["q_share"]) * 100.0 for item in ordered]
+
+    fig = go.Figure(
+        go.Bar(
+            x=combined,
+            y=labels,
+            orientation="h",
+            marker=dict(color="#2f68f5", line=dict(color="#244c94", width=0.6)),
+            text=[f"{v:.1f}%" for v in combined],
+            textposition="outside",
+            hovertemplate=(
+                "特徵: %{y}<br>"
+                "合併占比: %{x:.1f}%<br>"
+                "功率: %{customdata[0]:.1f}%<br>"
+                "Q: %{customdata[1]:.1f}%<extra></extra>"
+            ),
+            customdata=list(zip(power_share, q_share)),
+            width=0.55,
+        )
+    )
+    fig.update_layout(
+        margin=dict(l=10, r=10, t=8, b=8),
+        height=max(260, 56 * len(rows)),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        xaxis=dict(
+            title=None,
+            range=[0, max(100.0, max(combined, default=0.0) * 1.15)],
+            ticksuffix="%",
+            gridcolor="#e7ecf4",
+            zeroline=False,
+        ),
+        yaxis=dict(title=None, automargin=True, gridcolor="rgba(0,0,0,0)"),
+        showlegend=False,
+    )
+    return fig
+
+
+def _render_feature_overview(ml_res: dict) -> None:
+    rows = _build_feature_overview(ml_res)
+    if not rows:
+        st.info("目前沒有可顯示的重要特徵。")
+        return
+
+    st.markdown(
+        """
+        <style>
+        .ho-ready-summary {
+            color: var(--ho-on-variant);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin: 0.2rem 0 1rem 0;
+        }
+        .ho-feature-wrap {
+            margin-top: 1rem;
+            padding-top: 0.25rem;
+            border-top: 1px solid #e4e9f2;
+        }
+        .ho-feature-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.85rem;
+        }
+        .ho-feature-title {
+            margin: 0;
+            font-size: 0.98rem;
+            font-weight: 700;
+            color: var(--ho-on-surface);
+        }
+        .ho-feature-subtitle {
+            margin: 0.2rem 0 0 0;
+            color: var(--ho-on-variant);
+            font-size: 0.85rem;
+            line-height: 1.45;
+        }
+        .ho-validation {
+            margin-top: 1rem;
+            padding: 0.95rem 1rem;
+            border-radius: 0.9rem;
+            background: #f6f8fc;
+            border: 1px solid #e4e9f2;
+        }
+        .ho-validation-title {
+            margin: 0 0 0.25rem 0;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--ho-on-surface);
+        }
+        .ho-validation-text {
+            margin: 0;
+            color: var(--ho-on-variant);
+            font-size: 0.85rem;
+            line-height: 1.45;
+        }
+        .ho-validation-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            margin-top: 0.75rem;
+        }
+        .ho-check-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 650;
+        }
+        .ho-check-pill.ok {
+            background: #e8f6ee;
+            color: #196a3c;
+        }
+        .ho-check-pill.warn {
+            background: #fff4df;
+            color: #8a5a00;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        """
+        <div class="ho-feature-wrap">
+          <div class="ho-feature-head">
+            <div>
+              <p class="ho-feature-title">重要特徵總覽</p>
+              <p class="ho-feature-subtitle">合併功率與 Q 的重要度後排序，這裡會以真正的圖表呈現，而不是原始碼。</p>
+            </div>
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    st.plotly_chart(_build_feature_figure(rows), use_container_width=True, config={"displayModeBar": False})
+
+    detail_lines = []
+    for item in rows:
+        feature = str(item["feature"])
+        pct = float(item["display_pct"])
+        power_share = float(item["power_share"]) * 100
+        q_share = float(item["q_share"]) * 100
+        labels = "、".join(item["sources"]) if item["sources"] else "無"
+        detail_lines.append(
+            f"<div class='ho-feature-detail'><strong>{feature}</strong> "
+            f"<span>{pct:.1f}%</span><small>{labels} · 功率 {power_share:.1f}% · Q {q_share:.1f}%</small></div>"
+        )
+    detail_html = "".join(detail_lines)
+    st.markdown(
+        f"""
+        <style>
+        .ho-feature-detail {{
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 0.5rem 0.65rem;
+            padding: 0.28rem 0;
+            color: var(--ho-on-variant);
+            font-size: 0.85rem;
+        }}
+        .ho-feature-detail strong {{
+            color: var(--ho-on-surface);
+            font-size: 0.88rem;
+            font-weight: 650;
+        }}
+        .ho-feature-detail span {{
+            color: var(--ho-on-surface);
+            font-weight: 700;
+        }}
+        .ho-feature-detail small {{
+            color: var(--ho-on-variant);
+        }}
+        </style>
+        <div>{detail_html}</div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def _render_validation_summary(qd: dict) -> None:
+    mapping = {
+        "coverage_ok": "Q 覆蓋率",
+        "pinball_improvement_ok": "Q 改善",
+        "weather_driver_ok": "天氣驅動",
+    }
+    bits = []
+    pass_count = 0
+    for key, label in mapping.items():
+        ok = bool(qd.get("validation", {}).get(key))
+        pass_count += int(ok)
+        bits.append(
+            f'<span class="ho-check-pill {"ok" if ok else "warn"}">{label}{" / 通過" if ok else " / 需調整"}</span>'
+        )
+    st.markdown(
+        f"""
+        <div class="ho-validation">
+          <div class="ho-validation-title">Q-demand 工程檢核</div>
+          <div class="ho-validation-text">通過 {pass_count}/3 項。這代表模型已經能用，但還有幾個工程面指標值得再調整。</div>
+          <div class="ho-validation-pills">{''.join(bits)}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def render() -> None:
     _ensure_state()
     _ensure_draft_workspace_for_upload()
@@ -85,7 +367,7 @@ def render() -> None:
                     """
                     <div class="ho-drop-hint">
                         <span class="material-symbols-outlined">cloud_upload</span>
-                        <p class="ho-muted" style="margin:0;font-weight:500;color:#0b1c30;">選擇或拖曳檔案至下方區域</p>
+                        <p class="ho-muted" style="margin:0;font-weight:500;color:var(--ho-on-surface);">選擇或拖曳檔案至下方區域</p>
                         <p class="ho-muted" style="margin:0.25rem 0 0 0;">支援 CSV、Excel。建議單檔 &lt; 50MB。</p>
                     </div>
                     """,
@@ -363,24 +645,27 @@ def render() -> None:
             ml_res = st.session_state.get("ml_results") or {}
             power = ml_res.get("power_metrics", {})
             qd = ml_res.get("q_demand_metrics", {})
+            power_mape = power.get("holdout_mape")
+            q_coverage = qd.get("coverage")
+            q_improve = qd.get("pinball_improvement")
+            overall = "這次訓練完成，功率模型表現穩定，Q 模型也有明顯進步。"
+            if qd.get("status") == "skipped":
+                overall = "這次訓練完成，但 Q 模型沒有成功產出，建議先檢查資料欄位或樣本數。"
+            elif q_coverage is not None and q_coverage < 0.8:
+                overall = "這次訓練可用，但 Q 覆蓋率還偏保守，後續可以再調整資料或特徵。"
+            st.markdown(f'<p class="ho-ready-summary">{overall}</p>', unsafe_allow_html=True)
+
             c1, c2, c3, c4 = st.columns(4)
-            c1.metric("功率 Holdout MAPE", f"{power.get('holdout_mape', 0):.2%}")
-            c2.metric("功率 CV(RMSE)", f"{power.get('holdout_cv_rmse', 0):.2f}")
-            c3.metric("Q coverage", f"{qd.get('coverage', 0):.2f}" if qd.get("coverage") is not None else "—")
-            c4.metric(
-                "Q 改善",
-                f"{qd.get('pinball_improvement', 0):.1%}" if qd.get("pinball_improvement") is not None else "—",
-            )
+            c1.metric("功率誤差", f"{power_mape:.2%}" if power_mape is not None else "—")
+            c2.metric("功率穩定度", f"{power.get('holdout_cv_rmse', 0):.2f}" if power.get("holdout_cv_rmse") is not None else "—")
+            c3.metric("Q 覆蓋率", f"{q_coverage:.2f}" if q_coverage is not None else "—")
+            c4.metric("Q 改善", f"{q_improve:.1%}" if q_improve is not None else "—")
 
             if qd.get("status") == "skipped":
                 st.warning(f"Q-demand 模型略過：{qd.get('message')}")
 
-            st.markdown("**功率模型重要特徵**")
-            for item in ml_res.get("power_top_features", []):
-                st.write(f"- `{item['feature']}`: {item['importance']:.3f}")
-
-            st.markdown("**Q-demand 檢核**")
-            st.json(qd.get("validation", {}))
+            _render_feature_overview(ml_res)
+            _render_validation_summary(qd)
 
             if st.button("前往既有數據分析", type="primary", use_container_width=True):
                 st.session_state.current_view = "dashboard"

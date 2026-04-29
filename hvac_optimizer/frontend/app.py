@@ -33,16 +33,16 @@ def inject_custom_styles():
         header[data-testid="stHeader"] {background: transparent;}
 
         :root {
-            --ho-primary: #2f6df6;
-            --ho-primary-container: #1f5ae0;
-            --ho-secondary: #4f46e5;
-            --ho-background: #f7f7f5;
-            --ho-surface: #ffffff;
-            --ho-surface-low: #f2f4f8;
-            --ho-on-surface: #111827;
-            --ho-on-variant: #596275;
-            --ho-outline: #d8deea;
-            --ho-error: #c24141;
+            --ho-primary: #2e5fb8;
+            --ho-primary-container: #244c94;
+            --ho-secondary: #4b7a70;
+            --ho-background: #f4f6fb;
+            --ho-surface: #fbfcff;
+            --ho-surface-low: #eef2f8;
+            --ho-on-surface: #1d2738;
+            --ho-on-variant: #5b6678;
+            --ho-outline: #cfd8e6;
+            --ho-error: #b84756;
             --ho-radius-sm: 10px;
             --ho-radius-md: 14px;
             --ho-radius-lg: 18px;
@@ -53,13 +53,13 @@ def inject_custom_styles():
             color: var(--ho-on-surface);
         }
         .stApp {
-            background: radial-gradient(circle at 0% 0%, #eef3ff 0%, transparent 32%),
-                        radial-gradient(circle at 100% 8%, #f4f6ff 0%, transparent 28%),
+            background: radial-gradient(circle at 0% 0%, #e9eef9 0%, transparent 34%),
+                        radial-gradient(circle at 100% 8%, #edf2fb 0%, transparent 29%),
                         var(--ho-background) !important;
         }
         section[data-testid="stMain"] {
-            color: rgba(255, 255, 255, 1) !important;
-            background-color: rgba(255, 255, 255, 1) !important;
+            color: var(--ho-on-surface) !important;
+            background-color: transparent !important;
         }
 
         /* Top nav */
@@ -95,7 +95,7 @@ def inject_custom_styles():
         .nav-logo {
             font-size: 1.2rem;
             font-weight: 700;
-            color: rgba(5, 5, 5, 1);
+            color: #1f2a3b;
             letter-spacing: -0.04em;
             white-space: nowrap;
         }
@@ -117,8 +117,8 @@ def inject_custom_styles():
         }
         .nav-item:hover { color: var(--ho-primary-container); }
         .nav-item.active {
-            color: rgba(12, 13, 13, 1);
-            border-bottom-color: #1d4ed8;
+            color: #1f2a3b;
+            border-bottom-color: var(--ho-primary);
         }
         .nav-actions {
             display: flex;
@@ -154,9 +154,16 @@ def inject_custom_styles():
             box-shadow: 0 10px 22px rgba(47, 109, 246, 0.30) !important;
         }
         .stButton > button[kind="secondary"] {
-            background: var(--ho-surface) !important;
+            background: rgba(181, 181, 181, 1) !important;
             border: 1px solid #d4d9e3 !important;
-            color: var(--ho-on-surface) !important;
+            color: rgba(0, 0, 0, 1) !important;
+        }
+        [data-testid="stFileUploader"] button[data-testid="stBaseButton-secondary"],
+        [data-testid="stFileUploader"] button[data-testid="stBaseButton-secondary"]:disabled {
+            background-color: rgba(181, 181, 181, 1) !important;
+            border: 1px solid #d4d9e3 !important;
+            color: rgba(0, 0, 0, 1) !important;
+            opacity: 1 !important;
         }
         .stButton > button:active { transform: scale(0.98) !important; }
 
@@ -168,12 +175,13 @@ def inject_custom_styles():
             padding: 0.45rem 0.7rem !important;
         }
         div.stVerticalBlock.st-emotion-cache-1gz5zxc {
-            color: rgba(255, 255, 255, 1) !important;
+            color: var(--ho-on-surface) !important;
             background-color: unset !important;
             background: unset !important;
             background-clip: unset !important;
             -webkit-background-clip: unset !important;
-            border-color: rgba(0, 0, 0, 1) !important;
+            border-width: 0 !important;
+            border-color: rgba(0, 0, 0, 0) !important;
             border-image: none !important;
         }
 
@@ -186,10 +194,10 @@ def inject_custom_styles():
         [data-testid="stFileUploaderDropzone"] {
             background-color: var(--ho-surface-low) !important;
             background: unset !important;
-            color: rgba(255, 255, 255, 1) !important;
+            color: var(--ho-on-surface) !important;
         }
         span.st-emotion-cache-1x4hur2 {
-            color: rgba(10, 10, 10, 0.6) !important;
+            color: rgba(29, 39, 56, 0.62) !important;
         }
         [data-testid="stFileUploader"]:hover {
             background: #e5eeff !important;
@@ -218,6 +226,10 @@ def inject_custom_styles():
         }
         div[data-baseweb="select"] > div {
             border-radius: var(--ho-radius-md) !important;
+        }
+        /* Streamlit tabs text color override */
+        button[data-baseweb="tab"] p {
+            color: var(--ho-on-surface) !important;
         }
 
         /* Onboarding stepper (injected HTML) */
@@ -321,6 +333,18 @@ def inject_custom_styles():
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
             vertical-align: middle;
+        }
+        div[data-testid="stPlotlyChart"] .js-plotly-plot .plotly text {
+            fill: #172133 !important;
+        }
+        div[data-testid="stPlotlyChart"] .js-plotly-plot .plotly .legendtext,
+        div[data-testid="stPlotlyChart"] .js-plotly-plot .plotly .gtitle,
+        div[data-testid="stPlotlyChart"] .js-plotly-plot .plotly .xtitle,
+        div[data-testid="stPlotlyChart"] .js-plotly-plot .plotly .ytitle {
+            fill: #172133 !important;
+        }
+        div[data-testid="stPlotlyChart"] .js-plotly-plot .plotly .modebar {
+            background: rgba(23, 33, 51, 0.16) !important;
         }
 
         /* Hide sidebar — project picker lives under header on analysis views */

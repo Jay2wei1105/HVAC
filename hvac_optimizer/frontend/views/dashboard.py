@@ -27,34 +27,26 @@ def _inject_styles() -> None:
             font-size: clamp(1.9rem, 3vw, 2.35rem);
             font-weight: 700;
             letter-spacing: -0.03em;
-            color: #111827;
+            color: var(--ho-on-surface);
             margin: 0 0 0.35rem 0;
         }
         .ho-analysis-hero p {
             margin: 0;
-            color: #5a6272;
+            color: var(--ho-on-variant);
             font-size: 0.98rem;
-        }
-        .ho-panel {
-            background: #ffffff;
-            border: 1px solid #d9dfeb;
-            border-radius: 1rem;
-            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 10px 24px rgba(15, 23, 42, 0.04);
-            padding: 1.25rem;
-            height: 100%;
         }
         .ho-panel-title {
             display: flex;
             align-items: center;
             gap: 0.5rem;
             margin: 0 0 1rem 0;
-            font-size: 1.03rem;
+            font-size: 1.06rem;
             font-weight: 600;
-            color: #1f2937;
+            color: var(--ho-on-surface);
         }
         .ho-kpi-card {
-            background: #ffffff;
-            border: 1px solid #d9dfeb;
+            background: var(--ho-surface);
+            border: 1px solid var(--ho-outline);
             border-radius: 1rem;
             padding: 1.1rem 1.15rem;
             box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 8px 20px rgba(15, 23, 42, 0.03);
@@ -63,34 +55,34 @@ def _inject_styles() -> None:
         .ho-kpi-label {
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            font-size: 0.72rem;
+            font-size: 0.76rem;
             font-weight: 600;
-            color: #667085;
+            color: var(--ho-on-variant);
             margin-bottom: 0.55rem;
         }
         .ho-kpi-value {
-            font-size: 2rem;
+            font-size: 2.1rem;
             line-height: 1.08;
             letter-spacing: -0.03em;
             font-weight: 700;
-            color: #111827;
+            color: var(--ho-on-surface);
             margin: 0;
         }
         .ho-kpi-unit {
-            font-size: 0.92rem;
+            font-size: 0.96rem;
             font-weight: 500;
-            color: #667085;
+            color: var(--ho-on-variant);
         }
         .ho-kpi-trend {
             margin-top: 0.9rem;
             display: flex;
             gap: 0.45rem;
             align-items: center;
-            font-size: 0.78rem;
-            color: #667085;
+            font-size: 0.84rem;
+            color: var(--ho-on-variant);
         }
-        .ho-kpi-good { color: #2f6df6; font-weight: 600; }
-        .ho-kpi-bad { color: #c24141; font-weight: 600; }
+        .ho-kpi-good { color: var(--ho-primary); font-weight: 600; }
+        .ho-kpi-bad { color: var(--ho-error); font-weight: 600; }
         .ho-meta-list {
             display: grid;
             gap: 0.5rem;
@@ -100,32 +92,33 @@ def _inject_styles() -> None:
             justify-content: space-between;
             gap: 1rem;
             padding: 0.6rem 0;
-            border-bottom: 1px solid #edf2f7;
+            border-bottom: 1px solid #e4e9f2;
         }
         .ho-meta-row:last-child {
             border-bottom: none;
             padding-bottom: 0;
         }
         .ho-meta-key {
-            color: #667085;
-            font-size: 0.86rem;
+            color: var(--ho-on-variant);
+            font-size: 0.92rem;
         }
         .ho-meta-value {
-            color: #111827;
-            font-size: 0.88rem;
+            color: var(--ho-on-surface);
+            font-size: 0.95rem;
             font-weight: 600;
             text-align: right;
+            width: 180px;
         }
         .ho-spec-card {
-            background: #f8faff;
-            border: 1px solid #e1e7f3;
+            background: var(--ho-surface-low);
+            border: 1px solid #d6deea;
             border-radius: 0.85rem;
             padding: 0.95rem;
         }
         .ho-spec-card h4 {
             margin: 0 0 0.75rem 0;
-            color: #1f4fd6;
-            font-size: 0.96rem;
+            color: var(--ho-primary-container);
+            font-size: 1rem;
             font-weight: 700;
         }
         .ho-spec-item {
@@ -133,17 +126,22 @@ def _inject_styles() -> None:
             justify-content: space-between;
             gap: 0.75rem;
             margin-bottom: 0.45rem;
-            font-size: 0.84rem;
-            color: #4b5565;
+            font-size: 0.9rem;
+            color: var(--ho-on-variant);
         }
         .ho-spec-item:last-child { margin-bottom: 0; }
-        .ho-section-spacer { height: 0.5rem; }
+        .ho-section-spacer { height: 0.7rem; }
         .ho-chart-card {
-            background: #ffffff;
-            border: 1px solid #d9dfeb;
+            background: var(--ho-surface);
+            border: 1px solid var(--ho-outline);
             border-radius: 1rem;
             padding: 1rem 1rem 0.35rem 1rem;
             box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 8px 20px rgba(15, 23, 42, 0.03);
+        }
+        .ho-subtle-text {
+            color: var(--ho-on-variant);
+            font-size: 0.93rem;
+            line-height: 1.55;
         }
         </style>
         """,
@@ -238,7 +236,10 @@ def _render_header(stats: dict[str, Any]) -> None:
         unsafe_allow_html=True,
     )
     if stats.get("days"):
-        st.caption(f"資料涵蓋約 {stats['days']} 天，以下圖表均以既有歷史資料自動彙整。")
+        st.markdown(
+            f'<p class="ho-subtle-text" style="margin:0.35rem 0 0 0;">資料涵蓋約 {stats["days"]} 天，以下圖表均以既有歷史資料自動彙整。</p>',
+            unsafe_allow_html=True,
+        )
 
 
 def _render_context_panels(data: dict[str, Any]) -> None:
@@ -254,14 +255,13 @@ def _render_context_panels(data: dict[str, Any]) -> None:
 
     left, right = st.columns([1.0, 1.8], gap="large")
     with left:
-        with st.container():
+        with st.container(border=True):
             st.markdown(
                 """
-                <div class="ho-panel">
-                    <div class="ho-panel-title">
-                        <span class="material-symbols-outlined">location_city</span>
-                        <span>Site Information</span>
-                    </div>
+                <div class="ho-panel-title">
+                    <span class="material-symbols-outlined">location_city</span>
+                    <span>Site Information</span>
+                </div>
                 """,
                 unsafe_allow_html=True,
             )
@@ -279,23 +279,14 @@ def _render_context_panels(data: dict[str, Any]) -> None:
 
             st.markdown(
                 f"""
-                    <div class="ho-meta-list">
-                        <div class="ho-meta-row">
-                            <div class="ho-meta-key">Analysis Period</div>
-                            <div class="ho-meta-value">{_analysis_period(stats)}</div>
-                        </div>
-                        <div class="ho-meta-row">
-                            <div class="ho-meta-key">Samples</div>
-                            <div class="ho-meta-value">{_fmt_int((data.get('quality_report') or {}).get('final_rows'))}</div>
-                        </div>
-                        <div class="ho-meta-row">
-                            <div class="ho-meta-key">Outside Air Avg</div>
-                            <div class="ho-meta-value">{_fmt_number(stats.get('oa_temp_avg'))} °C</div>
-                        </div>
-                        <div class="ho-meta-row">
-                            <div class="ho-meta-key">Dataset</div>
-                            <div class="ho-meta-value">{(site_meta.get('dataset_id') or '--')}</div>
-                        </div>
+                <div class="ho-meta-list">
+                    <div class="ho-meta-row">
+                        <div class="ho-meta-key">Analysis Period</div>
+                        <div class="ho-meta-value">{_analysis_period(stats)}</div>
+                    </div>
+                    <div class="ho-meta-row">
+                        <div class="ho-meta-key">Samples</div>
+                        <div class="ho-meta-value">{_fmt_int((data.get('quality_report') or {}).get('final_rows'))}</div>
                     </div>
                 </div>
                 """,
@@ -314,13 +305,18 @@ def _render_context_panels(data: dict[str, Any]) -> None:
             f'<div class="ho-spec-item"><span>{item["label"]}</span><span>{item["value"]}</span></div>'
             for item in towers
         ) or '<div class="ho-spec-item"><span>Cooling towers</span><span>Pending</span></div>'
-        st.markdown(
-            f"""
-            <div class="ho-panel">
+        with st.container(border=True):
+            st.markdown(
+                """
                 <div class="ho-panel-title">
                     <span class="material-symbols-outlined">dns</span>
                     <span>Equipment Specifications</span>
                 </div>
+                """,
+                unsafe_allow_html=True,
+            )
+            st.markdown(
+                f"""
                 <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;">
                     <div class="ho-spec-card">
                         <h4>Chiller Plant</h4>
@@ -331,10 +327,9 @@ def _render_context_panels(data: dict[str, Any]) -> None:
                         {tower_rows}
                     </div>
                 </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+                """,
+                unsafe_allow_html=True,
+            )
 
 
 def _render_kpi_cards(data: dict[str, Any]) -> None:
@@ -361,8 +356,8 @@ def _render_kpi_cards(data: dict[str, Any]) -> None:
                 else "Historical total energy"
             ),
             "icon": "bolt",
-            "icon_bg": "rgba(15,76,92,0.10)",
-            "icon_fg": "#0f4c5c",
+            "icon_bg": "rgba(46,95,184,0.12)",
+            "icon_fg": "#2a4f90",
         },
         {
             "label": "Operating Cost",
@@ -371,8 +366,8 @@ def _render_kpi_cards(data: dict[str, Any]) -> None:
             "trend_class": "ho-kpi-good",
             "trend_text": "Estimated from current tariff",
             "icon": "attach_money",
-            "icon_bg": "rgba(0,108,73,0.10)",
-            "icon_fg": "#006c49",
+            "icon_bg": "rgba(75,122,112,0.14)",
+            "icon_fg": "#315c54",
         },
         {
             "label": "Average COP",
@@ -385,8 +380,8 @@ def _render_kpi_cards(data: dict[str, Any]) -> None:
                 else "Insufficient data"
             ),
             "icon": "speed",
-            "icon_bg": "rgba(255,185,95,0.18)",
-            "icon_fg": "#8c5400",
+            "icon_bg": "rgba(178,133,78,0.20)",
+            "icon_fg": "#7c5a33",
         },
     ]
 
@@ -443,7 +438,7 @@ def _fig_energy_vs_baseline(data: dict[str, Any]) -> go.Figure:
             mode="lines",
             line=dict(color=C["total"], width=2.4),
             fill="tozeroy",
-            fillcolor="rgba(15,76,92,0.08)",
+            fillcolor="rgba(46,95,184,0.09)",
             hovertemplate="%{x|%Y-%m-%d %H:%M}<br>Actual %{y:.1f} kW<extra></extra>",
         )
     )
@@ -453,7 +448,7 @@ def _fig_energy_vs_baseline(data: dict[str, Any]) -> go.Figure:
             y=hourly["baseline_kw"],
             name="Hourly baseline",
             mode="lines",
-            line=dict(color="#ba1a1a", width=1.8, dash="dot"),
+            line=dict(color="#8b6aa7", width=1.8, dash="dot"),
             hovertemplate="%{x|%Y-%m-%d %H:%M}<br>Baseline %{y:.1f} kW<extra></extra>",
         )
     )
@@ -461,8 +456,8 @@ def _fig_energy_vs_baseline(data: dict[str, Any]) -> go.Figure:
         **layout(
             title="Energy Consumption vs Baseline",
             height=390,
-            xaxis=dict(title="", type="date", gridcolor="#e2e8f0"),
-            yaxis=dict(title="kW", gridcolor="#e2e8f0"),
+            xaxis=dict(title="", type="date", gridcolor="#dde5f0"),
+            yaxis=dict(title="kW", gridcolor="#dde5f0"),
             legend=dict(orientation="h", y=1.06, x=1, xanchor="right"),
         )
     )
@@ -494,7 +489,7 @@ def _fig_shap_importance(data: dict[str, Any]) -> go.Figure:
             x=frame[value_col],
             y=frame["feature"],
             orientation="h",
-            marker=dict(color="#ba1a1a"),
+            marker=dict(color="#355e9a"),
             text=[f"{v:.3f}" for v in frame[value_col]],
             textposition="outside",
             hovertemplate="%{y}<br>Importance %{x:.3f}<extra></extra>",
@@ -504,7 +499,7 @@ def _fig_shap_importance(data: dict[str, Any]) -> go.Figure:
         **layout(
             title="Feature Importance (SHAP / Importance)",
             height=390,
-            xaxis=dict(title="Impact score", gridcolor="#e2e8f0"),
+            xaxis=dict(title="Impact score", gridcolor="#dde5f0"),
             yaxis=dict(title="", automargin=True),
             margin=dict(t=56, b=40, l=20, r=20),
         )

@@ -49,10 +49,10 @@ def fig_chw_temperatures(data: dict[str, Any]) -> go.Figure:
     fig = make_subplots(specs=[[{"secondary_y": True}]])
     if has_chw:
         fig.add_trace(go.Scatter(x=ts, y=_col(recs, "chw_supply"), name="CHW 供水溫",
-                                  mode="lines", line=dict(color="#2196F3", width=1.8),
+                                  mode="lines", line=dict(color="#3d8fa2", width=1.8),
                                   hovertemplate="供水: %{y:.2f} °C<extra></extra>"), secondary_y=False)
         fig.add_trace(go.Scatter(x=ts, y=_col(recs, "chw_return"), name="CHW 回水溫",
-                                  mode="lines", line=dict(color="#0F4C5C", width=1.8),
+                                  mode="lines", line=dict(color="#355e9a", width=1.8),
                                   hovertemplate="回水: %{y:.2f} °C<extra></extra>"), secondary_y=False)
     if has_dt:
         fig.add_trace(go.Scatter(x=ts, y=_col(recs, "delta_chw"), name="ΔT 冰水側",
