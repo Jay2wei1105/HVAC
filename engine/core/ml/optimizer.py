@@ -243,6 +243,7 @@ def run_control_optimization(
 ) -> OptimizationResult:
     try:
         import optuna
+        from optuna.samplers import TPESampler
     except ModuleNotFoundError as exc:
         raise RuntimeError(
             "Optuna is required for control optimization. Install with: pip install optuna"
@@ -358,7 +359,7 @@ def run_control_optimization(
         return obj
 
     optuna.logging.set_verbosity(optuna.logging.WARNING)
-    study = optuna.create_study(direction="minimize")
+    study = optuna.create_study(direction="minimize", sampler=TPESampler(seed=42))
     study.optimize(objective, n_trials=n_trials, show_progress_bar=True)
 
     trials_df = pd.DataFrame(all_trials_data)

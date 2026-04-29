@@ -48,11 +48,22 @@ def _inject_styles() -> None:
 def _metric_row(result: dict) -> None:
     savings = result.get("savings", {})
     q_constraint = result.get("q_constraint", {})
+    baseline = result.get("baseline", {}) or {}
+    best_solution = result.get("best_solution", {}) or {}
+    model_saving = float(savings.get("total_kw") or 0.0)
+    ref_baseline = float(baseline.get("total_kw") or 0.0)
+    best_power = float(best_solution.get("energy_cost") or 0.0)
+    reference_saving = max(ref_baseline - best_power, 0.0)
+    display_saving = model_saving if model_saving > 0 else reference_saving
     cols = st.columns(4)
-    cols[0].metric("預估節能", f"{savings.get('total_kw', 0):,.1f} kW")
+    cols[0].metric("預估節能", f"{display_saving:,.1f} kW")
     cols[1].metric("節能比例", f"{savings.get('total_pct', 0):,.1f}%")
     cols[2].metric("Q 能力上限", f"{q_constraint.get('q_capability', 0) or 0:,.1f} kW")
     cols[3].metric("Q 安全可行", "可行" if q_constraint.get("feasible") else "不可行")
+    st.caption(
+        f"模型節能：{model_saving:,.1f} kW；對資料平均的參考差值：{reference_saving:,.1f} kW。"
+        " Q 能力上限會依最佳化找到的 setpoints 變動。"
+    )
 
 
 def render() -> None:
@@ -127,4 +138,3 @@ def render() -> None:
     with tab3:
         st.markdown("#### 產出檔案")
         st.json(result.get("artifacts", {}))
-
